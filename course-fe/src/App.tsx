@@ -1,7 +1,7 @@
-import Header from "./components/user/Header/Header";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Outlet } from "react-router";
 import "./styles/user/App.scss";
+import Header from "./components/Header/Header";
 
 function App() {
   return (
