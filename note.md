@@ -24,8 +24,11 @@
  =      - Là giao thức tiêu chuẩn để gửi email qua mạng.
  =      - Thường được sử dụng bởi các dịch vụ email như Gmail, Outlook, Yahoo Mail, ..., để gửi email từ một server ứng dụng (chứ không phải là gửi trực tiếp từ máy tính cá nhân).
  =
- =
- =
+ =  `npx sequelize-cli db:create`
+ =  `npx sequelize-cli db:migrate`
+ =  `npx sequelize-cli db:seed:all`
+ =  `npx sequelize-cli db:seed:undo:all`
+ =  `npx sequelize-cli db:seed:all`
  =
  =
  =

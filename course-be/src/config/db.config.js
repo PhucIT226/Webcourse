@@ -1,5 +1,5 @@
 export default {
-  url: process.env.DATABASE_URL || "mysql://root:11072005@127.0.0.1:3306/kids_db",
+  url: process.env.DATABASE_URL || "mysql://root@127.0.0.1:3306/courses_db",
   dialect: process.env.DATABASE_DIALECT || "mysql",
   pool: {
     max: parseInt(process.env.DB_POOL_MAX, 10) || 5,

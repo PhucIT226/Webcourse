@@ -3,7 +3,7 @@ import { Model, DataTypes } from "sequelize";
 export default (sequelize) => {
   class Profile extends Model {
     static associate(models) {
-      this.belongsTo(models.User, { foreignKey: "userId" });
+      this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
     }
   }
 
@@ -13,13 +13,25 @@ export default (sequelize) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
+        allowNull: false,
       },
-      address: DataTypes.STRING,
-      phone: DataTypes.STRING,
-      dateOfBirth: DataTypes.DATEONLY,
-      avatarUrl: DataTypes.STRING(255),
+      userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        unique: true,
+      },
+      fullName: { type: DataTypes.STRING(100) },
+      phone: { type: DataTypes.STRING(20) },
+      address: { type: DataTypes.STRING(255) },
+      avatarUrl: { type: DataTypes.STRING(255) },
+      dateOfBirth: { type: DataTypes.DATEONLY },
     },
-    { sequelize, modelName: "Profile", tableName: "profiles" }
+    {
+      sequelize,
+      modelName: "Profile",
+      tableName: "profiles",
+      timestamps: true,
+    }
   );
 
   return Profile;

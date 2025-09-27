@@ -4,6 +4,7 @@ export async function up(queryInterface, Sequelize) {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
+      allowNull: false,
     },
     userId: {
       type: Sequelize.UUID,
@@ -11,22 +12,26 @@ export async function up(queryInterface, Sequelize) {
       references: { model: "users", key: "id" },
       onDelete: "CASCADE",
     },
-    status: {
-      type: Sequelize.ENUM(
-        "pending",
-        "paid",
-        "shipped",
-        "completed",
-        "cancelled"
-      ),
-      allowNull: false,
-      defaultValue: "pending",
+    couponId: {
+      type: Sequelize.UUID,
+      allowNull: true,
+      references: { model: "coupons", key: "id" },
+      onDelete: "SET NULL",
     },
-    total: {
+    totalAmount: {
       type: Sequelize.DECIMAL(10, 2),
       allowNull: false,
       defaultValue: 0.0,
     },
+    status: {
+      type: Sequelize.ENUM("pending", "paid", "cancelled", "refunded"),
+      allowNull: false,
+      defaultValue: "pending",
+    },
+    paymentMethod: { type: Sequelize.STRING(50), allowNull: true},
+    provider: { type: Sequelize.STRING(50), allowNull: true },
+    providerPaymentId: { type: Sequelize.STRING(100), allowNull: true },
+    paidAt: { type: Sequelize.DATE, allowNull: true },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: false,

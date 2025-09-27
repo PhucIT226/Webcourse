@@ -3,7 +3,7 @@ import { Model, DataTypes } from "sequelize";
 export default (sequelize) => {
   class Role extends Model {
     static associate(models) {
-      this.belongsToMany(models.User, { through: "user_roles" });
+      this.hasMany(models.User, { foreignKey: "roleId", as: "users" });
     }
   }
 
@@ -13,10 +13,20 @@ export default (sequelize) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
+        allowNull: false,
       },
-      name: DataTypes.STRING,
+      name: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        unique: true,
+      },
     },
-    { sequelize, modelName: "Role", tableName: "roles" }
+    { 
+      sequelize,
+      modelName: "Role",
+      tableName: "roles",
+      timestamps: true,
+    }
   );
 
   return Role;

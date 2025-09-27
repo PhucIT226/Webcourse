@@ -3,10 +3,11 @@ import { Model, DataTypes } from "sequelize";
 export default (sequelize) => {
   class User extends Model {
     static associate(models) {
-      this.hasOne(models.RefreshToken, { foreignKey: "userId" });
-      this.hasOne(models.Profile, { foreignKey: "userId" });
-      this.hasMany(models.Order, { foreignKey: "userId" });
-      this.belongsToMany(models.Role, { through: "user_roles" });
+      this.belongsTo(models.Role, { foreignKey: "roleId", as: "role" });
+      this.hasOne(models.Profile, { foreignKey: "userId", as: "profile" });
+      this.hasMany(models.Course, { foreignKey: "instructorId", as: "coursesTaught" });
+      this.hasMany(models.Order, { foreignKey: "userId", as: "orders" });
+      this.hasMany(models.Review, { foreignKey: "userId", as: "reviews" });
     }
   }
 
@@ -18,18 +19,15 @@ export default (sequelize) => {
         primaryKey: true,
         allowNull: false,
       },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      name: { type: DataTypes.STRING(100), allowNull: false },
       email: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         allowNull: false,
         unique: true,
       },
-      passwordHash: {
-        type: DataTypes.STRING,
-      },
+      passwordHash: { type: DataTypes.STRING(255), allowNull: false },
+      avatarUrl: { type: DataTypes.STRING(500), allowNull: true },
+      roleId: { type: DataTypes.UUID, allowNull: false },
     },
     {
       sequelize, // truyền kết nối
@@ -38,7 +36,7 @@ export default (sequelize) => {
       timestamps: true,
       // 👇 This hides passwordHash from queries by default
       defaultScope: {
-        attributes: { exclude: ["passwordHash", "refreshToken"] },
+        attributes: { exclude: ["passwordHash"] },
       },
       // Optional: allow an "includeSensitive" scope if you need the password
       scopes: {
