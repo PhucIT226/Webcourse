@@ -1,14 +1,22 @@
 export async function up(queryInterface, Sequelize) {
-  await queryInterface.createTable("users", {
+  await queryInterface.createTable("categories", {
     id: {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
       allowNull: false,
     },
-    name: { type: Sequelize.STRING(100), allowNull: false },
-    email: { type: Sequelize.STRING(150), allowNull: false, unique: true },
-    passwordHash: { type: Sequelize.STRING(255), allowNull: false },
+    name: { type: Sequelize.STRING(150), allowNull: false },
+    slug: {
+      type: Sequelize.STRING(150),
+      allowNull: false,
+      unique: true
+    },
+    parentId: {
+      type: Sequelize.UUID,
+      references: { model: "categories", key: "id" },
+      onDelete: "SET NULL",
+    },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: false,
@@ -23,5 +31,5 @@ export async function up(queryInterface, Sequelize) {
 }
 
 export async function down(queryInterface) {
-  await queryInterface.dropTable("users");
+  await queryInterface.dropTable("categories");
 }

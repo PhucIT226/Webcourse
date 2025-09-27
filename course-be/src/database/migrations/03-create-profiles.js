@@ -4,6 +4,7 @@ export async function up(queryInterface, Sequelize) {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
+      allowNull: false,
     },
     userId: {
       type: Sequelize.UUID,
@@ -12,10 +13,11 @@ export async function up(queryInterface, Sequelize) {
       references: { model: "users", key: "id" },
       onDelete: "CASCADE",
     },
-    address: { type: Sequelize.STRING(255) },
-    phone: { type: Sequelize.STRING(30) },
-    dateOfBirth: { type: Sequelize.DATEONLY },
-    avatarUrl: { type: Sequelize.STRING(255) },
+    fullName: { type: Sequelize.STRING(100), allowNull: true },
+    phone: { type: Sequelize.STRING(20), allowNull: true },
+    address: { type: Sequelize.STRING(255), allowNull: true },
+    avatarUrl: { type: Sequelize.STRING(255), allowNull: true },
+    dateOfBirth: { type: Sequelize.DATEONLY, allowNull: true },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: false,

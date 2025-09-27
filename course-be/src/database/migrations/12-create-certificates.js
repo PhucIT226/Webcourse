@@ -1,23 +1,29 @@
 export async function up(queryInterface, Sequelize) {
-  await queryInterface.createTable("order_items", {
+  await queryInterface.createTable("certificates", {
     id: {
       type: Sequelize.UUID,
       defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
+      allowNull: false,
     },
-    orderId: {
+    userId: {
       type: Sequelize.UUID,
       allowNull: false,
-      references: { model: "orders", key: "id" },
+      references: { model: "users", key: "id" },
       onDelete: "CASCADE",
     },
-    productId: {
-      type: Sequelize.UUID,
-      allowNull: false,
-      references: { model: "products", key: "id" },
+    courseId: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: { model: "courses", key: "id" },
+        onDelete: "CASCADE",
     },
-    quantity: { type: Sequelize.INTEGER, allowNull: false },
-    price: { type: Sequelize.DECIMAL(10, 2), allowNull: false },
+    certificateUrl: { type: Sequelize.STRING(500), allowNull: false },
+    issuedAt: {
+      type: Sequelize.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.fn("NOW"),
+    },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: false,
@@ -32,5 +38,5 @@ export async function up(queryInterface, Sequelize) {
 }
 
 export async function down(queryInterface) {
-  await queryInterface.dropTable("order_items");
+  await queryInterface.dropTable("certificates");
 }

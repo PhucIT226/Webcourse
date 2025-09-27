@@ -9,7 +9,17 @@ CREATE DATABASE IF NOT EXISTS online_learning
 USE online_learning;
 
 -- =============================
--- 1. USERS
+-- `1. ROLES`
+-- =============================
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL, `-- ví dụ: student, instructor, admin`
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- =============================
+-- `2. USERS`
 -- =============================
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -19,11 +29,28 @@ CREATE TABLE users (
     role ENUM('student','admin','instructor') DEFAULT 'student',
     avatar_url VARCHAR(500),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE RESTRICT
 );
 
 -- =============================
--- 2. CATEGORIES
+-- `3. PROFILES`
+-- =============================
+CREATE TABLE profiles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    fullName VARCHAR(100),
+    phone VARCHAR(20),
+    address VARCHAR(255),
+    avatarUrl VARCHAR(255),
+    dateOfBirth DATE,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- =============================
+-- `4. CATEGORIES`
 -- =============================
 CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,7 +61,7 @@ CREATE TABLE categories (
 );
 
 -- =============================
--- 3. COURSES
+-- `5. COURSES`
 -- =============================
 CREATE TABLE courses (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -54,7 +81,7 @@ CREATE TABLE courses (
 );
 
 -- =============================
--- 4. LESSONS (Bài học gắn trực tiếp với Course)
+-- `6. LESSONS (Bài học gắn trực tiếp với Course)`
 -- =============================
 CREATE TABLE lessons (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,7 +97,7 @@ CREATE TABLE lessons (
 );
 
 -- =============================
--- 5. ORDERS (gộp luôn thông tin thanh toán)
+-- `7. ORDERS (gộp luôn thông tin thanh toán)`
 -- =============================
 CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -87,7 +114,7 @@ CREATE TABLE orders (
 );
 
 -- =============================
--- 6. ORDER ITEMS
+-- `8. ORDER ITEMS`
 -- =============================
 CREATE TABLE order_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -101,7 +128,7 @@ CREATE TABLE order_items (
 );
 
 -- =============================
--- 7. ENROLLMENTS
+-- `9. ENROLLMENTS`
 -- =============================
 CREATE TABLE enrollments (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -118,7 +145,7 @@ CREATE TABLE enrollments (
 );
 
 -- =============================
--- 8. COUPONS
+-- `10. COUPONS`
 -- =============================
 CREATE TABLE coupons (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -133,7 +160,7 @@ CREATE TABLE coupons (
 );
 
 -- =============================
--- 9. REVIEWS
+-- `11. REVIEWS`
 -- =============================
 CREATE TABLE reviews (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -147,7 +174,7 @@ CREATE TABLE reviews (
 );
 
 -- =============================
--- 10. CERTIFICATES
+-- `12. CERTIFICATES`
 -- =============================
 CREATE TABLE certificates (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -169,6 +196,12 @@ INSERT INTO users (email, password, name, role, avatar_url) VALUES
 ('student2@example.com', 'hashed_password', 'Tran Thi B', 'student', NULL),
 ('teacher1@example.com', 'hashed_password', 'Le Van C', 'instructor', NULL),
 ('admin@example.com', 'hashed_password', 'Admin User', 'admin', NULL);
+
+-- ROLES
+INSERT INTO roles (name) VALUES
+('admin');
+('student'),
+('instructor'),
 
 -- CATEGORIES
 INSERT INTO categories (name, slug) VALUES

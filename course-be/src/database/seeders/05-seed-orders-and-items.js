@@ -4,16 +4,22 @@ import { v4 as uuidv4 } from "uuid";
 export async function up(queryInterface, Sequelize) {
   const now = new Date();
 
-  const users = await queryInterface.sequelize.query(`SELECT id FROM users`, {
-    type: Sequelize.QueryTypes.SELECT,
-  });
-  const products = await queryInterface.sequelize.query(
-    `SELECT id, price FROM products`,
+  // Lấy users, courses, coupons từ DB
+  const users = await queryInterface.sequelize.query(
+    `SELECT id FROM users`,
+    { type: Sequelize.QueryTypes.SELECT }
+  );
+  const courses = await queryInterface.sequelize.query(
+    `SELECT id, price FROM courses`,
+    { type: Sequelize.QueryTypes.SELECT }
+  );
+  const coupons = await queryInterface.sequelize.query(
+    `SELECT id FROM coupons`,
     { type: Sequelize.QueryTypes.SELECT }
   );
 
   const orders = [];
-  const items = [];
+  const orderItems = [];
 
   for (let i = 0; i < 15; i++) {
     const orderId = uuidv4();
@@ -21,42 +27,54 @@ export async function up(queryInterface, Sequelize) {
     const status = faker.helpers.arrayElement([
       "pending",
       "paid",
-      "shipped",
-      "completed",
       "cancelled",
+      "refunded",
     ]);
-    let total = 0;
 
-    const itemCount = faker.number.int({ min: 1, max: 5 });
-    for (let j = 0; j < itemCount; j++) {
-      const p = faker.helpers.arrayElement(products);
-      const qty = faker.number.int({ min: 1, max: 3 });
-      const price = Number(p.price); // dùng price của product là hợp lý nhất
-      total += price * qty;
+    let totalAmount = 0;
 
-      items.push({
+    // Mỗi đơn 1-3 khóa học, không trùng nhau
+    const itemCount = faker.number.int({ min: 1, max: 3 });
+    const selectedCourses = faker.helpers.arrayElements(courses, itemCount);
+
+    selectedCourses.forEach((course) => {
+      const price = Number(course.price);
+      const quantity = 1;
+      totalAmount += price * quantity;
+
+      orderItems.push({
         id: uuidv4(),
         orderId,
-        productId: p.id,
-        quantity: qty,
+        courseId: course.id,
         price,
+        quantity,
+        discount: 0,
         createdAt: now,
         updatedAt: now,
       });
-    }
+    });
+
+    // Random coupon hoặc null
+    const coupon = faker.helpers.arrayElement([...coupons, null]);
+    const couponId = coupon ? coupon.id : null;
 
     orders.push({
       id: orderId,
       userId: user.id,
+      couponId,
+      totalAmount: Number(totalAmount.toFixed(2)),
       status,
-      total: total.toFixed(2),
+      paymentMethod: faker.helpers.arrayElement(["COD", "VNPay", "Momo", "Stripe"]),
+      provider: null,
+      providerPaymentId: null,
+      paidAt: status === "paid" ? faker.date.recent() : null,
       createdAt: now,
       updatedAt: now,
     });
   }
 
   await queryInterface.bulkInsert("orders", orders, {});
-  await queryInterface.bulkInsert("order_items", items, {});
+  await queryInterface.bulkInsert("order_items", orderItems, {});
 }
 
 export async function down(queryInterface) {

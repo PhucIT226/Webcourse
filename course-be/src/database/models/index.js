@@ -4,14 +4,15 @@ import Sequelize from "sequelize";
 import userModel from "./user.model.js";
 import profileModel from "./profile.model.js";
 import categoryModel from "./category.model.js";
-import productModel from "./product.model.js";
+import courseModel from "./course.model.js";
 import orderModel from "./order.model.js";
 import orderItemModel from "./orderItem.model.js";
 import roleModel from "./role.model.js";
-import refreshTokenModel from "./refreshToken.model.js";
-import tagModel from "./tag.model.js";
-import productTagModel from "./productTag.model.js";
-import userRoleModel from "./userRole.model.js";
+import couponModel from "./coupon.model.js";
+import reviewModel from "./review.model.js";
+import lessonModel from "./lesson.model.js";
+import enrollmentModel from "./enrollment.model.js";
+import cerificateModel from "./certificate.model.js";
 
 const sequelize = new Sequelize(AppConfig.database.url, {
   dialect: AppConfig.database.dialect, // ✅ Rất quan trọng!
@@ -23,14 +24,15 @@ const db = {
   User: userModel(sequelize),
   Profile: profileModel(sequelize),
   Category: categoryModel(sequelize),
-  Product: productModel(sequelize),
+  Course: courseModel(sequelize),
   Order: orderModel(sequelize),
   OrderItem: orderItemModel(sequelize),
   Role: roleModel(sequelize),
-  RefreshToken: refreshTokenModel(sequelize),
-  Tag: tagModel(sequelize),
-  ProductTag: productTagModel(sequelize),
-  UserRole: userRoleModel(sequelize),
+  Coupon: couponModel(sequelize),
+  Review: reviewModel(sequelize),
+  Lesson: lessonModel(sequelize),
+  Enrollment: enrollmentModel(sequelize),
+  Cerificate: cerificateModel(sequelize),
 };
 
 // Gọi associate cho tất cả models

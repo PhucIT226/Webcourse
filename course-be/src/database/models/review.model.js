@@ -1,14 +1,14 @@
 import { Model, DataTypes } from "sequelize";
 
 export default (sequelize) => {
-  class OrderItem extends Model {
+  class Review extends Model {
     static associate(models) {
-      this.belongsTo(models.Order, { foreignKey: "orderId", as: "order" });
+      this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
       this.belongsTo(models.Course, { foreignKey: "courseId", as: "course" });
     }
   }
 
-  OrderItem.init(
+  Review.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -16,27 +16,22 @@ export default (sequelize) => {
         primaryKey: true,
         allowNull: false,
       },
-      orderId: { type: DataTypes.UUID, allowNull: false },
+      userId: { type: DataTypes.UUID, allowNull: false },
       courseId: { type: DataTypes.UUID, allowNull: false },
-      price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
-      quantity: {
+      rating: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 1,
+        validate: { min: 1, max: 5 },
       },
-      discount: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-        defaultValue: 0,
-      },
+      comment: { type: DataTypes.TEXT, allowNull: true },
     },
-    { 
+    {
       sequelize,
-      modelName: "OrderItem",
-      tableName: "order_items",
+      modelName: "Review",
+      tableName: "reviews",
       timestamps: true,
     }
   );
 
-  return OrderItem;
+  return Review;
 };
