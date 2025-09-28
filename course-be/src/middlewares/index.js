@@ -1,7 +1,11 @@
-import { jwt } from "./auth.js";
-import { validate } from "./validate.js";
+import auth from "./auth.middleware.js";
+import errorHandler from "./error.middleware.js";
+import role from "./role.middleware.js";
+import validate from "./validate.middleware.js";
 
 export default {
-  jwt,
-  validate,
+  auth,
+  errorHandler,
+  role,
+  validate
 };

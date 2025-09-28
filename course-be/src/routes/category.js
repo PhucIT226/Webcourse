@@ -1,13 +1,21 @@
-import { Router } from "express";
-import CategoryController from "../controllers/category.controller.js";
+import express from 'express';
+import middlewares from '../middlewares/index.js';
+import {
+  getAllCategories,
+  getCategoryById,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from '../controllers/categories.js';
 
-const controller = new CategoryController();
-const router = Router();
-// define the about route
-router.get("/", controller.getAllCategories);
-router.post("/", controller.createCategory);
-router.delete("/:id", controller.deleteCategory);
-router.get("/:id", controller.getCategoryById);
-router.put("/:id", controller.editCategory);
+const router = express.Router();
+
+router.get('/', getAllCategories);
+router.get('/:id', getCategoryById);
+
+// Admin mới tạo, sửa, xóa
+router.post('/', middlewares.auth, middlewares.role.allowRoles('admin'), createCategory);
+router.patch('/:id', middlewares.auth, middlewares.role.allowRoles('admin'), updateCategory);
+router.delete('/:id', middlewares.auth, middlewares.role.allowRoles('admin'), deleteCategory);
 
 export default router;

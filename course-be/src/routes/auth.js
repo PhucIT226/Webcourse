@@ -1,14 +1,19 @@
-import { Router } from "express";
-import AuthController from "../controllers/auth.controller.js";
-import middlewares from "../middlewares/index.js";
+import express from 'express';
+import middlewares from '../middlewares/index.js';
+import {
+  register,
+  login,
+  logout,
+  refreshToken,
+  getMe,
+} from '../controllers/auth.js';
 
-const controller = new AuthController();
-const router = Router();
-// define the auth route
-router.post("/signin", controller.signin);
-router.post("/signout", controller.signout);
-router.post("/signup", controller.signup);
-router.post("/refresh", controller.refresh);
-router.get("/me", middlewares.jwt(), controller.getProfile);
+const router = express.Router();
+
+router.post('/register', register);
+router.post('/login', login);
+router.post('/logout', logout);
+router.post('/refresh', refreshToken);
+router.get('/me', middlewares.auth, getMe);
 
 export default router;
