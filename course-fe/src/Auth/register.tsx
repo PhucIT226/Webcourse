@@ -1,19 +1,24 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import "../styles/auth/register.scss";
 import { useNavigate } from "react-router-dom";
-import "../styles/auth/login.scss";
 
-// ✅ Schema validate
+// ✅ Schema validate cho Register
 const schema = yup.object({
+  name: yup.string().required("Họ tên là bắt buộc"),
   email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
   password: yup
     .string()
     .min(6, "Mật khẩu ít nhất 6 ký tự")
     .required("Mật khẩu là bắt buộc"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Mật khẩu xác nhận không khớp")
+    .required("Xác nhận mật khẩu là bắt buộc"),
 });
 
-const Login = () => {
+const Register = () => {
   const {
     register,
     handleSubmit,
@@ -24,16 +29,28 @@ const Login = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
-    console.log("Login Data:", data);
-    alert(`Email: ${data.email}\nPassword: ${data.password}`);
+    console.log("Register Data:", data);
+    alert(`Đăng ký thành công!\nTên: ${data.name}\nEmail: ${data.email}`);
   };
 
   return (
     <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <div className="card p-4 shadow col-md-4 col-sm-8 col-12">
-        <h3 className="text-center mb-4">Đăng nhập</h3>
+      <div className="card p-4 shadow col-md-5 col-sm-8 col-12">
+        <h3 className="text-center mb-4">Đăng ký</h3>
 
         <form onSubmit={handleSubmit(onSubmit)}>
+          {/* Name */}
+          <div className="mb-3">
+            <label className="form-label">Họ tên</label>
+            <input
+              type="text"
+              className={`form-control ${errors.name ? "is-invalid" : ""}`}
+              {...register("name")}
+              placeholder="Nhập họ tên"
+            />
+            <div className="invalid-feedback">{errors.name?.message}</div>
+          </div>
+
           <div className="mb-3">
             <label className="form-label">Email</label>
             <input
@@ -45,7 +62,7 @@ const Login = () => {
             <div className="invalid-feedback">{errors.email?.message}</div>
           </div>
 
-          <div className="mb-2">
+          <div className="mb-3">
             <label className="form-label">Mật khẩu</label>
             <input
               type="password"
@@ -56,24 +73,33 @@ const Login = () => {
             <div className="invalid-feedback">{errors.password?.message}</div>
           </div>
 
-          <div className="d-flex justify-content-end mb-3">
-            <a href="#" className="small text-decoration-none">
-              Quên mật khẩu?
-            </a>
+          <div className="mb-3">
+            <label className="form-label">Xác nhận mật khẩu</label>
+            <input
+              type="password"
+              className={`form-control ${
+                errors.confirmPassword ? "is-invalid" : ""
+              }`}
+              {...register("confirmPassword")}
+              placeholder="Nhập lại mật khẩu"
+            />
+            <div className="invalid-feedback">
+              {errors.confirmPassword?.message}
+            </div>
           </div>
 
           <button type="submit" className="btn btn-primary w-100">
-            Đăng nhập
+            Đăng ký
           </button>
         </form>
 
         <p className="text-center mt-3 mb-0">
-          Chưa có tài khoản?{" "}
+          Đã có tài khoản?{" "}
           <button
-            className="btn-register"
-            onClick={() => navigate("/register")}
+            onClickCapture={() => navigate("/login")}
+            className="btn-login"
           >
-            Resgister
+            Đăng nhập
           </button>
         </p>
       </div>
@@ -81,4 +107,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
