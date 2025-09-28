@@ -1,15 +1,18 @@
-import { Router } from "express";
-import UserController from "../controllers/user.controller.js";
-import UserValidator from "../validators/user.validator.js";
+import express from 'express';
+import middlewares from '../middlewares/index.js';
+import {
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+} from '../controllers/users.js';
 
-const validator = new UserValidator();
-const controller = new UserController();
-const router = Router();
-// define the user route
-router.get("/", controller.getListUsers);
-router.get("/:id", controller.getUserById);
-router.post("/", validator.createUserSchema(), controller.createUser);
-router.put("/:id", controller.updateUser);
-router.delete("/:id", controller.deleteUser);
+const router = express.Router();
+
+// Admin thao tác tất cả user
+router.get('/', middlewares.auth, middlewares.role.allowRoles('admin'), getAllUsers);
+router.get('/:id', middlewares.auth, middlewares.role.allowRoles('admin'), getUserById);
+router.patch('/:id', middlewares.auth, middlewares.role.allowRoles('admin'), updateUser);
+router.delete('/:id', middlewares.auth, middlewares.role.allowRoles('admin'), deleteUser);
 
 export default router;

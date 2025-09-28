@@ -64,10 +64,6 @@ export async function up(queryInterface, Sequelize) {
       couponId,
       totalAmount: Number(totalAmount.toFixed(2)),
       status,
-      paymentMethod: faker.helpers.arrayElement(["COD", "VNPay", "Momo", "Stripe"]),
-      provider: null,
-      providerPaymentId: null,
-      paidAt: status === "paid" ? faker.date.recent() : null,
       createdAt: now,
       updatedAt: now,
     });
