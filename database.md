@@ -145,4 +145,5 @@
  =  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
  =  `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
  = )
+ =
 # ---------------------------------------------------------------------------- `DATABASE` -------------------------------------------------------------------------------

@@ -1,21 +1,21 @@
-import express from 'express';
-import middlewares from '../middlewares/index.js';
-import {
-  getAllCourses,
-  getCourseById,
-  createCourse,
-  updateCourse,
-  deleteCourse,
-} from '../controllers/courses.js';
+// import express from 'express';
+// import middlewares from '../middlewares/index.js';
+// import {
+//   getAllCourses,
+//   getCourseById,
+//   createCourse,
+//   updateCourse,
+//   deleteCourse,
+// } from '../controllers/course.controller.js';
 
-const router = express.Router();
+// const router = express.Router();
 
-router.get('/', getAllCourses);
-router.get('/:id', getCourseById);
+// router.get('/', getAllCourses);
+// router.get('/:id', getCourseById);
 
-// Instructor hoặc Admin mới thao tác
-router.post('/', middlewares.auth, middlewares.role.allowRoles('instructor', 'admin'), createCourse);
-router.patch('/:id', middlewares.auth, middlewares.role.allowRoles('instructor', 'admin'), updateCourse);
-router.delete('/:id', middlewares.auth, middlewares.role.allowRoles('instructor', 'admin'), deleteCourse);
+// // Instructor hoặc Admin mới thao tác
+// router.post('/', middlewares.auth, middlewares.role('instructor', 'admin'), createCourse);
+// router.patch('/:id', middlewares.auth, middlewares.role('instructor', 'admin'), updateCourse);
+// router.delete('/:id', middlewares.auth, middlewares.role('instructor', 'admin'), deleteCourse);
 
-export default router;
+// export default router;

@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
-import { User, Role } from "../models/index.js";
+import db from "../database/models/index.js";
+const { User, Role } = db;
 
-export const authMiddleware = async (req, res, next) => {
+const auth = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -24,3 +25,5 @@ export const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
+
+export default auth;
