@@ -11,7 +11,7 @@ class AuthController extends BaseController {
     this.service = new UserService();
   }
 
-  async signup(req, res) {
+  async register(req, res) {
     try {
       const { name, email, password } = req.body;
       const isUserExisted = !!(await this.service.getUserByEmail(email));
@@ -28,7 +28,7 @@ class AuthController extends BaseController {
     }
   }
 
-  async signin(req, res) {
+  async login(req, res) {
     try {
       const { email, password, isRemember } = req.body;
       const user = await this.service.getUserByEmail(email, true);
@@ -50,7 +50,7 @@ class AuthController extends BaseController {
     }
   }
 
-  async refresh(req, res) {
+  async refreshToken(req, res) {
     try {
       const token = req.cookies.refreshToken || req.body.refreshToken;
       if (!token)
@@ -77,7 +77,7 @@ class AuthController extends BaseController {
     }
   }
 
-  async signout(req, res) {
+  async logout(req, res) {
     try {
       const userId = req.user?.id;
       if (userId) {

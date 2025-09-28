@@ -1,19 +1,19 @@
-import express from 'express';
-import middlewares from '../middlewares/index.js';
-import {
-  getOrderItems,
-  getOrderItemById,
-  createOrderItem,
-  updateOrderItem,
-  deleteOrderItem
-} from '../controllers/orderItems.js';
+// import express from 'express';
+// import middlewares from '../middlewares/index.js';
+// import {
+//   getOrderItems,
+//   getOrderItemById,
+//   createOrderItem,
+//   updateOrderItem,
+//   deleteOrderItem
+// } from '../controllers/orderItem.controller.js';
 
-const router = express.Router({ mergeParams: true }); // orderId từ params
+// const router = express.Router({ mergeParams: true }); // orderId từ params
 
-router.get('/', middlewares.auth, getOrderItems); // /orders/:orderId/items
-router.get('/:id', middlewares.auth, getOrderItemById);
-router.post('/', middlewares.auth, middlewares.role.allowRoles('admin'), createOrderItem);
-router.patch('/:id', middlewares.auth, middlewares.role.allowRoles('admin'), updateOrderItem);
-router.delete('/:id', middlewares.auth, middlewares.role.allowRoles('admin'), deleteOrderItem);
+// router.get('/', middlewares.auth, getOrderItems); // /orders/:orderId/items
+// router.get('/:id', middlewares.auth, getOrderItemById);
+// router.post('/', middlewares.auth, middlewares.role('admin'), createOrderItem);
+// router.patch('/:id', middlewares.auth, middlewares.role('admin'), updateOrderItem);
+// router.delete('/:id', middlewares.auth, middlewares.role('admin'), deleteOrderItem);
 
-export default router;
+// export default router;

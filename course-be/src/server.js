@@ -19,7 +19,7 @@ const io = new Server(server, {
 });
 
 dotenv.config();
-db.sequelize.sync({ force: false }); // Sync database models
+db.sequelize.sync({ force: false });
 app.use(
   cors({
     origin: "http://localhost:5173", // replace with your React app URL
@@ -67,7 +67,6 @@ app.use(passport.initialize());
 // cho phép truy cập thư mục uploads
 app.use("/uploads", express.static("uploads"));
 
-// // Define routes
 app.use(`/api/${AppConfig.apiVersion}`, ApiRouter[AppConfig.apiVersion]);
 
 server.listen(port, () => {
