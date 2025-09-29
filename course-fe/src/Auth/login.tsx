@@ -3,8 +3,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import "../styles/auth/login.scss";
+import type { LoginForm } from "../types/auth";
 
-// ✅ Schema validate
 const schema = yup.object({
   email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
   password: yup
@@ -23,7 +23,7 @@ const Login = () => {
   });
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
+  const onSubmit = (data:LoginForm) => {
     console.log("Login Data:", data);
     alert(`Email: ${data.email}\nPassword: ${data.password}`);
   };
