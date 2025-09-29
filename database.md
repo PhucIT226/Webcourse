@@ -101,8 +101,22 @@
  =   `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
  =   `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
  = )
- = 
+ =
  = *9*.
+ = CREATE TABLE `payments` (
+ =   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+ =   `orderId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+ =   `provider` varchar(50) DEFAULT NULL,
+ =   `providerPaymentId` varchar(100) DEFAULT NULL,
+ =   `amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+ =   `status` enum('pending','success','failed','refunded') NOT NULL DEFAULT 'pending',
+ =   `paidAt` datetime DEFAULT NULL,
+ =   `meta` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`meta`)),
+ =   `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+ =   `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
+)
+ = 
+ = *10*.
  = CREATE TABLE `profiles` (
  =   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
  =   `userId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
@@ -115,7 +129,7 @@
  =   `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
  = )
  = 
- = *10*.
+ = *11*.
  = CREATE TABLE `reviews` (
  =   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
  =   `userId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
@@ -126,7 +140,7 @@
  =   `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
  = )
  =
- = *11*.
+ = *12*.
  = CREATE TABLE `roles` (
  =   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
  =   `name` varchar(50) NOT NULL,
@@ -134,7 +148,7 @@
  =   `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
  = )
  =
- = *12*.
+ = *13*.
  = CREATE TABLE `users` (
  =   `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
  =   `name` varchar(100) NOT NULL,
