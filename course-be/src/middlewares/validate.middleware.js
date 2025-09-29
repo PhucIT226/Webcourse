@@ -1,11 +1,14 @@
-import { validationResult } from "express-validator";
-
-const validate = (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  next();
+const validate = (schema) => {
+  return (req, res, next) => {
+    const { error } = schema.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res.status(400).json({
+        message: "Validation failed",
+        details: error.details.map(d => d.message),
+      });
+    }
+    next();
+  };
 };
 
 export default validate;

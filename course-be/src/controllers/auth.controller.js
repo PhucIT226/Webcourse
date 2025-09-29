@@ -1,9 +1,8 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import UserService from "../services/user.service.js";
-import jwtConfig from "../config/jwt.config.js";
 import BaseController from "./base.controller.js";
-import { getExpiresAtFromToken } from "../helpers/jwt.js";
+import UserService from "../services/user.service.js";
+import * as HashHelper from "../helpers/hash.helper.js";
+import * as JwtHelper from "../helpers/jwt.helper.js";
+import db from "../database/models/index.js";
 
 class AuthController extends BaseController {
   constructor() {
@@ -12,133 +11,70 @@ class AuthController extends BaseController {
   }
 
   async register(req, res) {
-    try {
-      const { name, email, password } = req.body;
-      const isUserExisted = !!(await this.service.getUserByEmail(email));
-      if (isUserExisted) {
-        return res.status(400).json({ message: "User exists" });
-      }
-      const passwordHash = await bcrypt.hash(password, 10);
-      const newUser = { name, email, passwordHash };
-      await this.service.createUser(newUser);
-      res.json({ message: "User created" });
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
+    const { name, email, password } = req.body;
+
+    // Check email tồn tại
+    const existingUser = await this.service.getUserByEmail(email);
+    if (existingUser) return res.status(400).json({ message: "User exists" });
+
+    // Hash password
+    const passwordHash = await HashHelper.hashPassword(password);
+
+    // Lấy roleId từ bảng Roles
+    const studentRole = await db.Role.findOne({ where: { name: "student" } });
+    if (!studentRole) {
+      return res.status(500).json({ message: "Default role not found" });
     }
+
+    await this.service.createUser({
+      name,
+      email,
+      passwordHash,
+      roleId: studentRole.id,
+    });
+
+    res.status(201).json({ message: "User created" });
   }
 
   async login(req, res) {
-    try {
-      const { email, password, isRemember } = req.body;
-      const user = await this.service.getUserByEmail(email, true);
-      if (!user)
-        return res.status(400).json({ message: "Invalid credentials" });
-      const valid = await bcrypt.compare(password, user.passwordHash);
-      if (!valid)
-        return res.status(400).json({ message: "Invalid credentials" });
+    const { email, password, isRemember } = req.body;
+    const user = await this.service.getUserByEmail(email, true); // with password
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-      const { accessToken, refreshToken } = await this._generateTokens(
-        user.id,
-        !isRemember
-      );
-      this._setTokensAsCookies(res, accessToken, refreshToken);
-      res.json({ accessToken, refreshToken }); // also send in JSON for API clients
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
+    const valid = await HashHelper.comparePassword(password, user.passwordHash);
+    if (!valid) return res.status(400).json({ message: "Invalid credentials" });
+
+    const { accessToken, refreshToken } = await JwtHelper.generateTokens(user.id, !isRemember);
+    JwtHelper.setTokensAsCookies(res, accessToken, refreshToken);
+    res.json({ accessToken, refreshToken });
   }
 
   async refreshToken(req, res) {
-    try {
-      const token = req.cookies.refreshToken || req.body.refreshToken;
-      if (!token)
-        return res.status(401).json({ message: "Missing refresh token" });
+    const token = req.cookies.refreshToken || req.body.refreshToken;
+    if (!token) return res.status(401).json({ message: "Missing refresh token" });
 
-      jwt.verify(token, jwtConfig.JWT_REFRESH_SECRET, async (err, payload) => {
-        if (err)
-          return res.status(403).json({ message: "Invalid refresh token" });
+    const payload = JwtHelper.verifyToken(token, "refresh");
+    if (!payload) return res.status(403).json({ message: "Invalid refresh token" });
 
-        const user = await this.service.getUserById(payload.sub, true);
-        if (user?.RefreshToken?.token !== token)
-          return res.status(403).json({ message: "Refresh token revoked" });
+    const user = await this.service.getUserById(payload.sub, true);
+    if (!user || user.refreshToken !== token)
+      return res.status(403).json({ message: "Refresh token revoked" });
 
-        const { accessToken, refreshToken } = await this._generateTokens(
-          payload.sub,
-          true
-        );
-        this._setTokensAsCookies(res, accessToken, refreshToken);
-        res.json({ accessToken, refreshToken });
-      });
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
+    const { accessToken, refreshToken } = await JwtHelper.generateTokens(payload.sub, false);
+    JwtHelper.setTokensAsCookies(res, accessToken, refreshToken);
+    res.json({ accessToken, refreshToken });
   }
 
   async logout(req, res) {
-    try {
-      const userId = req.user?.id;
-      if (userId) {
-        await this.service.updateUser(userId, { refreshToken: null }, true);
-      }
-      res.clearCookie("accessToken");
-      res.clearCookie("refreshToken");
-      res.json({ message: "Signed out" });
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
+    const userId = req.user?.id;
+    if (userId) await this.service.updateUser(userId, { refreshToken: null }, true);
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.json({ message: "Signed out" });
   }
 
   async getProfile(req, res) {
-    try {
-      res.json(req.user);
-    } catch (error) {
-      console.error("Error creating user:", error);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
-
-  // ===== HELPER FUNCTIONS =====
-  async _generateTokens(userId, accessTokenOnly = false) {
-    const accessToken = jwt.sign({ sub: userId }, jwtConfig.JWT_SECRET, {
-      expiresIn: jwtConfig.JWT_EXPIRES_IN,
-    });
-
-    if (!accessTokenOnly) {
-      const refreshToken = jwt.sign(
-        { sub: userId },
-        jwtConfig.JWT_REFRESH_SECRET,
-        {
-          expiresIn: jwtConfig.JWT_REFRESH_EXPIRES_IN,
-        }
-      );
-      await this.service.updateUser(userId, { refreshToken }, true);
-      return { accessToken, refreshToken };
-    }
-    return { accessToken };
-  }
-
-  _setTokensAsCookies(res, accessToken, refreshToken) {
-    if (accessToken) {
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true, // set = false if want access from browser
-        sameSite: "strict",
-        secure: false,
-        expires: getExpiresAtFromToken(accessToken),
-      });
-    }
-
-    if (refreshToken) {
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true, // set = false if want access from browser
-        sameSite: "strict",
-        secure: false,
-        expires: getExpiresAtFromToken(refreshToken),
-      });
-    }
+    res.json(req.user);
   }
 }
 

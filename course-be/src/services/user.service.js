@@ -5,51 +5,28 @@ class UserService {
     this.repository = new UserRepository();
   }
 
-  async getListUsers() {
-    try {
-      return await this.repository.getAllUsers();
-    } catch (error) {
-      throw new Error("Error fetching users: " + error.message);
-    }
-  }
-  async getUserById(id, includeRefreshToken) {
-    try {
-      return await this.repository.getUserById(id, includeRefreshToken);
-    } catch (error) {
-      throw new Error("Error fetching user: " + error.message);
-    }
+  getListUsers(role) {
+    return this.repository.getAllUsers(role);
   }
 
-  async createUser(userData) {
-    try {
-      return await this.repository.createUser(userData);
-    } catch (error) {
-      throw new Error("Error creating user: " + error.message);
-    }
+  getUserById(id, includeRefreshToken = false) {
+    return this.repository.getUserById(id, includeRefreshToken);
   }
 
-  async updateUser(id, userData, updateRefreshToken = false) {
-    try {
-      return await this.repository.updateUser(id, userData, updateRefreshToken);
-    } catch (error) {
-      throw new Error("Error updating user: " + error.message);
-    }
+  createUser(userData) {
+    return this.repository.createUser(userData);
   }
 
-  async deleteUser(id) {
-    try {
-      return await this.repository.deleteUser(id);
-    } catch (error) {
-      throw new Error("Error deleting user: " + error.message);
-    }
+  updateUser(id, userData, updateRefreshToken = false) {
+    return this.repository.updateUser(id, userData, updateRefreshToken);
   }
 
-  async getUserByEmail(email, withPassword = false) {
-    try {
-      return await this.repository.getUserByEmail(email, withPassword);
-    } catch (error) {
-      throw new Error("Error check user existed: " + error.message);
-    }
+  deleteUser(id) {
+    return this.repository.deleteUser(id);
+  }
+
+  getUserByEmail(email, withPassword = false) {
+    return this.repository.getUserByEmail(email, withPassword);
   }
 }
 

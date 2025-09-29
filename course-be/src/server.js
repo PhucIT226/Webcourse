@@ -11,14 +11,17 @@ import db from "./database/models/index.js";
 import AppConfig from "./config/index.js";
 import ApiRouter from "./routes/index.js";
 
+dotenv.config();
+
 const app = express();
 const server = createServer(app);
 const port = AppConfig.port;
+
+// ===== Socket.IO =====
 const io = new Server(server, {
   cors: "http://localhost:5173", // replace with your React app URL
 });
 
-dotenv.config();
 db.sequelize.sync({ force: false });
 app.use(
   cors({
@@ -68,6 +71,19 @@ app.use(passport.initialize());
 app.use("/uploads", express.static("uploads"));
 
 app.use(`/api/${AppConfig.apiVersion}`, ApiRouter[AppConfig.apiVersion]);
+
+
+// ===== Error handler (catch all) =====
+// ===== Error handler (catch all) =====
+app.use((err, req, res, next) => {
+  console.error("❌ Error:", err);
+
+  res.status(500).json({
+    error: "Internal Server Error",
+    message: err.message, // show message để debug
+    stack: err.stack,     // show stack trace để biết ở đâu lỗi
+  });
+});
 
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
