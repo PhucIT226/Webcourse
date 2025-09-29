@@ -160,4 +160,14 @@
  =  `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
  = )
  =
+ = *14*.
+ = CREATE TABLE `refresh_tokens` (
+ =  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+ =  `userId` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+ =  `token` varchar(255) NOT NULL,
+ =  `expiresAt` datetime DEFAULT NULL,
+ =  `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
+ =  `updatedAt` datetime NOT NULL DEFAULT current_timestamp()
+ = )
+ =
 # ---------------------------------------------------------------------------- `DATABASE` -------------------------------------------------------------------------------

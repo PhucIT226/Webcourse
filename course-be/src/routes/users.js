@@ -1,18 +1,15 @@
-// import express from 'express';
-// import middlewares from '../middlewares/index.js';
-// import {
-//   getAllUsers,
-//   getUserById,
-//   updateUser,
-//   deleteUser,
-// } from '../controllers/user.controller.js';
+import express from 'express';
+import middlewares from '../middlewares/index.js';
+import UserController from '../controllers/user.controller.js';
 
-// const router = express.Router();
+const router = express.Router();
+const controller = new UserController();
 
-// // Admin thao tác tất cả user
-// router.get('/', middlewares.auth, middlewares.role('admin'), getAllUsers);
-// router.get('/:id', middlewares.auth, middlewares.role('admin'), getUserById);
-// router.patch('/:id', middlewares.auth, middlewares.role('admin'), updateUser);
-// router.delete('/:id', middlewares.auth, middlewares.role('admin'), deleteUser);
+// Admin thao tác tất cả user
+router.get('/', middlewares.auth, middlewares.role('admin'), controller.getListUsers);
+router.get('/:id', middlewares.auth, middlewares.role('admin'), controller.getUserById);
+router.post('/', middlewares.auth, middlewares.role('admin'), controller.createUser);
+router.patch('/:id', middlewares.auth, middlewares.role('admin'), controller.updateUser);
+router.delete('/:id', middlewares.auth, middlewares.role('admin'), controller.deleteUser);
 
-// export default router;
+export default router;
