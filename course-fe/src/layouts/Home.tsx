@@ -1,12 +1,12 @@
 import "../../../styles/user/home/home.scss";
-import Courses from "./Content/Coures";
-import Categories from "./Content/Categories";
-import Slider from "./Content/Slider";
+import Courses from "../pages/user/Home/Content/Coures";
+import Categories from "../pages/user/Home/Content/Categories";
+import Slider from "../pages/user/Home/Content/Slider";
 import "../../../styles/user/home/home.scss";
-import DetailPanel from "./Content/DetailPanel";
-import Testimonials from "./Content/Testimonials";
-import Header from "./Header/Header";
-import Footer from "./Footer/Footer";
+import DetailPanel from "../pages/user/Home/Content/DetailPanel";
+import Testimonials from "../pages/user/Home/Content/Testimonials";
+import Header from "../pages/user/Home/Header/Header";
+import Footer from "../pages/user/Home/Footer/Footer";
 
 const Home = () => {
   return (
