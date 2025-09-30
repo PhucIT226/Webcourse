@@ -5,3 +5,7 @@
 .disabled {
   @apply disabled:bg-gray-400 disabled:text-gray-700 cursor-not-allowed;
 }
+
+a {
+  @apply no-underline;
+}

@@ -12,9 +12,11 @@ import {
   FaStarHalfAlt,
   FaCreditCard,
 } from "react-icons/fa";
+import ThemeToggle from "../components/ThemeToggle";
 import { Link, useLocation } from "react-router-dom";
 import type { Menu } from "../types/menu";
 import type { TAny } from "../types/common";
+import SearchBar from "../components/SearchBar";
 
 type AdminLayoutProps = {
   children: ReactNode;
@@ -136,7 +138,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     />
                     <span
                       className={`flex-1 truncate ${
-                        sidebarOpen ? "inline" : "hidden"
+                        sidebarOpen ? "inline-block" : "hidden"
                       }`}
                     >
                       {item.label}
@@ -196,9 +198,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               <FaBars />
             </button>
 
+            {/* Search */}
+            <SearchBar placeholder="Tìm kiếm..." />
           </div>
           <div className="flex items-center gap-4">
             <FaRegBell className="text-gray-400 text-lg cursor-pointer" />
+            <ThemeToggle />
             <img
               src="https://flagcdn.com/us.svg"
               alt="US"

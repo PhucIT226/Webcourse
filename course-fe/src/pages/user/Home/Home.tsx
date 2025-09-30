@@ -5,11 +5,15 @@ import Slider from "./Content/Slider";
 import "../../../styles/user/home/home.scss";
 import DetailPanel from "./Content/DetailPanel";
 import Testimonials from "./Content/Testimonials";
+import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 
 const Home = () => {
   return (
     <>
+      <div className="header-container">
+          <Header />
+      </div>
       <div className="swiper-container mb-5">
         <Slider />
       </div>
