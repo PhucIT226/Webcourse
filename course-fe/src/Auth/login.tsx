@@ -4,6 +4,8 @@ import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
 import "../styles/auth/login.scss";
 import type { LoginForm } from "../types/auth";
+import { useAppDispatch } from "../hooks";
+import { signin } from "../redux/authSlice";
 
 const schema = yup.object({
   email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
@@ -11,6 +13,7 @@ const schema = yup.object({
     .string()
     .min(6, "Mật khẩu ít nhất 6 ký tự")
     .required("Mật khẩu là bắt buộc"),
+  isRemember: yup.boolean().required(),
 });
 
 const Login = () => {
@@ -20,12 +23,16 @@ const Login = () => {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      isRemember: false,
+    },
   });
   const navigate = useNavigate();
-
-  const onSubmit = (data:LoginForm) => {
-    console.log("Login Data:", data);
-    alert(`Email: ${data.email}\nPassword: ${data.password}`);
+  const dispatch = useAppDispatch();
+  
+  const onSubmit = (data: LoginForm) => {
+    dispatch(signin(data));
+    navigate("/courses");
   };
 
   return (

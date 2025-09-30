@@ -9,14 +9,16 @@ import Register from "./Auth/register";
 
 const Layout = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Intro />} />
-      <Route path="/courses" element={<App />}>
-        <Route index element={<Home />} />
-      </Route>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Intro />} />
+        <Route path="/courses" element={<App />}>
+          <Route index element={<Home />} />
+        </Route>
+        <Route path="courses/login" element={<Login />} />
+        <Route path="courses/register" element={<Register />} />
+      </Routes>
+    </>
   );
 };
 
