@@ -7,6 +7,7 @@ export type LoginForm = {
 export type LoginRes = {
   accessToken: string;
   refreshToken: string;
+  user: string;
 };
 
 export type LogoutRes = {
