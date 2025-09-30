@@ -5,13 +5,13 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import "./styles/index.css";
 // import "./styles/user/index.scss";
-import Layout from "./Layout.tsx";
+import App from "./App.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <BrowserRouter>
       <StrictMode>
-        <Layout />
+        <App />
       </StrictMode>
     </BrowserRouter>
   </Provider>
