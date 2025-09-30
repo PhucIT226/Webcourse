@@ -1,19 +1,21 @@
-import axios from "./axiosClient";
-import type { LoginForm, LoginRes, LogoutRes, UserRes } from "../types/auth";
+import type {
+  LoginForm,
+  LoginRes,
+  RegisterForm,
+  RegisterRes,
+} from "../types/auth";
+import axios from "../utils/axiosCustomize";
 
-export const AuthService = {
+export const authService = {
   async signin(data: LoginForm): Promise<LoginRes> {
-    const res = await axios.post<LoginRes>("auth/signin", data);
+    const res = await axios.post<LoginRes>("auth/login", data);
+    if (res.data.accessToken) {
+      localStorage.setItem("accessToken", res.data.accessToken);
+    }
     return res.data;
   },
-
-  async signout(): Promise<LogoutRes> {
-    const res = await axios.post<LogoutRes>("auth/signout");
-    return res.data;
-  },
-
-  async getMe(): Promise<UserRes> {
-    const res = await axios.get<UserRes>("auth/me");
+  async signup(data: RegisterForm): Promise<RegisterRes> {
+    const res = await axios.post<RegisterRes>("auth/register", data);
     return res.data;
   },
 };

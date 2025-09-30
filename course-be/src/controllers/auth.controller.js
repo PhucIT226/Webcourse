@@ -44,30 +44,39 @@ class AuthController extends BaseController {
     const valid = await HashHelper.comparePassword(password, user.passwordHash);
     if (!valid) return res.status(400).json({ message: "Invalid credentials" });
 
-    const { accessToken, refreshToken } = await JwtHelper.generateTokens(user.id, !isRemember);
+    const { accessToken, refreshToken } = await JwtHelper.generateTokens(
+      user.id,
+      !isRemember
+    );
     JwtHelper.setTokensAsCookies(res, accessToken, refreshToken);
     res.json({ accessToken, refreshToken });
   }
 
   async refreshToken(req, res) {
     const token = req.cookies.refreshToken || req.body.refreshToken;
-    if (!token) return res.status(401).json({ message: "Missing refresh token" });
+    if (!token)
+      return res.status(401).json({ message: "Missing refresh token" });
 
     const payload = JwtHelper.verifyToken(token, "refresh");
-    if (!payload) return res.status(403).json({ message: "Invalid refresh token" });
+    if (!payload)
+      return res.status(403).json({ message: "Invalid refresh token" });
 
     const user = await this.service.getUserById(payload.sub, true);
     if (!user || user.refreshToken !== token)
       return res.status(403).json({ message: "Refresh token revoked" });
 
-    const { accessToken, refreshToken } = await JwtHelper.generateTokens(payload.sub, false);
+    const { accessToken, refreshToken } = await JwtHelper.generateTokens(
+      payload.sub,
+      false
+    );
     JwtHelper.setTokensAsCookies(res, accessToken, refreshToken);
     res.json({ accessToken, refreshToken });
   }
 
   async logout(req, res) {
     const userId = req.user?.id;
-    if (userId) await this.service.updateUser(userId, { refreshToken: null }, true);
+    if (userId)
+      await this.service.updateUser(userId, { refreshToken: null }, true);
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
     res.json({ message: "Signed out" });
