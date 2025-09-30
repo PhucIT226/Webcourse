@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../constant";
+import { store } from "../redux/store";
 const instance = axios.create({
   baseURL: "http://localhost:3000/api/v1",
   headers: {
@@ -11,11 +12,14 @@ const instance = axios.create({
 // Set config defaults when creating the instance
 
 // Alter defaults after instance has been created
-instance.defaults.headers.common["Authorization"] = "AUTH_TOKEN";
+// instance.defaults.headers.common["Authorization"] = "AUTH_TOKEN";
 // Add a request interceptor
 instance.interceptors.request.use(
   function (config) {
     // Do something before request is sent
+    const access_token = store?.getState();
+    // config.headers["Authorization"] = "Bearer " + access_token;
+    console.log(access_token);
     return config;
   },
   function (error) {
