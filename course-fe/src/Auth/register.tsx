@@ -3,6 +3,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import "../styles/auth/register.scss";
 import { useNavigate } from "react-router-dom";
+import type { RegisterForm } from "../types/auth";
+import { authService } from "../services/authService";
 
 // ✅ Schema validate cho Register
 const schema = yup.object({
@@ -28,9 +30,9 @@ const Register = () => {
   });
   const navigate = useNavigate();
 
-  const onSubmit = (data) => {
-    console.log("Register Data:", data);
-    alert(`Đăng ký thành công!\nTên: ${data.name}\nEmail: ${data.email}`);
+  const onSubmit = async (data: RegisterForm) => {
+    await authService.signup(data);
+    navigate("/login");
   };
 
   return (
