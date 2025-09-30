@@ -13,7 +13,7 @@ const Home = () => {
     <>
       <div className="header-container">
           <Header />
-        </div>
+      </div>
       <div className="swiper-container mb-5">
         <Slider />
       </div>
