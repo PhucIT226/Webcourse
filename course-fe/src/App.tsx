@@ -1,4 +1,3 @@
-
 import "./styles/user/App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Routes, useNavigate } from "react-router-dom";
@@ -15,38 +14,39 @@ import Categories from "./pages/admin/categories/categories";
 import CategoriesForm from "./pages/admin/categories/categories-form";
 import Shipping from "./pages/admin/shipping/shipping";
 import Profile from "./pages/admin/setting/profile";
-import User from "./pages/user/user";
+
 import { useEffect } from "react";
+import User from "./pages/user/user";
 
 function App() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   useEffect(() => {
     // navigate('intro')
-  }, [])
+  }, []);
 
   return (
     <Routes>
-           {/* User */}
-          <Route path="/" element={<User />}>
-            <Route index element={<Home />} />
-          </Route>
+      {/* User */}
+      <Route path="/" element={<User />}>
+        <Route index element={<Home />} />
+      </Route>
 
-          {/* Admin */}
-          <Route path="/admin" element={<Admin />}>
-            <Route index element={<Dashboard />} />
-            <Route path="product-list" element={<ProductList />} />
-            <Route path="user-list" element={<UserList />} />
-            <Route path="category-list" element={<Categories />} />
-            <Route path="category-form" element={<CategoriesForm />} />
-            <Route path="category-form/:id" element={<CategoriesForm />} />
-            <Route path="shipping" element={<Shipping />} />
-            <Route path="profile" element={<Profile />} />
-          </Route>
-          
-          <Route path="/intro" element={<Intro />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
+      {/* Admin */}
+      <Route path="/admin" element={<Admin />}>
+        <Route index element={<Dashboard />} />
+        <Route path="product-list" element={<ProductList />} />
+        <Route path="user-list" element={<UserList />} />
+        <Route path="category-list" element={<Categories />} />
+        <Route path="category-form" element={<CategoriesForm />} />
+        <Route path="category-form/:id" element={<CategoriesForm />} />
+        <Route path="shipping" element={<Shipping />} />
+        <Route path="profile" element={<Profile />} />
+      </Route>
+
+      <Route path="/intro" element={<Intro />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
   );
 }
 
