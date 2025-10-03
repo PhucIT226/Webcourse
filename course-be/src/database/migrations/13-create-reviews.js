@@ -24,6 +24,11 @@ export async function up(queryInterface, Sequelize) {
       validate: { min: 1, max: 5 },
     },
     comment: { type: Sequelize.TEXT, allowNull: true },
+    status: {
+      type: Sequelize.ENUM("pending", "approved", "rejected"),
+      allowNull: false,
+      defaultValue: "pending",
+    },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: false,
