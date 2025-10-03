@@ -12,10 +12,11 @@ export async function up(queryInterface, Sequelize) {
       allowNull: false,
       unique: true
     },
-    parentId: {
-      type: Sequelize.UUID,
-      references: { model: "categories", key: "id" },
-      onDelete: "SET NULL",
+    description: { type: Sequelize.TEXT, allowNull: true, },
+    status: {
+      type: Sequelize.ENUM("active", "hidden"),
+      allowNull: false,
+      defaultValue: "active",
     },
     createdAt: {
       type: Sequelize.DATE,

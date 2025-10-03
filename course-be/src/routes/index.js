@@ -1,9 +1,8 @@
 import { Router } from 'express';
 
-// Import routes từng module
 import authRoutes from './auth.js';
-// import rolesRoutes from './roles.js';
-// import usersRoutes from './users.js';
+import rolesRoutes from './roles.js';
+import usersRoutes from './users.js';
 // import profilesRoutes from './profiles.js';
 // import categoriesRoutes from './categories.js';
 // import coursesRoutes from './courses.js';
@@ -19,8 +18,8 @@ import uploadsRoutes from './uploads.js';
 export default {
     v1: Router()
       .use("/auth", authRoutes)
-    //   .use("/roles", rolesRoutes)
-    //   .use("/users", usersRoutes)
+      .use("/roles", rolesRoutes)
+      .use("/users", usersRoutes)
     //   .use("/profiles", profilesRoutes)
     //   .use("/categories", categoriesRoutes)
     //   .use("/courses", coursesRoutes)

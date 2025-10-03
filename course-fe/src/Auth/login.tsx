@@ -32,7 +32,7 @@ const Login = () => {
   
   const onSubmit = (data: LoginForm) => {
     dispatch(signin(data));
-    navigate("/courses");
+    navigate("/");
   };
 
   return (

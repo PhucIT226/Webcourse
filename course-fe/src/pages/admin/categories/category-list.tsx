@@ -1,54 +1,54 @@
 import { useEffect, useState } from "react";
 
-type User = {
+type Category = {
   id: number;
   name: string;
-  email: string;
-  courses: number;
-  progress: number;
-  status: string;
+  slug: string;
+  description?: string;
+  courseCount: number;
+  status: "active" | "hidden";
   createdAt: string;
 };
 
-export default function UserListPage() {
-  const [users, setUsers] = useState<User[]>([]);
+export default function CategoryListPage() {
+  const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     // Giả lập API
-    setUsers([
+    setCategories([
       {
         id: 1,
-        name: "Nguyễn Văn A",
-        email: "vana@example.com",
-        courses: 3,
-        progress: 75,
+        name: "Lập trình",
+        slug: "lap-trinh",
+        description: "Khóa học về phát triển phần mềm",
+        courseCount: 12,
         status: "active",
-        createdAt: "10-01-2025",
+        createdAt: "2025-01-05",
       },
       {
         id: 2,
-        name: "Trần Thị B",
-        email: "thib@example.com",
-        courses: 1,
-        progress: 20,
-        status: "inactive",
-        createdAt: "09-02-2025",
+        name: "Thiết kế",
+        slug: "thiet-ke",
+        description: "Khóa học thiết kế đồ họa & UI/UX",
+        courseCount: 8,
+        status: "hidden",
+        createdAt: "2025-01-20",
       },
     ]);
   }, []);
 
-  const filteredUsers = users.filter(
-    (u) =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase())
+  const filteredCategories = categories.filter(
+    (c) =>
+      c.name.toLowerCase().includes(search.toLowerCase()) ||
+      c.slug.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <div className="p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Quản lý học viên</h1>
+        <h1 className="text-xl font-bold">Quản lý danh mục</h1>
         <div className="flex gap-2">
           <input
             type="text"
@@ -69,45 +69,37 @@ export default function UserListPage() {
           <thead className="bg-gray-100 text-gray-700 uppercase">
             <tr>
               <th className="px-4 py-3">ID</th>
-              <th className="px-4 py-3">Họ và tên</th>
-              <th className="px-4 py-3">Email</th>
+              <th className="px-4 py-3">Tên danh mục</th>
+              <th className="px-4 py-3">Slug</th>
+              <th className="px-4 py-3">Mô tả</th>
               <th className="px-4 py-3">Số khóa học</th>
-              <th className="px-4 py-3">Tiến độ</th>
               <th className="px-4 py-3">Trạng thái</th>
               <th className="px-4 py-3">Ngày tạo</th>
               <th className="px-4 py-3 text-right">Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
-              <tr key={user.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{user.id}</td>
-                <td className="px-4 py-2">{user.name}</td>
-                <td className="px-4 py-2">{user.email}</td>
-                <td className="px-4 py-2">{user.courses}</td>
-                <td className="px-4 py-2">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-500 h-2 rounded-full"
-                      style={{ width: `${user.progress}%` }}
-                    ></div>
-                  </div>
-                  <span className="text-xs text-gray-600">
-                    {user.progress}%
-                  </span>
+            {filteredCategories.map((cat) => (
+              <tr key={cat.id} className="border-b hover:bg-gray-50">
+                <td className="px-4 py-2">{cat.id}</td>
+                <td className="px-4 py-2 font-medium">{cat.name}</td>
+                <td className="px-4 py-2 text-gray-500">{cat.slug}</td>
+                <td className="px-4 py-2 text-gray-700">
+                  {cat.description || "-"}
                 </td>
+                <td className="px-4 py-2">{cat.courseCount}</td>
                 <td className="px-4 py-2">
                   <span
                     className={`px-2 py-1 rounded text-xs ${
-                      user.status === "active"
+                      cat.status === "active"
                         ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
+                        : "bg-gray-200 text-gray-600"
                     }`}
                   >
-                    {user.status}
+                    {cat.status === "active" ? "Hoạt động" : "Ẩn"}
                   </span>
                 </td>
-                <td className="px-4 py-2">{user.createdAt}</td>
+                <td className="px-4 py-2">{cat.createdAt}</td>
                 <td className="px-4 py-2 text-right">
                   <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded mr-2">
                     Sửa
@@ -118,10 +110,13 @@ export default function UserListPage() {
                 </td>
               </tr>
             ))}
-            {filteredUsers.length === 0 && (
+            {filteredCategories.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-4 text-center text-gray-500">
-                  Không có học viên nào
+                <td
+                  colSpan={8}
+                  className="px-4 py-4 text-center text-gray-500"
+                >
+                  Không có danh mục nào
                 </td>
               </tr>
             )}

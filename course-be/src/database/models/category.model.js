@@ -27,7 +27,12 @@ export default (sequelize) => {
         allowNull: false,
         unique: true,
       },
-      parentId: { type: DataTypes.UUID, allowNull: true },
+      description: { type: DataTypes.TEXT, allowNull: true },
+      status: {
+        type: DataTypes.ENUM("active", "hidden"),
+        allowNull: false,
+        defaultValue: "active",
+      },
     },
     {
       sequelize,

@@ -27,8 +27,13 @@ export default (sequelize) => {
         unique: true,
       },
       passwordHash: { type: DataTypes.STRING(255), allowNull: false },
-      avatarUrl: { type: DataTypes.STRING(500), allowNull: true },
       roleId: { type: DataTypes.UUID, allowNull: false },
+      avatarUrl: { type: DataTypes.STRING(500), allowNull: true },
+      status: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        defaultValue: "active",
+      },
     },
     {
       sequelize, // truyền kết nối

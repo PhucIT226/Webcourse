@@ -28,6 +28,7 @@ export async function up(queryInterface) {
     passwordHash: password,
     roleId: adminRoleId,
     avatarUrl: null,
+    status: "active",
     createdAt: now,
     updatedAt: now,
   });
@@ -54,6 +55,7 @@ export async function up(queryInterface) {
       passwordHash: password,
       roleId: instructorRoleId,
       avatarUrl: null,
+      status: "active",
       createdAt: now,
       updatedAt: now,
     });
@@ -81,6 +83,7 @@ export async function up(queryInterface) {
       passwordHash: password,
       roleId: studentRoleId,
       avatarUrl: null,
+      status: faker.helpers.arrayElement(["active", "inactive"]),
       createdAt: now,
       updatedAt: now,
     });
