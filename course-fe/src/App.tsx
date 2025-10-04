@@ -12,6 +12,7 @@ import InstructorList from "./pages/admin/instructors/instructor-list";
 import CategoryList from "./pages/admin/categories/category-list";
 import OrderList from "./pages/admin/orders/order-list";
 import ReviewList from "./pages/admin/reviews/review-list";
+import CouponList from "./pages/admin/coupons/coupon-list";
 import Profile from "./pages/admin/setting/profile";
 
 import { useEffect } from "react";
@@ -39,6 +40,7 @@ function App() {
         <Route path="category-list" element={<CategoryList />} />
         <Route path="order-list" element={<OrderList />} />
         <Route path="review-list" element={<ReviewList />} />
+        <Route path="coupon-list" element={<CouponList />} />
         <Route path="profile" element={<Profile />} />
       </Route>
 

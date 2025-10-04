@@ -4,7 +4,7 @@ import type {
   RegisterForm,
   RegisterRes,
 } from "../types/auth";
-import axios from "../utils/axiosCustomize";
+import axios from "../services/axiosClient";
 
 export const authService = {
   async signin(data: LoginForm): Promise<LoginRes> {
