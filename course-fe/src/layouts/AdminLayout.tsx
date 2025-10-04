@@ -9,6 +9,7 @@ import {
   FaRegBell,
   FaRegCommentDots,
   FaTags,
+  FaGift,
   FaUserCog,
   FaStarHalfAlt,
   FaCreditCard,
@@ -73,6 +74,13 @@ const menu: MenuType = [
     to: "review-list",
     icon: FaStarHalfAlt,
     defaultColor: "text-yellow-500",
+    children: [],
+  },
+  {
+    label: "Voucher",
+    to: "coupon-list",   
+    icon: FaGift,       
+    defaultColor: "text-red-500",
     children: [],
   },
   {
