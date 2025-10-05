@@ -1,9 +1,18 @@
 import { MdOutlineStar } from "react-icons/md";
-import Fullstack from "../../../../assets/fullstack.png";
-import Digital from "../../../../assets/digital.jpg";
-import DataScience from "../../../../assets/datascience.jpg";
+import { useEffect } from "react";
+import type { Course } from "../../../../types/course";
+import { useAppDispatch, useAppSelector } from "../../../../hooks";
+import { fetchCourses } from "../../../../redux/courseSlice";
 
 const Courses = () => {
+  const dispatch = useAppDispatch();
+  const courses = useAppSelector((state) => state.course.data);
+  const loading = useAppSelector((state) => state.course.loading);
+
+  useEffect(() => {
+    dispatch(fetchCourses());
+  }, [dispatch]);
+
   return (
     <div className="container">
       <div className="row">
@@ -16,62 +25,31 @@ const Courses = () => {
             Accelerators.
           </p>
         </div>
-        <a href="">
-          <div className="course-card mt-3 col col-lg-4">
-            <div className="course-card_image mb-3">
-              <img src={Fullstack} />
-            </div>
-            <div className="course-card_title mb-3">
-              Fullstack Web Developer
-            </div>
-            <div className="course-stats">
-              <div className="course-card_star">
-                <MdOutlineStar className="star-color" />
-                <span>4.7</span>
+
+        {loading && <p>Loading...</p>}
+        {!loading &&
+          courses.map((course: Course) => (
+            <a href="#" key={course.id}>
+              <div className="course-card mt-3 col col-lg-4">
+                <div className="course-card_image mb-3">
+                  {course.thumbnailUrls?.[0] && (
+                    <img src={course.thumbnailUrls[0].url} alt={course.title} />
+                  )}
+                </div>
+                <div className="course-card_title mb-3">{course.title}</div>
+                <div className="course-stats">
+                  <div className="course-card_star">
+                    <MdOutlineStar className="star-color" />
+                    <span>4.7</span>
+                  </div>
+                  <div className="course-card_rating">458k Rating</div>
+                  <div className="vid_length">
+                    <span>87,8 total hours</span>
+                  </div>
+                </div>
               </div>
-              <div className="course-card_rating">458k Rating</div>
-              <div className="vid_length">
-                <span>87,8 total hours</span>
-              </div>
-            </div>
-          </div>
-        </a>
-        <a href="">
-          <div className="course-card mt-3 col col-lg-4">
-            <div className="course-card_image mb-3">
-              <img src={Digital} />
-            </div>
-            <div className="course-card_title mb-3">Digital Marketer</div>
-            <div className="course-stats">
-              <div className="course-card_star">
-                <MdOutlineStar className="star-color" />
-                <span>4.7</span>
-              </div>
-              <div className="course-card_rating">458k Rating</div>
-              <div className="vid_length">
-                <span>87,8 total hours</span>
-              </div>
-            </div>
-          </div>
-        </a>
-        <a href="">
-          <div className="course-card mt-3 col col-lg-4">
-            <div className="course-card_image mb-3">
-              <img src={DataScience} />
-            </div>
-            <div className="course-card_title mb-3">Data Scientist</div>
-            <div className="course-stats">
-              <div className="course-card_star">
-                <MdOutlineStar className="star-color" />
-                <span>4.7</span>
-              </div>
-              <div className="course-card_rating">458k Rating</div>
-              <div className="vid_length">
-                <span>87,8 total hours</span>
-              </div>
-            </div>
-          </div>
-        </a>
+            </a>
+          ))}
       </div>
     </div>
   );
