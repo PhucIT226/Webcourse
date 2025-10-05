@@ -171,3 +171,14 @@
  = )
  =
 # ---------------------------------------------------------------------------- `DATABASE` -------------------------------------------------------------------------------
+
+
+  id: 1,
+        title: "React Cơ Bản",
+        description: "Học cách xây dựng ứng dụng React từ đầu",
+        instructor: "Nguyễn Văn A",
+        category: "Front-end",
+        price: 499000,
+        students: 120,
+        createdAt: "2025-01-10",
+        status: "published",

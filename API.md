@@ -124,3 +124,33 @@
  = - Sử dụng standard HTTP status codes, trả về error object {code, message, details?}.
  =
 # ------------------------------------------------------------------------------- `API` ---------------------------------------------------------------------------------
+
+
+
+
+
+Những module có thể cân nhắc thêm nếu muốn hoàn thiện hơn:
+
+Quản lý Voucher / Coupon / Khuyến mãi
+
+Cho phép tạo mã giảm giá, ngày hết hạn, số lượng, áp dụng cho khóa học nào.
+
+Quản lý Trang / Nội dung (CMS)
+
+Trang About, FAQ, Blog, hoặc banner quảng cáo.
+
+Quản lý Báo cáo / Thống kê
+
+Doanh thu, số học viên theo khóa học, khóa học hot, lượt đăng ký theo tháng…
+
+Quản lý Cấu hình Website / Cài đặt
+
+Logo, favicon, email liên hệ, phương thức thanh toán.
+
+Quản lý Vai trò / Quyền hạn (Roles & Permissions)
+
+Nếu admin có nhiều cấp (super admin, editor, etc).
+
+Hỗ trợ / Ticket / Chat (optional)
+
+Quản lý yêu cầu hỗ trợ của học viên, feedback từ user.

@@ -1,5 +1,3 @@
-import "./styles/user/App.scss";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Intro from "./pages/user/Intro/Intro";
 import Home from "./pages/user/Home/Home";
@@ -8,11 +6,13 @@ import Register from "./Auth/register";
 
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
-import ProductList from "./pages/admin/products/product-list";
+import CourseList from "./pages/admin/courses/course-list";
 import UserList from "./pages/admin/users/user-list";
-import Categories from "./pages/admin/categories/categories";
-import CategoriesForm from "./pages/admin/categories/categories-form";
-import Shipping from "./pages/admin/shipping/shipping";
+import InstructorList from "./pages/admin/instructors/instructor-list";
+import CategoryList from "./pages/admin/categories/category-list";
+import OrderList from "./pages/admin/orders/order-list";
+import ReviewList from "./pages/admin/reviews/review-list";
+import CouponList from "./pages/admin/coupons/coupon-list";
 import Profile from "./pages/admin/setting/profile";
 import User from "./pages/user/user";
 import { useEffect, useState } from "react";
@@ -43,12 +43,13 @@ function App() {
       {/* Admin */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<Dashboard />} />
-        <Route path="product-list" element={<ProductList />} />
+        <Route path="course-list" element={<CourseList />} />
         <Route path="user-list" element={<UserList />} />
-        <Route path="category-list" element={<Categories />} />
-        <Route path="category-form" element={<CategoriesForm />} />
-        <Route path="category-form/:id" element={<CategoriesForm />} />
-        <Route path="shipping" element={<Shipping />} />
+        <Route path="instructor-list" element={<InstructorList />} />
+        <Route path="category-list" element={<CategoryList />} />
+        <Route path="order-list" element={<OrderList />} />
+        <Route path="review-list" element={<ReviewList />} />
+        <Route path="coupon-list" element={<CouponList />} />
         <Route path="profile" element={<Profile />} />
       </Route>
       {showIntro && (

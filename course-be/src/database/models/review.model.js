@@ -24,6 +24,11 @@ export default (sequelize) => {
         validate: { min: 1, max: 5 },
       },
       comment: { type: DataTypes.TEXT, allowNull: true },
+      status: {
+        type: DataTypes.ENUM("pending", "approved", "rejected"),
+        allowNull: false,
+        defaultValue: "pending",
+      },
     },
     {
       sequelize,

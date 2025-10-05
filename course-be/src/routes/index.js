@@ -1,12 +1,11 @@
 import { Router } from 'express';
 
-// Import routes từng module
 import authRoutes from './auth.js';
-// import rolesRoutes from './roles.js';
-// import usersRoutes from './users.js';
+import rolesRoutes from './roles.js';
+import usersRoutes from './users.js';
 // import profilesRoutes from './profiles.js';
 // import categoriesRoutes from './categories.js';
-// import coursesRoutes from './courses.js';
+import coursesRoutes from './courses.js';
 // import lessonsRoutes from './lessons.js';
 // import ordersRoutes from './orders.js';
 // import orderItemsRoutes from './orderItems.js';
@@ -19,11 +18,11 @@ import uploadsRoutes from './uploads.js';
 export default {
     v1: Router()
       .use("/auth", authRoutes)
-    //   .use("/roles", rolesRoutes)
-    //   .use("/users", usersRoutes)
+      .use("/roles", rolesRoutes)
+      .use("/users", usersRoutes)
     //   .use("/profiles", profilesRoutes)
     //   .use("/categories", categoriesRoutes)
-    //   .use("/courses", coursesRoutes)
+      .use("/courses", coursesRoutes)
     //   .use("/auth", authRoutes)
     //   .use("/auth", authRoutes)
     //   .use("/auth", authRoutes)

@@ -24,6 +24,7 @@ export async function up(queryInterface) {
         courseId: course.id,
         rating: faker.number.int({ min: 1, max: 5 }),
         comment: faker.lorem.sentences(2),
+        status: faker.helpers.arrayElement(["pending", "approved", "rejected"]),
         createdAt: now,
         updatedAt: now,
       });

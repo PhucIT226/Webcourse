@@ -20,6 +20,11 @@ export async function up(queryInterface, Sequelize) {
       onDelete: "RESTRICT",
     },
     avatarUrl: { type: Sequelize.STRING(500), allowNull: true },
+    status: {
+      type: Sequelize.ENUM("active", "inactive", "banned", "pending"),
+      allowNull: false,
+      defaultValue: "active",
+    },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: false,
