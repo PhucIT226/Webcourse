@@ -111,10 +111,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex bg-[#f9fafb]">
+    <div className="flex min-h-screen bg-[#f9fafb]">
       {/* Sidebar */}
       <aside
-        className={`transition-all duration-200 bg-base-100 text-base-content shadow-lg border-r border-base-300 h-screen fixed z-30 top-0 left-0 ${
+        className={`fixed top-0 left-0 h-screen bg-base-100 text-base-content shadow-lg border-r border-base-300 transition-all duration-200 z-30 ${
           sidebarOpen ? "w-64" : "w-20"
         }`}
       >
@@ -129,6 +129,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             className="h-8"
           />
         </Link>
+
         {/* Menu */}
         <nav className="flex-1 flex flex-col px-2 py-4 overflow-y-auto">
           <ul className="space-y-1">
@@ -144,7 +145,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         : "text-gray-700 hover:bg-[#dbeafe] hover:text-[#2563eb]"
                     }`}
                   >
-                    {/* Icon với màu động */}
                     <Icon
                       className={`text-lg mr-3 transition-colors ${
                         item.active
@@ -159,21 +159,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     >
                       {item.label}
                     </span>
-                    {item.badge && sidebarOpen && (
-                      <span
-                        className={`ml-2 text-xs px-2 py-0.5 rounded-full ${
-                          typeof item.badge === "string"
-                            ? "bg-blue-100 text-blue-600"
-                            : "bg-indigo-100 text-indigo-600"
-                        }`}
-                      >
-                        {item.badge}
-                      </span>
-                    )}
-                    {item.children &&
-                      item.children.length > 0 &&
-                      sidebarOpen && <FaChevronDown className="ml-2 text-xs" />}
                   </Link>
+
                   {/* Submenu */}
                   {item.children && item.children.length > 0 && sidebarOpen && (
                     <ul className="ml-10 mt-1 space-y-1">
@@ -200,12 +187,19 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
       {/* Main Content Area */}
       <div
-        className={`flex-1 flex flex-col min-h-screen transition-all duration-200 ${
-          sidebarOpen ? "ml-64" : "ml-20"
-        }`}
+        className="flex-1 flex flex-col min-h-screen transition-all duration-200"
+        style={{
+          marginLeft: sidebarOpen ? "16rem" : "5rem",
+        }}
       >
         {/* Header */}
-        <header className="flex items-center dark:bg-gray-900 justify-between bg-white shadow px-6 h-16 sticky top-0 z-20">
+        <header
+          className="fixed top-0 left-0 right-0 h-16 bg-white shadow z-20 flex items-center justify-between px-6 transition-all duration-200"
+          style={{
+            left: sidebarOpen ? "16rem" : "5rem",
+            width: sidebarOpen ? "calc(100% - 16rem)" : "calc(100% - 5rem)",
+          }}
+        >
           <div className="flex items-center gap-4">
             <button
               className="text-2xl text-gray-600"
@@ -213,8 +207,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             >
               <FaBars />
             </button>
-
-            {/* Search */}
             <SearchBar placeholder="Tìm kiếm..." />
           </div>
           <div className="flex items-center gap-4">
@@ -235,11 +227,13 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             </Link>
           </div>
         </header>
+
         {/* Content */}
-        <main className="flex-1 p-6 bg-[#f9fafb]">{children}</main>
+        <main className="flex-1 p-6 pt-20 bg-[#f9fafb]">{children}</main>
+
         {/* Footer */}
-        <footer className="bg-white text-center py-3 text-gray-500 text-sm shadow-inner">
-          Copyright © {new Date().getFullYear()} Axelit. All rights reserved
+        <footer className="bg-white text-center py-3 text-gray-500 text-sm shadow-inner mt-auto">
+          Copyright © {new Date().getFullYear()} Axelit.{" "}
           <span className="text-pink-400 mx-1">♥</span> v1.0.0
         </footer>
       </div>

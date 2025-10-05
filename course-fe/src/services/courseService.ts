@@ -1,29 +1,29 @@
-import axiosClient from "./axiosClient";
+import axios from "./axiosClient";
 import type { Course, CourseResDto, GetAllCourseParams } from "../types/course";
 
 const CourseService = {
   async getAll(params?: GetAllCourseParams): Promise<CourseResDto> {
-    const res = await axiosClient.get<CourseResDto>("/courses", { params });
+    const res = await axios.get<CourseResDto>("/courses", { params });
     return res.data;
   },
 
   async getById(id: string): Promise<Course> {
-    const res = await axiosClient.get<Course>(`/courses/${id}`);
+    const res = await axios.get<Course>(`/courses/${id}`);
     return res.data;
   },
 
   async create(course: Partial<Course>): Promise<Course> {
-    const res = await axiosClient.post<Course>("/courses", course);
+    const res = await axios.post<Course>("/courses", course);
     return res.data;
   },
 
   async update(id: string, course: Partial<Course>): Promise<Course> {
-    const res = await axiosClient.put<Course>(`/courses/${id}`, course);
+    const res = await axios.put<Course>(`/courses/${id}`, course);
     return res.data;
   },
 
-  async remove(id: string): Promise<void> {
-    await axiosClient.delete(`/courses/${id}`);
+  async delete(id: string): Promise<void> {
+    await axios.delete(`/courses/${id}`);
   },
 };
 
