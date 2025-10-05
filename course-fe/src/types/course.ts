@@ -3,11 +3,11 @@ import type { Image, Pagination } from "./common";
 export type Course = {
   id?: string;
   title: string;
-  description?: string; // ✅ Thêm mô tả
-  instructor: string;
-  category: string;
+  description?: string;
+  instructor: {name: string, email: string};
+  category: { name: string };
   price: number;
-  studentCount?: number; // ✅ Số học viên
+  studentCount?: number;
   createdAt?: string;
   status: "published" | "draft" | "closed";
   thumbnailUrls?: Image[];
