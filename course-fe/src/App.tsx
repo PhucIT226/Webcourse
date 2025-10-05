@@ -14,15 +14,24 @@ import Categories from "./pages/admin/categories/categories";
 import CategoriesForm from "./pages/admin/categories/categories-form";
 import Shipping from "./pages/admin/shipping/shipping";
 import Profile from "./pages/admin/setting/profile";
-
-import { useEffect } from "react";
 import User from "./pages/user/user";
+import { useEffect, useState } from "react";
 
 function App() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [showIntro, setShowIntro] = useState(true);
+  const hasSeenIntro = localStorage.getItem("hasSeeIntro");
   useEffect(() => {
-    // navigate('intro')
-  }, []);
+    if (hasSeenIntro && showIntro) {
+      navigate("intro");
+    }
+  }, [showIntro, navigate]);
+
+  const handleFinishIntro = () => {
+    localStorage.setItem("hasSeenIntro", "true");
+    setShowIntro(false);
+    navigate("/");
+  };
 
   return (
     <Routes>
@@ -42,8 +51,12 @@ function App() {
         <Route path="shipping" element={<Shipping />} />
         <Route path="profile" element={<Profile />} />
       </Route>
-
-      <Route path="/intro" element={<Intro />} />
+      {showIntro && (
+        <Route
+          path="/intro"
+          element={<Intro onHandleFinish={handleFinishIntro} />}
+        />
+      )}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>

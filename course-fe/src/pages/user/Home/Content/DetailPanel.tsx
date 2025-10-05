@@ -34,7 +34,7 @@ const DetailPanel = () => {
       icon: <FaCogs />,
     },
   ];
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState<number | null>(null);
 
   return (
     <>

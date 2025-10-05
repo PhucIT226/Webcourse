@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router";
 import videoSource from "../../../assets/istockphoto-2114486363-640_adpp_is.mp4";
 
-const Intro = () => {
-  const navigate = useNavigate();
-  const changeSite = () => {
-    navigate("/courses");
-  };
+type IntroProps = {
+  onHandleFinish: () => void;
+};
+
+const Intro: React.FC<IntroProps> = ({ onHandleFinish }) => {
   return (
     <>
       <div className="homepage-container">
@@ -18,7 +17,7 @@ const Intro = () => {
           Học code từ cơ bản đến nâng cao cùng mentor
         </div>
         <div className="title-2">
-          <button className="btn btn-primary" onClick={() => changeSite()}>
+          <button className="btn btn-primary" onClick={onHandleFinish}>
             Let's get started
           </button>
         </div>
