@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import CourseService from "../services/courseService";
 import type { Course, CourseResDto, GetAllCourseParams } from "../types/course";
+import type { TAny } from "../types/common";
 
 type CourseState = {
   data: Course[];
@@ -25,7 +26,7 @@ export const fetchCourses = createAsyncThunk<
 >("courses/fetchAll", async (params, { rejectWithValue }) => {
   try {
     return await CourseService.getAll(params);
-  } catch (err: any) {
+  } catch (err: TAny) {
     return rejectWithValue(err.response?.data?.message || err.message);
   }
 });
@@ -37,7 +38,7 @@ export const fetchCourseById = createAsyncThunk<
 >("courses/fetchById", async (id, { rejectWithValue }) => {
   try {
     return await CourseService.getById(id);
-  } catch (err: any) {
+  } catch (err: TAny) {
     return rejectWithValue(err.response?.data?.message || err.message);
   }
 });
@@ -49,7 +50,7 @@ export const createCourse = createAsyncThunk<
 >("courses/create", async (course, { rejectWithValue }) => {
   try {
     return await CourseService.create(course);
-  } catch (err: any) {
+  } catch (err: TAny) {
     return rejectWithValue(err.response?.data?.message || err.message);
   }
 });
@@ -61,7 +62,7 @@ export const updateCourse = createAsyncThunk<
 >("courses/update", async ({ id, course }, { rejectWithValue }) => {
   try {
     return await CourseService.update(id, course);
-  } catch (err: any) {
+  } catch (err: TAny) {
     return rejectWithValue(err.response?.data?.message || err.message);
   }
 });
@@ -74,7 +75,7 @@ export const deleteCourse = createAsyncThunk<
   try {
     await CourseService.remove(id);
     return id;
-  } catch (err: any) {
+  } catch (err: TAny) {
     return rejectWithValue(err.response?.data?.message || err.message);
   }
 });
@@ -100,7 +101,12 @@ const courseSlice = createSlice({
         fetchCourses.fulfilled,
         (state, action: PayloadAction<CourseResDto>) => {
           state.loading = false;
-          state.data = action.payload.data;
+          state.data = action.payload.data.map((course: TAny) => ({
+            ...course,
+            thumbnailUrls: course.thumbnailUrl
+              ? [{ url: course.thumbnailUrl }]
+              : [],
+          }));
           state.pagination = action.payload.pagination;
         }
       )

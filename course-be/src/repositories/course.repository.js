@@ -6,11 +6,17 @@ class CourseRepository {
   constructor() {
     this.model = db.Course;
     this.enrollmentModel = db.Enrollment; // Bảng lưu học viên đăng ký khóa học
-    this.paymentModel = db.Payment;       // Bảng lưu thông tin thanh toán
+    this.paymentModel = db.Payment; // Bảng lưu thông tin thanh toán
   }
 
   // Lấy tất cả course (có phân trang + search + lọc category/instructor)
-  async getAllCourses({ page = 1, pageSize = 10, search, category, instructor }) {
+  async getAllCourses({
+    page = 1,
+    pageSize = 10,
+    search,
+    category,
+    instructor,
+  }) {
     const where = {};
     if (search) {
       where[Op.or] = [
@@ -35,7 +41,7 @@ class CourseRepository {
       ],
       attributes: {
         include: [
-          [db.Sequelize.fn("COUNT", db.Sequelize.col("enrollments.id")), "studentCount"],
+          [db.Sequelize.fn("COUNT", db.Sequelize.col("*")), "studentCount"],
         ],
       },
       group: ["Course.id"],
@@ -96,7 +102,9 @@ class CourseRepository {
   async getInstructorStudents(instructorId) {
     return this.enrollmentModel.findAll({
       where: { instructorId },
-      include: [{ model: db.User, as: "student", attributes: ["id", "name", "email"] }],
+      include: [
+        { model: db.User, as: "student", attributes: ["id", "name", "email"] },
+      ],
     });
   }
 

@@ -14,7 +14,7 @@ import reviewModel from "./review.model.js";
 import lessonModel from "./lesson.model.js";
 import enrollmentModel from "./enrollment.model.js";
 import certificateModel from "./certificate.model.js";
-import refreshTokenModel from "./refreshToken.model.js"
+import refreshTokenModel from "./refreshToken.model.js";
 
 const sequelize = new Sequelize(AppConfig.database.url, {
   dialect: AppConfig.database.dialect, // ✅ Rất quan trọng!
@@ -22,6 +22,7 @@ const sequelize = new Sequelize(AppConfig.database.url, {
 });
 
 const db = {
+  Sequelize,
   sequelize,
   User: userModel(sequelize),
   Profile: profileModel(sequelize),
