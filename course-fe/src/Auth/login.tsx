@@ -29,7 +29,7 @@ const Login = () => {
   });
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  
+
   const onSubmit = (data: LoginForm) => {
     dispatch(signin(data));
     navigate("/");

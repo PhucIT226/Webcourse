@@ -32,6 +32,20 @@ export const signin = createAsyncThunk(
     }
   }
 );
+export const signout = createAsyncThunk(
+  "auth/signout", // type
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await authService.signout();
+      return response; // Dữ liệu trả về sẽ nằm ở action.payload
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        return rejectWithValue(err.response?.data || "Lỗi không xác định");
+      }
+      return rejectWithValue("Lỗi không xác định");
+    }
+  }
+);
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -48,9 +62,22 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.accessToken = action.payload?.accessToken;
         state.refreshToken = action.payload?.refreshToken;
-        state.refreshToken = action.payload?.user;
       })
       .addCase(signin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+    builder
+      .addCase(signout.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signout.fulfilled, (state) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.user = null;
+      })
+      .addCase(signout.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string; // Lưu lỗi nếu có
       });

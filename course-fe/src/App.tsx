@@ -14,15 +14,24 @@ import OrderList from "./pages/admin/orders/order-list";
 import ReviewList from "./pages/admin/reviews/review-list";
 import CouponList from "./pages/admin/coupons/coupon-list";
 import Profile from "./pages/admin/setting/profile";
-
-import { useEffect } from "react";
 import User from "./pages/user/user";
+import { useEffect, useState } from "react";
 
 function App() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [showIntro, setShowIntro] = useState(true);
+  const hasSeenIntro = localStorage.getItem("hasSeeIntro");
   useEffect(() => {
-    // navigate('intro')
-  }, []);
+    if (hasSeenIntro && showIntro) {
+      navigate("intro");
+    }
+  }, [showIntro, navigate]);
+
+  const handleFinishIntro = () => {
+    localStorage.setItem("hasSeenIntro", "true");
+    setShowIntro(false);
+    navigate("/");
+  };
 
   return (
     <Routes>
@@ -43,8 +52,12 @@ function App() {
         <Route path="coupon-list" element={<CouponList />} />
         <Route path="profile" element={<Profile />} />
       </Route>
-
-      <Route path="/intro" element={<Intro />} />
+      {showIntro && (
+        <Route
+          path="/intro"
+          element={<Intro onHandleFinish={handleFinishIntro} />}
+        />
+      )}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>
