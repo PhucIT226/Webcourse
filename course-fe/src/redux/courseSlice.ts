@@ -73,7 +73,7 @@ export const deleteCourse = createAsyncThunk<
   { rejectValue: string }
 >("courses/delete", async (id, { rejectWithValue }) => {
   try {
-    await CourseService.remove(id);
+    await CourseService.delete(id);
     return id;
   } catch (err: TAny) {
     return rejectWithValue(err.response?.data?.message || err.message);

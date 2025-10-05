@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Intro from "./pages/user/Intro/Intro";
 import Home from "./pages/user/Home/Home";
 import Login from "./Auth/login";
@@ -7,6 +7,7 @@ import Register from "./Auth/register";
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
 import CourseList from "./pages/admin/courses/course-list";
+import CourseDetail from "./pages/admin/courses/CourseDetail";
 import UserList from "./pages/admin/users/user-list";
 import InstructorList from "./pages/admin/instructors/instructor-list";
 import CategoryList from "./pages/admin/categories/category-list";
@@ -44,6 +45,7 @@ function App() {
       <Route path="/admin" element={<Admin />}>
         <Route index element={<Dashboard />} />
         <Route path="course-list" element={<CourseList />} />
+        <Route path="course/:id" element={<CourseDetail />} />
         <Route path="user-list" element={<UserList />} />
         <Route path="instructor-list" element={<InstructorList />} />
         <Route path="category-list" element={<CategoryList />} />

@@ -6,7 +6,9 @@ class CourseRepository {
   constructor() {
     this.model = db.Course;
     this.enrollmentModel = db.Enrollment; // Bảng lưu học viên đăng ký khóa học
-    this.paymentModel = db.Payment; // Bảng lưu thông tin thanh toán
+    this.paymentModel = db.Payment;       // Bảng lưu thông tin thanh toán
+    this.categoryModel = db.Category;     // bảng categories
+    this.roleModel = db.Role;             // bảng roles (của user/instructor)
   }
 
   // Lấy tất cả course (có phân trang + search + lọc category/instructor)
@@ -36,7 +38,17 @@ class CourseRepository {
         {
           model: this.enrollmentModel,
           as: "enrollments",
-          attributes: [], // không lấy chi tiết
+          attributes: [],
+        },
+        {
+          model: this.categoryModel,
+          as: "category",
+          attributes: ["name"],
+        },
+        {
+          model: db.User,
+          as: "instructor",
+          attributes: ["name"],
         },
       ],
       attributes: {
@@ -44,8 +56,8 @@ class CourseRepository {
           [db.Sequelize.fn("COUNT", db.Sequelize.col("*")), "studentCount"],
         ],
       },
-      group: ["Course.id"],
-      distinct: true,
+      group: ["Course.id", "category.id", "instructor.id"],
+      subQuery: false,
     });
 
     return {
@@ -112,7 +124,7 @@ class CourseRepository {
     const result = await this.paymentModel.findAll({
       where: { instructorId },
       attributes: [
-        [db.Sequelize.fn("SUM", db.Sequelize.col("amount")), "totalRevenue"],
+        [db.sequelize.fn("SUM", db.sequelize.col("amount")), "totalRevenue"],
       ],
       raw: true,
     });
