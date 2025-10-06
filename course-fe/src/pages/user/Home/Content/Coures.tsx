@@ -11,7 +11,7 @@ const Courses = () => {
 
   useEffect(() => {
     dispatch(fetchCourses());
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className="container">
@@ -28,7 +28,7 @@ const Courses = () => {
 
         {loading && <p>Loading...</p>}
         {!loading &&
-          courses.map((course: Course) => (
+          courses.slice(0, 3).map((course: Course) => (
             <a href="#" key={course.id}>
               <div className="course-card mt-3 col col-lg-4">
                 <div className="course-card_image mb-3">
