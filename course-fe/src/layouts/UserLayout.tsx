@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import Header from "../pages/user/Home/Header/Header";
 import Slider from "../pages/user/Home/Content/Slider";
 import Footer from "../pages/user/Home/Footer/Footer";
@@ -9,14 +9,14 @@ type UserLayoutProps = {
 };
 
 const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
+  const location = useLocation();
+  const isHome = location.pathname === "/";
   return (
     <>
       <div className="header-container">
-          <Header />
+        <Header />
       </div>
-      <div className="swiper-container mb-5">
-        <Slider />
-      </div>
+      <div className="swiper-container mb-5">{isHome && <Slider />}</div>
       <main>
         <Outlet />
       </main>
@@ -25,6 +25,6 @@ const UserLayout: React.FC<UserLayoutProps> = ({ children }) => {
       </div>
     </>
   );
-}
+};
 
 export default UserLayout;

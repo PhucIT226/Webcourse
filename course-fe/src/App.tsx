@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Intro from "./pages/user/Intro/Intro";
 import Home from "./pages/user/Home/Home";
 import Login from "./Auth/login";
@@ -16,17 +16,21 @@ import CouponList from "./pages/admin/coupons/coupon-list";
 import Profile from "./pages/admin/setting/profile";
 import User from "./pages/user/user";
 import { useEffect, useState } from "react";
+import DetailCourse from "./pages/user/Home/Content/DetailCourse";
+import Slider from "./pages/user/Home/Content/Slider";
 
 function App() {
   const navigate = useNavigate();
   const [showIntro, setShowIntro] = useState(true);
-  const hasSeenIntro = localStorage.getItem("hasSeeIntro");
+  const hasSeenIntro = localStorage.getItem("hasSeenIntro");
+  const location = useLocation();
+  console.log(location);
 
   useEffect(() => {
     if (hasSeenIntro && showIntro) {
       navigate("intro");
     }
-  }, [showIntro, navigate]);
+  }, [hasSeenIntro, showIntro, navigate]);
 
   const handleFinishIntro = () => {
     localStorage.setItem("hasSeenIntro", "true");
@@ -39,6 +43,7 @@ function App() {
       {/* User */}
       <Route path="/" element={<User />}>
         <Route index element={<Home />} />
+        <Route path="/course/:id" element={<DetailCourse />} />
       </Route>
 
       {/* Admin */}
