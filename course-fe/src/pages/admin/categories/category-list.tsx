@@ -86,7 +86,7 @@ export default function CategoryList() {
                     {category.name}
                   </td>
                   <td className="border px-4 py-2">{category.slug}</td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 max-w-[250px] truncate">
                     {category.description || "-"}
                   </td>
                   <td className="border px-4 py-2 text-center">

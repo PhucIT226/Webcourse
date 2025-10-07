@@ -18,9 +18,7 @@ import CouponList from "./pages/admin/coupons/coupon-list";
 import Profile from "./pages/admin/setting/profile";
 import User from "./pages/user/user";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import DetailCourse from "./pages/user/Home/Content/DetailCourse";
-import Slider from "./pages/user/Home/Content/Slider";
 
 function App() {
   const navigate = useNavigate();
