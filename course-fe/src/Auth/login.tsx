@@ -6,6 +6,8 @@ import "../styles/auth/login.scss";
 import type { LoginForm } from "../types/auth";
 import { useAppDispatch } from "../hooks";
 import { signin } from "../redux/authSlice";
+import { FaSpinner } from "react-icons/fa";
+import { useState } from "react";
 
 const schema = yup.object({
   email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
@@ -29,10 +31,18 @@ const Login = () => {
   });
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (data: LoginForm) => {
-    dispatch(signin(data));
-    navigate("/");
+  const onSubmit = async (data: LoginForm) => {
+    setIsLoading(true);
+    try {
+      await dispatch(signin(data));
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -68,9 +78,13 @@ const Login = () => {
               Quên mật khẩu?
             </a>
           </div>
-
-          <button type="submit" className="btn btn-primary w-100">
-            Đăng nhập
+          <button
+            type="submit"
+            className="d-flex btn btn-primary w-100 btn-submit"
+            disabled={isLoading}
+          >
+            {isLoading === true && <FaSpinner className="loaderIcon" />}
+            <span>Đăng nhập</span>
           </button>
         </form>
 
@@ -80,7 +94,7 @@ const Login = () => {
             className="btn-register"
             onClick={() => navigate("/register")}
           >
-            Resgister
+            Register
           </button>
         </p>
       </div>

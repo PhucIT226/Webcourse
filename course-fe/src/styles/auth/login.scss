@@ -6,3 +6,25 @@
     color: #5771cf;
   }
 }
+.btn-submit {
+  .loaderIcon {
+    margin-right: 7px;
+    top: 2px;
+    animation: spin 1s infinite linear;
+  }
+
+  &:disabled {
+    background-color: #dddddd !important;
+    color: #fafafa !important;
+    cursor: no-drop;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: scale(1) rotate(0deg);
+  }
+  to {
+    transform: scale(1) rotate(360deg);
+  }
+}
