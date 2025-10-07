@@ -36,7 +36,8 @@ const Login = () => {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      await dispatch(signin(data));
+      await new Promise((resolve) => setTimeout(resolve, 1500)); // delay 1.5s
+      dispatch(signin(data));
       navigate("/");
     } catch (error) {
       console.log(error);
