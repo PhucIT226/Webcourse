@@ -1,119 +1,137 @@
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { fetchCategories, deleteCategory } from "../../../redux/categorySlice";
+import type { Category } from "../../../types/category";
+import { useNavigate } from "react-router-dom";
 
-type Category = {
-  id: number;
-  name: string;
-  slug: string;
-  description?: string;
-  courseCount: number;
-  status: "active" | "hidden";
-  createdAt: string;
-};
+export default function CategoryList() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { data: categories, pagination, loading, error } = useAppSelector(
+    (state) => state.category
+  );
 
-export default function CategoryListPage() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    // Giả lập API
-    setCategories([
-      {
-        id: 1,
-        name: "Lập trình",
-        slug: "lap-trinh",
-        description: "Khóa học về phát triển phần mềm",
-        courseCount: 12,
-        status: "active",
-        createdAt: "2025-01-05",
-      },
-      {
-        id: 2,
-        name: "Thiết kế",
-        slug: "thiet-ke",
-        description: "Khóa học thiết kế đồ họa & UI/UX",
-        courseCount: 8,
-        status: "hidden",
-        createdAt: "2025-01-20",
-      },
-    ]);
-  }, []);
+    dispatch(fetchCategories({ page, pageSize: 15, search }));
+  }, [dispatch, page, search]);
 
-  const filteredCategories = categories.filter(
-    (c) =>
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.slug.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleDelete = (id: string) => {
+    if (confirm("Bạn có chắc muốn xóa danh mục này?")) {
+      dispatch(deleteCategory(id));
+    }
+  };
+
+  const handleSearch = () => {
+    setPage(1);
+    setSearch(searchInput);
+  };
 
   return (
     <div className="p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Quản lý danh mục</h1>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Tìm kiếm..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border px-3 py-2 rounded-md text-sm"
-          />
-          <button className="bg-gray-200 px-4 py-2 rounded-md text-sm">
-            Tìm
-          </button>
+      {/* Header + Search */}
+      <div className="sticky top-16 z-20 p-4 my-4 bg-yellow-700 shadow-lg rounded-sm text-white">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">Quản lý danh mục</h1>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Tìm danh mục..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="border bg-white px-3 py-2 rounded-md text-sm text-black"
+            />
+            <button
+              onClick={handleSearch}
+              className="btn-gradient btn-gradient:hover text-white px-4 py-2 rounded-md text-sm"
+            >
+              Tìm kiếm
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* Loading/Error */}
+      {loading && <p>Đang tải dữ liệu...</p>}
+      {error && <p className="text-red-500">Lỗi: {error}</p>}
+
       {/* Table */}
-      <div className="overflow-x-auto border rounded-lg">
+      <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="bg-gray-100 text-gray-700 uppercase">
+          <thead className="whitespace-nowrap bg-gray-100 text-gray-700 uppercase">
             <tr>
-              <th className="px-4 py-3">ID</th>
-              <th className="px-4 py-3">Tên danh mục</th>
-              <th className="px-4 py-3">Slug</th>
-              <th className="px-4 py-3">Mô tả</th>
-              <th className="px-4 py-3">Số khóa học</th>
-              <th className="px-4 py-3">Trạng thái</th>
-              <th className="px-4 py-3">Ngày tạo</th>
-              <th className="px-4 py-3 text-right">Hành động</th>
+              <th className="border text-center px-4 py-3">STT</th>
+              <th className="border text-center px-4 py-3">Tên danh mục</th>
+              <th className="border text-center px-4 py-3">Slug</th>
+              <th className="border text-center px-4 py-3">Mô tả</th>
+              <th className="border text-center px-4 py-3">Trạng thái</th>
+              <th className="border text-center px-4 py-3">Ngày tạo</th>
+              <th className="border text-center px-4 py-3">Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {filteredCategories.map((cat) => (
-              <tr key={cat.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{cat.id}</td>
-                <td className="px-4 py-2 font-medium">{cat.name}</td>
-                <td className="px-4 py-2 text-gray-500">{cat.slug}</td>
-                <td className="px-4 py-2 text-gray-700">
-                  {cat.description || "-"}
-                </td>
-                <td className="px-4 py-2">{cat.courseCount}</td>
-                <td className="px-4 py-2">
-                  <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      cat.status === "active"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-gray-200 text-gray-600"
-                    }`}
-                  >
-                    {cat.status === "active" ? "Hoạt động" : "Ẩn"}
-                  </span>
-                </td>
-                <td className="px-4 py-2">{cat.createdAt}</td>
-                <td className="px-4 py-2 text-right">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded mr-2">
-                    Sửa
-                  </button>
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-                    Xóa
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filteredCategories.length === 0 && (
+            {categories.length > 0 ? (
+              categories.map((category: Category, index: number) => (
+                <tr
+                  key={category.id}
+                  className="border-b whitespace-nowrap hover:bg-gray-50 transition-colors"
+                >
+                  <td className="border text-center px-4 py-2">
+                    {(page - 1) * 15 + index + 1}
+                  </td>
+                  <td className="border px-4 py-2 font-medium">
+                    {category.name}
+                  </td>
+                  <td className="border px-4 py-2">{category.slug}</td>
+                  <td className="border px-4 py-2">
+                    {category.description || "-"}
+                  </td>
+                  <td className="border px-4 py-2 text-center">
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${
+                        category.status === "active"
+                          ? "bg-green-100 text-green-600"
+                          : "bg-gray-200 text-gray-600"
+                      }`}
+                    >
+                      {category.status === "active" ? "Hoạt động" : "Ẩn"}
+                    </span>
+                  </td>
+                  <td className="border text-center px-4 py-2">
+                    {new Date(category.createdAt || "").toLocaleDateString(
+                      "vi-VN"
+                    )}
+                  </td>
+                  <td className="border px-4 py-2 text-right flex gap-2 justify-end">
+                    <button
+                      onClick={() =>
+                        navigate(`/admin/category/${category.id}`, {
+                          state: { category },
+                        })
+                      }
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+                    >
+                      Chi tiết
+                    </button>
+                    <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                      Sửa
+                    </button>
+                    <button
+                      onClick={() => handleDelete(category.id!)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
                 <td
-                  colSpan={8}
+                  colSpan={7}
                   className="px-4 py-4 text-center text-gray-500"
                 >
                   Không có danh mục nào
@@ -123,6 +141,25 @@ export default function CategoryListPage() {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="flex gap-2 mt-4">
+          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+            (p) => (
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                className={`px-3 py-1 border rounded ${
+                  page === p ? "bg-blue-500 text-white" : ""
+                }`}
+              >
+                {p}
+              </button>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }

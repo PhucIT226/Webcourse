@@ -1,31 +1,15 @@
-// import express from "express";
-// import middlewares from "../middlewares/index.js";
-// import {
-//   getAllCategories,
-//   getCategoryById,
-//   createCategory,
-//   updateCategory,
-//   deleteCategory,
-// } from "../controllers/category.controller.js";
+import express from 'express';
+import middlewares from '../middlewares/index.js';
+import categoryController from '../controllers/category.controller.js';
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.get("/", getAllCategories);
-// router.get("/:id", getCategoryById);
+router.get('/', categoryController.getAllCategories);
+router.get('/:id', categoryController.getCategoryById);
 
-// // Admin mới tạo, sửa, xóa
-// router.post("/", middlewares.auth, middlewares.role("admin"), createCategory);
-// router.patch(
-//   "/:id",
-//   middlewares.auth,
-//   middlewares.role("admin"),
-//   updateCategory
-// );
-// router.delete(
-//   "/:id",
-//   middlewares.auth,
-//   middlewares.role("admin"),
-//   deleteCategory
-// );
+// Admin mới tạo, sửa, xóa
+router.post('/', middlewares.auth, middlewares.role('admin'), categoryController.createCategory);
+router.patch('/:id', middlewares.auth, middlewares.role('admin'), categoryController.updateCategory);
+router.delete('/:id', middlewares.auth, middlewares.role('admin'), categoryController.deleteCategory);
 
-// export default router;
+export default router;

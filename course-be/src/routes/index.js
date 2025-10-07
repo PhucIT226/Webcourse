@@ -4,7 +4,7 @@ import authRoutes from './auth.js';
 import rolesRoutes from './roles.js';
 import usersRoutes from './users.js';
 // import profilesRoutes from './profiles.js';
-// import categoriesRoutes from './categories.js';
+import categoriesRoutes from './categories.js';
 import coursesRoutes from './courses.js';
 // import lessonsRoutes from './lessons.js';
 // import ordersRoutes from './orders.js';
@@ -21,7 +21,7 @@ export default {
       .use("/roles", rolesRoutes)
       .use("/users", usersRoutes)
     //   .use("/profiles", profilesRoutes)
-    //   .use("/categories", categoriesRoutes)
+      .use("/categories", categoriesRoutes)
       .use("/courses", coursesRoutes)
     //   .use("/auth", authRoutes)
     //   .use("/auth", authRoutes)

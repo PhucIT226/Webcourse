@@ -2,7 +2,11 @@ import type { Pagination } from "./common";
 
 export type Category = {
   id?: string;
-  name?: string;
+  name: string;
+  slug: string;
+  description?: string;
+  createdAt?: string;
+  status: "active" | "inactive";
 };
 
 export interface CategoryResDto {
@@ -15,5 +19,5 @@ export type GetAllCategoryParams = {
   pageSize?: number;
   search?: string;
   sortField?: string;
-  sortOrder?: string;
+  sortOrder?: "asc" | "desc";
 };

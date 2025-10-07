@@ -33,7 +33,8 @@ export default function CourseList() {
   return (
     <div className="p-6">
       {/* Header + Search */}
-      <div className="sticky top-20 z-20 bg-[#f9fafb] pb-4">
+      <div className="sticky top-16 z-20 p-4 my-4 bg-yellow-700 shadow-lg rounded-sm text-white ">
+
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Quản lý khóa học</h1>
           <div className="flex gap-2">
@@ -42,13 +43,13 @@ export default function CourseList() {
               placeholder="Tìm khóa học..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="border px-3 py-2 rounded-md text-sm"
+              className="border bg-white px-3 py-2 rounded-md text-sm text-black"
             />
             <button
               onClick={handleSearch}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm"
+              className="btn-gradient btn-gradient:hover text-white px-4 py-2 rounded-md text-sm"
             >
-              Tìm
+              Tìm kiếm
             </button>
           </div>
         </div>
@@ -59,14 +60,13 @@ export default function CourseList() {
       {error && <p className="text-red-500">Lỗi: {error}</p>}
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg">
+      <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
           <thead className="whitespace-nowrap bg-gray-100 text-gray-700 uppercase">
             <tr>
               <th className="border text-center px-4 py-3">STT</th>
               <th className="border text-center px-4 py-3">Tên</th>
               <th className="border text-center px-4 py-3">Giảng viên</th>
-              <th className="border text-center px-4 py-3">Danh mục</th>
               <th className="border text-center px-4 py-3">Giá</th>
               <th className="border text-center px-4 py-3">Học viên</th>
               <th className="border text-center px-4 py-3">Trạng thái</th>
@@ -91,9 +91,6 @@ export default function CourseList() {
                   </td>
                   <td className="border px-4 py-2">
                     {course.instructor?.name}
-                  </td>
-                  <td className="border px-4 py-2">
-                    {course.category?.name}
                   </td>
                   <td className="border px-4 py-2">
                     {Number(course.price).toLocaleString("vi-VN")} đ
@@ -127,7 +124,7 @@ export default function CourseList() {
                     >
                       Chi tiết
                     </button>
-                    <button className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                    <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
                       Sửa
                     </button>
                     <button

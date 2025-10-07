@@ -14,11 +14,11 @@ import {
   FaStarHalfAlt,
   FaCreditCard,
 } from "react-icons/fa";
-import ThemeToggle from "../components/ThemeToggle";
+import ThemeToggle from "../components/admin/ThemeToggle";
 import { Link, useLocation } from "react-router-dom";
 import type { Menu } from "../types/menu";
 import type { TAny } from "../types/common";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "../components/admin/SearchBar";
 
 type AdminLayoutProps = {
   children: ReactNode;
@@ -43,7 +43,7 @@ const menu: MenuType = [
   },
   {
     label: "Học viên",
-    to: "user-list",
+    to: "student-list",
     icon: FaUser,
     defaultColor: "text-green-600",
     children: [],

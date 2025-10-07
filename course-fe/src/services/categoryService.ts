@@ -1,25 +1,24 @@
 import axios from "./axiosClient";
-import type { CategoryResDto, GetAllCategoryParams } from "../types/category";
-import type { TAny } from "../types/common";
+import type { Category, CategoryResDto, GetAllCategoryParams } from "../types/category";
 
-export const CategoryService = {
+const CategoryService = {
   async getAll(params?: GetAllCategoryParams): Promise<CategoryResDto> {
     const res = await axios.get<CategoryResDto>("/categories", { params });
     return res.data;
   },
 
-  async getById(id: string): Promise<TAny> {
-    const res = await axios.get<TAny>(`/categories/${id}`);
+  async getById(id: string): Promise<Category> {
+    const res = await axios.get<Category>(`/categories/${id}`);
     return res.data;
   },
 
-  async create(data: Partial<TAny>): Promise<TAny> {
-    const res = await axios.post<TAny>("/categories", data);
+  async create(category: Partial<Category>): Promise<Category> {
+    const res = await axios.post<Category>("/categories", category);
     return res.data;
   },
 
-  async update(id: string, data: Partial<TAny>): Promise<TAny> {
-    const res = await axios.put<TAny>(`/categories/${id}`, data);
+  async update(id: string, category: Partial<Category>): Promise<Category> {
+    const res = await axios.put<Category>(`/categories/${id}`, category);
     return res.data;
   },
 
