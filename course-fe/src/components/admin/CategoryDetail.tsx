@@ -1,29 +1,26 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import type { Course } from "../../types/course";
+import type { Category } from "../../types/category";
 import {
-  FaUserTie,
-  FaUser,
-  FaFolderOpen,
-  FaMoneyBillAlt,
-  FaCalendarAlt,
   FaInfoCircle,
+  FaFolderOpen,
+  FaCalendarAlt,
   FaArrowLeft,
 } from "react-icons/fa";
 
-export default function CourseDetail() {
+export default function CategoryDetail() {
   const navigate = useNavigate();
   const location = useLocation();
-  const course = location.state?.course as Course | undefined;
+  const category = location.state?.category as Category | undefined;
 
-  if (!course) {
+  if (!category) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-center">
-        <p className="text-red-600 text-lg font-semibold mb-4">
-          Không tìm thấy dữ liệu khóa học
+      <div className="p-6 bg-gray-50 min-h-screen flex flex-col items-center justify-center">
+        <p className="text-red-600 text-lg font-semibold">
+          Không tìm thấy dữ liệu danh mục
         </p>
         <button
           onClick={() => navigate(-1)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-lg shadow-md transition-all duration-300"
+          className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2 rounded-lg shadow-lg transition-all duration-300"
         >
           Quay lại
         </button>
@@ -32,119 +29,71 @@ export default function CourseDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Tiêu đề */}
-      <div className="mb-10 text-center">
-        <h1 className="text-3xl font-extrabold text-indigo-600">
-          Chi tiết khóa học
+    <div className="p-6 bg-gray-50 min-h-screen">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-3xl font-extrabold text-indigo-600 tracking-wide">
+          Chi tiết danh mục
         </h1>
-        <p className="text-gray-500 mt-1 italic">/{course.slug}</p>
       </div>
 
-      {/* Thông tin khóa học */}
-      <div className="bg-white p-8 rounded-3xl shadow-xl max-w-5xl mx-auto space-y-8 border border-gray-100">
-        {/* Tiêu đề & mô tả */}
+      {/* Card chính */}
+      <div className="p-8 rounded-3xl shadow-xl space-y-8 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50">
+        {/* Title & slug */}
         <div>
-          <h2 className="text-4xl font-bold text-gray-800 mb-3">
-            {course.title}
+          <h2 className="text-4xl font-bold text-gray-800 mb-1">
+            {category.name}
           </h2>
-          <p className="text-gray-700 leading-relaxed text-lg">
-            {course.description || "Chưa có mô tả cho khóa học này."}
-          </p>
+          <p className="text-sm text-indigo-500 italic">/{category.slug}</p>
         </div>
 
-        {/* Thông tin chi tiết */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Cột trái */}
-          <div className="space-y-4">
-            <p className="flex items-center text-gray-800 font-medium">
-              <FaUserTie className="mr-3 text-blue-600" />
-              Giảng viên:{" "}
-              <span className="ml-1 text-gray-700 font-semibold">
-                {course.instructor?.name || "Chưa cập nhật"}{" "}
-                {course.instructor?.email
-                  ? `(${course.instructor.email})`
-                  : ""}
-              </span>
-            </p>
-            <p className="flex items-center text-gray-800 font-medium">
-              <FaFolderOpen className="mr-3 text-yellow-500" />
-              Danh mục:{" "}
-              <span className="ml-1 text-gray-700 font-semibold">
-                {course.category?.name || "Chưa có danh mục"}
-              </span>
-            </p>
-            <p className="flex items-center text-gray-800 font-medium">
-              <FaMoneyBillAlt className="mr-3 text-green-500" />
-              Giá:{" "}
-              <span className="ml-1 text-xl font-bold text-green-700">
-                {Number(course.price).toLocaleString("vi-VN")} đ
-              </span>
-            </p>
-          </div>
+        {/* Description */}
+        <p className="text-gray-700 leading-relaxed text-lg">
+          Mô tả: {category.description || "Không có mô tả"}
+        </p>
 
-          {/* Cột phải */}
+        {/* Thông tin chi tiết */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
           <div className="space-y-4">
             <p className="flex items-center text-gray-800 font-medium">
-              <FaUser className="mr-3 text-purple-500" />
-              Học viên:{" "}
-              <span className="ml-1 text-gray-700 font-semibold">
-                {course.studentCount ?? 0}
-              </span>
+              <FaFolderOpen className="mr-3 text-yellow-500 text-lg" />
+              Mã danh mục: {category.id}
             </p>
             <p className="flex items-center text-gray-800 font-medium">
-              <FaInfoCircle className="mr-3 text-indigo-500" />
-              Trạng thái:{" "}
+              <FaInfoCircle className="mr-3 text-blue-600 text-lg" />
+              Trạng thái:
               <span
                 className={`ml-2 px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
-                  course.status === "published"
+                  category.status === "active"
                     ? "bg-green-100 text-green-700"
-                    : course.status === "draft"
-                    ? "bg-yellow-100 text-yellow-700"
+                    : category.status === "inactive"
+                    ? "bg-red-100 text-red-700"
                     : "bg-gray-200 text-gray-700"
                 }`}
               >
-                {course.status}
+                {category.status}
               </span>
             </p>
+          </div>
+
+          <div className="space-y-4">
             <p className="flex items-center text-gray-800 font-medium">
-              <FaCalendarAlt className="mr-3 text-pink-500" />
+              <FaCalendarAlt className="mr-3 text-indigo-500 text-lg" />
               Ngày tạo:{" "}
-              <span className="ml-1 text-gray-700 font-semibold">
-                {new Date(course.createdAt || "").toLocaleDateString("vi-VN")}
-              </span>
+              {new Date(category.createdAt || "").toLocaleDateString("vi-VN")}
             </p>
           </div>
         </div>
-
-        {/* Ảnh khóa học */}
-        {course.thumbnailUrls && course.thumbnailUrls.length > 0 && (
-          <div className="mt-6">
-            <p className="font-semibold mb-3 text-gray-800 text-lg">
-              Ảnh khóa học:
-            </p>
-            <div className="flex gap-4 overflow-x-auto p-2 rounded-xl">
-              {course.thumbnailUrls.map((img, i) => (
-                <img
-                  key={i}
-                  src={img.url}
-                  alt={course.title}
-                  className="w-48 h-32 object-cover rounded-2xl border border-gray-200 shadow-sm hover:shadow-lg hover:scale-[1.03] transition-all duration-300"
-                />
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Nút quay lại */}
-      <div className="mt-10 flex justify-center">
+      {/* Button quay lại */}
+      <div className="mt-8 flex justify-end">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-6 py-3 rounded-lg shadow-lg transition-all duration-300 font-medium"
+          className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-5 py-2 rounded-lg shadow-lg transition-all duration-300 font-medium"
         >
           <FaArrowLeft className="text-lg" />
-          Quay lại danh sách
+          Quay lại
         </button>
       </div>
     </div>
