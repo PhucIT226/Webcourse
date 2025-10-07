@@ -3,15 +3,17 @@ import { useEffect } from "react";
 import type { Course } from "../../../../types/course";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { fetchCourses } from "../../../../redux/courseSlice";
+import { useNavigate } from "react-router-dom";
 
 const Courses = () => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const courses = useAppSelector((state) => state.course.data);
   const loading = useAppSelector((state) => state.course.loading);
 
   useEffect(() => {
     dispatch(fetchCourses());
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className="container">
@@ -28,9 +30,17 @@ const Courses = () => {
 
         {loading && <p>Loading...</p>}
         {!loading &&
-          courses.map((course: Course) => (
-            <a href="#" key={course.id}>
-              <div className="course-card mt-3 col col-lg-4">
+          courses.slice(0, 3).map((course: Course) => (
+            <div
+              className="cursor-pointer col col-lg-4"
+              onClick={() =>
+                navigate(`/course/${course.id}`, {
+                  state: { id: 7, color: "green" },
+                })
+              }
+              key={course.id}
+            >
+              <div className="course-card mt-3 ">
                 <div className="course-card_image mb-3">
                   {course.thumbnailUrls?.[0] && (
                     <img src={course.thumbnailUrls[0].url} alt={course.title} />
@@ -48,7 +58,7 @@ const Courses = () => {
                   </div>
                 </div>
               </div>
-            </a>
+            </div>
           ))}
       </div>
     </div>

@@ -1,12 +1,13 @@
 import axios from "axios";
 import { API_URL } from "../constants";
+import NProgress from "nprogress";
 
 // Helper to get cookie by name
 // function getCookie(name: string): string | undefined {
 //   const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
 //   return match ? decodeURIComponent(match[2]) : undefined;
 // }
-
+NProgress.configure({ showSpinner: false, trickleSpeed: 100 });
 const axiosClient = axios.create({
   baseURL: API_URL,
   headers: {
@@ -15,23 +16,25 @@ const axiosClient = axios.create({
   withCredentials: true,
 });
 
-/* just use in case httpOnly set is false in BE side
+// just use in case httpOnly set is false in BE side
 // Request interceptor: attach access token from cookie
 axiosClient.interceptors.request.use(
   (config) => {
-    const token = getCookie("accessToken");
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    NProgress.start();
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    NProgress.done();
+    return Promise.reject(error);
+  }
 );
-*/
 
 // Response interceptor: handle token refresh
 axiosClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    NProgress.done();
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
     // If 401 and not already retried
