@@ -33,7 +33,7 @@ const Header = () => {
     >
       <Container>
         {/* <Navbar.Brand href="#home"></Navbar.Brand> */}
-        <NavLink to={"/courses"} className="navbar-brand">
+        <NavLink to={"/"} className="navbar-brand">
           Học dễ thôi
         </NavLink>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
