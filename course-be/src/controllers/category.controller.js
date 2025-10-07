@@ -1,66 +1,84 @@
-// import CategoryService from "../services/category.service.js";
-// import BaseController from "./base.controller.js";
+import CategoryService from "../services/category.service.js";
+import BaseController from "./base.controller.js";
 
-// class CategoryController extends BaseController {
-//   constructor() {
-//     super();
-//     this.service = new CategoryService();
-//   }
+class CategoryController extends BaseController {
+  constructor() {
+    super();
+    this.service = new CategoryService();
+  }
 
-//   async getAllCategories(req, res) {
-//     try {
-//       const categories = await this.service.getAllCategories(req);
-//       res.json(categories);
-//     } catch (error) {
-//       console.error("Error fetching categories:", error);
-//       return res.status(500).json({ error: "Internal Server Error" });
-//     }
-//   }
+  // Lấy danh sách categories
+  async getAllCategories(req, res) {
+    const { page = 1, pageSize = 10, search } = req.query;
+    const result = await this.service.getListCategories({ page, pageSize, search });
 
-//   async getCategoryById(req, res) {
-//     try {
-//       const { id } = req.params;
-//       const category = await this.service.getCategoryById(id);
-//       res.json(category);
-//     } catch (error) {
-//       console.error("Error fetching category:", error);
-//       return res.status(500).json({ error: "Internal Server Error" });
-//     }
-//   }
+    res.json({
+      status: true,
+      message: "Fetched categories successfully",
+      data: result.data,
+      pagination: result.pagination,
+    });
+  }
 
-//   async createCategory(req, res) {
-//     try {
-//       const data = req.body;
-//       await this.service.createCategory(data);
-//       return res.status(200).json({ status: true });
-//     } catch (error) {
-//       console.error("Error creating category:", error);
-//       return res.status(500).json({ error: "Internal Server Error" });
-//     }
-//   }
+  // Lấy category theo id
+  async getCategoryById(req, res) {
+    const { id } = req.params;
+    const category = await this.service.getCategoryById(id);
 
-//   async editCategory(req, res) {
-//     try {
-//       const { id } = req.params;
-//       const data = req.body;
-//       await this.service.editCategory(id, data);
-//       return res.status(200).json({ status: true });
-//     } catch (error) {
-//       console.error("Error creating category:", error);
-//       return res.status(500).json({ error: "Internal Server Error" });
-//     }
-//   }
+    if (!category) {
+      return res.status(404).json({ status: false, message: "Category not found" });
+    }
 
-//   async deleteCategory(req, res) {
-//     try {
-//       const { id } = req.params;
-//       await this.service.deleteCategory(id);
-//       return res.status(200).json({ status: true });
-//     } catch (error) {
-//       console.error("Error dalete category:", error);
-//       return res.status(500).json({ error: "Internal Server Error" });
-//     }
-//   }
-// }
+    res.json({
+      status: true,
+      message: "Fetched category successfully",
+      data: category,
+    });
+  }
 
-// export default CategoryController;
+  // Tạo category mới
+  async createCategory(req, res) {
+    const data = req.body;
+    const newCategory = await this.service.createCategory(data);
+
+    res.status(201).json({
+      status: true,
+      message: "Category created successfully",
+      data: newCategory,
+    });
+  }
+
+  // Cập nhật category
+  async updateCategory(req, res) {
+    const { id } = req.params;
+    const data = req.body;
+    const updated = await this.service.updateCategory(id, data);
+
+    if (!updated) {
+      return res.status(404).json({ status: false, message: "Category not found" });
+    }
+
+    res.json({
+      status: true,
+      message: "Category updated successfully",
+      data: updated,
+    });
+  }
+
+  // Xóa category
+  async deleteCategory(req, res) {
+    const { id } = req.params;
+    const deleted = await this.service.deleteCategory(id);
+
+    if (!deleted) {
+      return res.status(404).json({ status: false, message: "Category not found" });
+    }
+
+    res.json({
+      status: true,
+      message: "Category deleted successfully",
+    });
+  }
+}
+
+export default new CategoryController();

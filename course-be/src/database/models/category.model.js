@@ -4,12 +4,6 @@ export default (sequelize) => {
   class Category extends Model {
     static associate(models) {
       this.hasMany(models.Course, { foreignKey: "categoryId", as: "courses" });
-
-      // Self-relation: 1 Category có thể có nhiều sub-categories
-      this.hasMany(models.Category, { foreignKey: "parentId", as: "subCategories" });
-
-      // Sub-category thuộc về 1 parent category
-      this.belongsTo(models.Category, { foreignKey: "parentId", as: "parentCategory" });
     }
   }
 

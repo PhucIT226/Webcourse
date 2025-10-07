@@ -1,48 +1,34 @@
-// import CategoryRepository from "../repositories/category.repository.js";
+import CategoryRepository from "../repositories/category.repository.js";
 
-// class CategoryService {
-//   constructor() {
-//     this.repository = new CategoryRepository();
-//   }
+class CategoryService {
+  constructor() {
+    this.repository = new CategoryRepository();
+  }
 
-//   async getAllCategories(req) {
-//     try {
-//       return await this.repository.getAllCategories(req);
-//     } catch (error) {
-//       throw new Error("Error fetching categories: " + error.message);
-//     }
-//   }
-//   async getCategoryById(id) {
-//     try {
-//       return await this.repository.getCategoryById(id);
-//     } catch (error) {
-//       throw new Error("Error fetching category: " + error.message);
-//     }
-//   }
+  // Lấy danh sách categories
+  getListCategories({ page, pageSize, search }) {
+    return this.repository.getAllCategories({ page, pageSize, search });
+  }
 
-//   async createCategory(data) {
-//     try {
-//       return await this.repository.createCategory(data);
-//     } catch (error) {
-//       throw new Error("Error creating product: " + error.message);
-//     }
-//   }
+  // Lấy category theo id
+  getCategoryById(id) {
+    return this.repository.getCategoryById(id);
+  }
 
-//   async editCategory(id, data) {
-//     try {
-//       return await this.repository.editCategory(id, data);
-//     } catch (error) {
-//       throw new Error("Error updating category: " + error.message);
-//     }
-//   }
+  // Tạo category
+  createCategory(data) {
+    return this.repository.createCategory(data);
+  }
 
-//   async deleteCategory(id) {
-//     try {
-//       return await this.repository.deleteCategory(id);
-//     } catch (error) {
-//       throw new Error("Error deleting category: " + error.message);
-//     }
-//   }
-// }
+  // Cập nhật category
+  updateCategory(id, data) {
+    return this.repository.updateCategory(id, data);
+  }
 
-// export default CategoryService;
+  // Xóa category
+  deleteCategory(id) {
+    return this.repository.deleteCategory(id);
+  }
+}
+
+export default CategoryService;

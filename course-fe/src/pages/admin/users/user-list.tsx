@@ -1,133 +1,160 @@
 import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { fetchUsers, deleteUser } from "../../../redux/userSlice";
+import type { User } from "../../../types/user";
+import { useNavigate } from "react-router-dom";
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-  courses: number;
-  progress: number;
-  status: string;
-  createdAt: string;
-};
+export default function UserList() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { data: users, pagination, loading, error } = useAppSelector(
+    (state) => state.user
+  );
 
-export default function UserListPage() {
-  const [users, setUsers] = useState<User[]>([]);
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    // Giả lập API
-    setUsers([
-      {
-        id: 1,
-        name: "Nguyễn Văn A",
-        email: "vana@example.com",
-        courses: 3,
-        progress: 75,
-        status: "active",
-        createdAt: "10-01-2025",
-      },
-      {
-        id: 2,
-        name: "Trần Thị B",
-        email: "thib@example.com",
-        courses: 1,
-        progress: 20,
-        status: "inactive",
-        createdAt: "09-02-2025",
-      },
-    ]);
-  }, []);
+    dispatch(fetchUsers({ page, pageSize: 15, search }));
+  }, [dispatch, page, search]);
 
-  const filteredUsers = users.filter(
-    (u) =>
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleDelete = (id: string) => {
+    if (confirm("Bạn có chắc muốn xóa người dùng này?")) {
+      dispatch(deleteUser(id));
+    }
+  };
+
+  const handleSearch = () => {
+    setPage(1);
+    setSearch(searchInput);
+  };
 
   return (
     <div className="p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Quản lý học viên</h1>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Tìm kiếm..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border px-3 py-2 rounded-md text-sm"
-          />
-          <button className="bg-gray-200 px-4 py-2 rounded-md text-sm">
-            Tìm
-          </button>
+      {/* Header + Search */}
+      <div className="sticky top-16 z-20 p-4 my-4 bg-yellow-700 shadow-lg rounded-sm text-white ">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">Quản lý người dùng</h1>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Tìm người dùng..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="border bg-white px-3 py-2 rounded-md text-sm text-black"
+            />
+            <button
+              onClick={handleSearch}
+              className="btn-gradient btn-gradient:hover text-white px-4 py-2 rounded-md text-sm"
+            >
+              Tìm kiếm
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* Loading/Error */}
+      {loading && <p>Đang tải dữ liệu...</p>}
+      {error && <p className="text-red-500">Lỗi: {error}</p>}
+
       {/* Table */}
-      <div className="overflow-x-auto border rounded-lg">
+      <div className="overflow-x-auto">
         <table className="w-full text-sm text-left">
-          <thead className="bg-gray-100 text-gray-700 uppercase">
+          <thead className="whitespace-nowrap bg-gray-100 text-gray-700 uppercase">
             <tr>
-              <th className="px-4 py-3">ID</th>
-              <th className="px-4 py-3">Họ và tên</th>
-              <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Số khóa học</th>
-              <th className="px-4 py-3">Tiến độ</th>
-              <th className="px-4 py-3">Trạng thái</th>
-              <th className="px-4 py-3">Ngày tạo</th>
-              <th className="px-4 py-3 text-right">Hành động</th>
+              <th className="border text-center px-4 py-3">STT</th>
+              <th className="border text-center px-4 py-3">Tên</th>
+              <th className="border text-center px-4 py-3">Email</th>
+              <th className="border text-center px-4 py-3">SĐT</th>
+              <th className="border text-center px-4 py-3">Tiến độ</th>
+              <th className="border text-center px-4 py-3">Trạng thái</th>
+              <th className="border text-center px-4 py-3">Ngày tạo</th>
+              <th className="border text-center px-4 py-3">Hành động</th>
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
-              <tr key={user.id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{user.id}</td>
-                <td className="px-4 py-2">{user.name}</td>
-                <td className="px-4 py-2">{user.email}</td>
-                <td className="px-4 py-2">{user.courses}</td>
-                <td className="px-4 py-2">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-500 h-2 rounded-full"
-                      style={{ width: `${user.progress}%` }}
-                    ></div>
-                  </div>
-                  <span className="text-xs text-gray-600">
-                    {user.progress}%
-                  </span>
-                </td>
-                <td className="px-4 py-2">
-                  <span
-                    className={`px-2 py-1 rounded text-xs ${
-                      user.status === "active"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
-                    }`}
-                  >
-                    {user.status}
-                  </span>
-                </td>
-                <td className="px-4 py-2">{user.createdAt}</td>
-                <td className="px-4 py-2 text-right">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded mr-2">
-                    Sửa
-                  </button>
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
-                    Xóa
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filteredUsers.length === 0 && (
+            {users.length > 0 ? (
+              users.map((user: User, index: number) => (
+                <tr
+                  key={user.id}
+                  className="border-b whitespace-nowrap hover:bg-gray-50 transition-colors"
+                >
+                  <td className="border text-center px-4 py-2">
+                    {(page - 1) * 10 + index + 1}
+                  </td>
+                  <td className="border px-4 py-2 font-medium">{user.name}</td>
+                  <td className="border px-4 py-2">{user.email}</td>
+                  <td className="border px-4 py-2">{user.phone || "—"}</td>
+                  <td className="border text-center px-4 py-2">
+                    {user.progress ?? 0}%
+                  </td>
+                  <td className="border px-4 py-2">
+                    <span
+                      className={`px-2 py-1 rounded text-xs ${
+                        user.status === "active"
+                          ? "bg-green-100 text-green-600"
+                          : user.status === "inactive"
+                          ? "bg-yellow-100 text-yellow-600"
+                          : "bg-gray-200 text-gray-600"
+                      }`}
+                    >
+                      {user.status}
+                    </span>
+                  </td>
+                  <td className="border text-center px-4 py-2">
+                    {new Date(user.createdAt || "").toLocaleDateString("vi-VN")}
+                  </td>
+                  <td className="border px-4 py-2 text-right flex gap-2 justify-end">
+                    <button
+                      onClick={() =>
+                        navigate(`/admin/user/${user.id}`, { state: { user } })
+                      }
+                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+                    >
+                      Chi tiết
+                    </button>
+                    <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                      Sửa
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id!)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td colSpan={8} className="px-4 py-4 text-center text-gray-500">
-                  Không có học viên nào
+                <td colSpan={9} className="px-4 py-4 text-center text-gray-500">
+                  Không có người dùng nào
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="flex gap-2 mt-4">
+          {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map(
+            (p) => (
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                className={`px-3 py-1 border rounded ${
+                  page === p ? "bg-blue-500 text-white" : ""
+                }`}
+              >
+                {p}
+              </button>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }

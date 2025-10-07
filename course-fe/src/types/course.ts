@@ -3,6 +3,7 @@ import type { Image, Pagination } from "./common";
 export type Course = {
   id?: string;
   title: string;
+  slug: string;
   description?: string;
   instructor: {name: string, email: string};
   category: { name: string };

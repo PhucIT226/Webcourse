@@ -9,3 +9,14 @@
 a {
   @apply no-underline;
 }
+
+/* Đặt class custom cho button gradient */
+.btn-gradient {
+  @apply flex items-center gap-2 text-white px-5 py-2 rounded-lg shadow-lg transition-all duration-300 font-medium;
+
+  background: linear-gradient(to right, #6366f1, #8b5cf6); /* from-indigo-500 → to-purple-500 */
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(to right, #4f46e5, #7c3aed); /* from-indigo-600 → to-purple-600 */
+}
