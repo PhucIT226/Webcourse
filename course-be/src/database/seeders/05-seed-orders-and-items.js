@@ -24,11 +24,36 @@ export async function up(queryInterface, Sequelize) {
   for (let i = 0; i < 15; i++) {
     const orderId = uuidv4();
     const user = faker.helpers.arrayElement(users);
+    const coupon = faker.helpers.arrayElement([...coupons, null]);
+    const couponId = coupon ? coupon.id : null;
+
     const status = faker.helpers.arrayElement([
       "pending",
       "paid",
       "cancelled",
       "refunded",
+    ]);
+
+    const paymentStatus =
+      status === "paid"
+        ? "paid"
+        : status === "refunded"
+        ? "refunded"
+        : faker.helpers.arrayElement(["unpaid", "failed"]);
+
+    const paymentMethod = faker.helpers.arrayElement([
+      "credit_card",
+      "paypal",
+      "bank",
+      "momo",
+      "zalopay",
+    ]);
+
+    const note = faker.helpers.arrayElement([
+      null,
+      "Khách yêu cầu xuất hóa đơn.",
+      "Thanh toán bị pending, chờ xác nhận.",
+      "Sử dụng coupon giảm giá đặc biệt.",
     ]);
 
     let totalAmount = 0;
@@ -39,24 +64,31 @@ export async function up(queryInterface, Sequelize) {
 
     selectedCourses.forEach((course) => {
       const price = Number(course.price);
-      const quantity = 1;
-      totalAmount += price * quantity;
+      const discount =
+        faker.number.int({ min: 0, max: 1 }) === 1
+          ? Number((price * 0.1).toFixed(2))
+          : 0; // Ngẫu nhiên giảm 10% hoặc không giảm
+      const finalPrice = Number((price - discount).toFixed(2));
+      totalAmount += finalPrice;
+
+      const accessStatus = faker.helpers.arrayElement([
+        "active",
+        "expired",
+        "revoked",
+      ]);
 
       orderItems.push({
         id: uuidv4(),
         orderId,
         courseId: course.id,
         price,
-        quantity,
-        discount: 0,
+        discount,
+        finalPrice,
+        accessStatus,
         createdAt: now,
         updatedAt: now,
       });
     });
-
-    // Random coupon hoặc null
-    const coupon = faker.helpers.arrayElement([...coupons, null]);
-    const couponId = coupon ? coupon.id : null;
 
     orders.push({
       id: orderId,
@@ -64,6 +96,9 @@ export async function up(queryInterface, Sequelize) {
       couponId,
       totalAmount: Number(totalAmount.toFixed(2)),
       status,
+      paymentMethod,
+      paymentStatus,
+      note,
       createdAt: now,
       updatedAt: now,
     });

@@ -13,14 +13,12 @@ class AuthController extends BaseController {
   async register(req, res) {
     const { name, email, password } = req.body;
 
-    // Check email tồn tại
     const existingUser = await this.service.getUserByEmail(email);
-    if (existingUser) return res.status(400).json({ message: "User exists" });
+    if (existingUser)
+      return res.status(400).json({ message: "User exists" });
 
-    // Hash password
     const passwordHash = await HashHelper.hashPassword(password);
 
-    // Lấy roleId từ bảng Roles
     const studentRole = await db.Role.findOne({ where: { name: "student" } });
     if (!studentRole) {
       return res.status(500).json({ message: "Default role not found" });
@@ -37,18 +35,23 @@ class AuthController extends BaseController {
   }
 
   async login(req, res) {
-    const { email, password, isRemember } = req.body;
+    const { email, password } = req.body;
     const user = await this.service.getUserByEmail(email, true); // with password
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
     const valid = await HashHelper.comparePassword(password, user.passwordHash);
     if (!valid) return res.status(400).json({ message: "Invalid credentials" });
 
+    // ✅ Luôn trả cả 2 token, truyền this.service vào helper
     const { accessToken, refreshToken } = await JwtHelper.generateTokens(
       user.id,
-      !isRemember
+      false,
+      this.service
     );
+
+    // Set token vào cookie
     JwtHelper.setTokensAsCookies(res, accessToken, refreshToken);
+
     res.json({ accessToken, refreshToken });
   }
 
@@ -65,10 +68,13 @@ class AuthController extends BaseController {
     if (!user || user.refreshToken !== token)
       return res.status(403).json({ message: "Refresh token revoked" });
 
+    // ✅ Truyền this.service vào helper
     const { accessToken, refreshToken } = await JwtHelper.generateTokens(
       payload.sub,
-      false
+      false,
+      this.service
     );
+
     JwtHelper.setTokensAsCookies(res, accessToken, refreshToken);
     res.json({ accessToken, refreshToken });
   }
@@ -87,4 +93,4 @@ class AuthController extends BaseController {
   }
 }
 
-export default new AuthController;
+export default new AuthController();

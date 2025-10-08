@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function CourseList() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const { data: courses, pagination, loading, error } = useAppSelector(
     (state) => state.course
   );
@@ -34,7 +35,6 @@ export default function CourseList() {
     <div className="p-6">
       {/* Header + Search */}
       <div className="sticky top-16 z-20 p-4 my-4 bg-yellow-700 shadow-lg rounded-sm text-white ">
-
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Quản lý khóa học</h1>
           <div className="flex gap-2">
@@ -92,7 +92,7 @@ export default function CourseList() {
                   <td className="border px-4 py-2">
                     {course.instructor?.name}
                   </td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 text-right">
                     {Number(course.price).toLocaleString("vi-VN")} đ
                   </td>
                   <td className="border text-center px-4 py-2">

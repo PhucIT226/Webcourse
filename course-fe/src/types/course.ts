@@ -10,6 +10,7 @@ export type Course = {
   price: number;
   studentCount?: number;
   createdAt?: string;
+  updatedAt?: string;
   status: "published" | "draft" | "closed";
   thumbnailUrls?: Image[];
 };

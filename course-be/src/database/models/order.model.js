@@ -19,7 +19,7 @@ export default (sequelize) => {
         allowNull: false,
       },
       userId: { type: DataTypes.UUID, allowNull: false },
-      couponId: { type: DataTypes.UUID, allowNull: false },
+      couponId: { type: DataTypes.UUID, allowNull: true },
       totalAmount: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
@@ -29,6 +29,19 @@ export default (sequelize) => {
         type: DataTypes.ENUM("pending", "paid", "cancelled", "refunded"),
         allowNull: false,
         defaultValue: "pending",
+      },
+      paymentMethod: {
+        type: DataTypes.ENUM("credit_card", "paypal", "bank", "momo", "zalopay"),
+        allowNull: true,
+      },
+      paymentStatus: {
+        type: DataTypes.ENUM("unpaid", "paid", "failed", "refunded"),
+        allowNull: false,
+        defaultValue: "unpaid",
+      },
+      note: {
+        type: DataTypes.TEXT,
+        allowNull: true,
       },
     },
     {

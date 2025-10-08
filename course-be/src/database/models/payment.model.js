@@ -16,8 +16,14 @@ export default (sequelize) => {
         allowNull: false,
       },
       orderId: { type: DataTypes.UUID, allowNull: false },
-      provider: { type: DataTypes.STRING(50), allowNull: true },
-      providerPaymentId: { type: DataTypes.STRING(100), allowNull: true },
+      paymentMethod: {
+        type: DataTypes.ENUM("credit_card", "paypal", "bank", "momo", "zalopay"),
+        allowNull: false,
+      },
+      transactionId: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
       amount: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,

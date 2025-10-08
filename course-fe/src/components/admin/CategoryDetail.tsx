@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import type { Category } from "../../types/category";
 import {
-  FaInfoCircle,
-  FaFolderOpen,
+  FaAlgolia,
+  FaKey,
   FaCalendarAlt,
   FaArrowLeft,
 } from "react-icons/fa";
@@ -56,11 +56,11 @@ export default function CategoryDetail() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
           <div className="space-y-4">
             <p className="flex items-center text-gray-800 font-medium">
-              <FaFolderOpen className="mr-3 text-yellow-500 text-lg" />
+              <FaKey className="mr-3 text-yellow-500 text-lg" />
               Mã danh mục: {category.id}
             </p>
             <p className="flex items-center text-gray-800 font-medium">
-              <FaInfoCircle className="mr-3 text-blue-600 text-lg" />
+              <FaAlgolia className="mr-3 text-pink-500 text-lg" />
               Trạng thái:
               <span
                 className={`ml-2 px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
@@ -79,8 +79,11 @@ export default function CategoryDetail() {
           <div className="space-y-4">
             <p className="flex items-center text-gray-800 font-medium">
               <FaCalendarAlt className="mr-3 text-indigo-500 text-lg" />
-              Ngày tạo:{" "}
-              {new Date(category.createdAt || "").toLocaleDateString("vi-VN")}
+              Ngày tạo: {new Date(category.createdAt || "").toLocaleDateString("vi-VN")}
+            </p>
+            <p className="flex items-center text-gray-800 font-medium">
+              <FaCalendarAlt className="mr-3 text-purple-500 text-lg" />
+              Cập nhật gần nhất: {new Date(category.updatedAt || "").toLocaleDateString("vi-VN")}
             </p>
           </div>
         </div>

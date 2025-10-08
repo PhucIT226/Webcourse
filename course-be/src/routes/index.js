@@ -7,8 +7,9 @@ import usersRoutes from './users.js';
 import categoriesRoutes from './categories.js';
 import coursesRoutes from './courses.js';
 // import lessonsRoutes from './lessons.js';
-// import ordersRoutes from './orders.js';
-// import orderItemsRoutes from './orderItems.js';
+import ordersRoutes from './orders.js';
+import orderItemsRoutes from './orderItems.js';
+// import paymentsRoutes from './payments.js';
 // import enrollmentsRoutes from './enrollments.js';
 // import couponsRoutes from './coupons.js';
 // import reviewsRoutes from './reviews.js';
@@ -21,26 +22,20 @@ export default {
       .use("/roles", rolesRoutes)
       .use("/users", usersRoutes)
     //   .use("/profiles", profilesRoutes)
-      .use("/categories", categoriesRoutes)
       .use("/courses", coursesRoutes)
-    //   .use("/auth", authRoutes)
-    //   .use("/auth", authRoutes)
-    //   .use("/auth", authRoutes)
-    //   .use("/auth", authRoutes)
-    //   .use("/auth", authRoutes)
-    //   .use("/auth", authRoutes)
-    //   .use("/auth", authRoutes)
+      .use("/categories", categoriesRoutes)
+      .use("/orders", ordersRoutes)
+      .use("/orderItem", orderItemsRoutes)
+      // .use("/payments", paymentsRoutes)
       .use("/uploads", uploadsRoutes)
+
+      // Nested routes
+      .use('/orders/:orderId/items', orderItemsRoutes)
+      // .use('/courses/:courseId/lessons', lessonsRoutes)
+      // .use('/courses/:courseId/reviews', reviewsRoutes)
 }
 
-
-// Nested routes
-// router.use('/courses/:courseId/lessons', lessonsRoutes);
-// router.use('/orders/:orderId/items', orderItemsRoutes);
-// router.use('/courses/:courseId/reviews', reviewsRoutes);
-
 // Các route còn lại
-// router.use('/orders', ordersRoutes);
 // router.use('/enrollments', enrollmentsRoutes);
 // router.use('/coupons', couponsRoutes);
 // router.use('/certificates', certificatesRoutes);
