@@ -6,9 +6,9 @@ class CourseRepository {
   constructor() {
     this.model = db.Course;
     this.enrollmentModel = db.Enrollment; // Bảng lưu học viên đăng ký khóa học
-    this.paymentModel = db.Payment;       // Bảng lưu thông tin thanh toán
-    this.categoryModel = db.Category;     // bảng categories
-    this.roleModel = db.Role;             // bảng roles (của user/instructor)
+    this.paymentModel = db.Payment; // Bảng lưu thông tin thanh toán
+    this.categoryModel = db.Category; // bảng categories
+    this.roleModel = db.Role; // bảng roles (của user/instructor)
   }
 
   // Lấy tất cả course (có phân trang + search + lọc category/instructor)
@@ -24,7 +24,7 @@ class CourseRepository {
     if (search) {
       where[Op.or] = [
         { title: { [Op.like]: `%${search}%` } },
-        { instructor: { [Op.like]: `%${search}%` } },
+        { instructorId: { [Op.like]: `%${search}%` } },
       ];
     }
     

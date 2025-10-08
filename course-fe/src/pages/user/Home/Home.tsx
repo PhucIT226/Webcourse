@@ -8,10 +8,10 @@ import Testimonials from "./Content/Testimonials";
 const Home = () => {
   return (
     <>
-      <div className="courses-container mb-5">
+      <div className="courses-container mb-15">
         <Courses />
       </div>
-      <div className="categories-container mb-5">
+      <div className="categories-container mb-15">
         <Categories />
       </div>
       <div className="detail-container">

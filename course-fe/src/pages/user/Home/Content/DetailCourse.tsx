@@ -1,10 +1,17 @@
 import React from "react";
-import { Accordion } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../../../../components/ui/accordion";
 
 const DetailCourse = () => {
   //   const location = useLocation();
   //   console.log(location);
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col md:flex-row gap-10 p-8 max-w-6xl mx-auto">
       {/* Left content */}
@@ -27,31 +34,20 @@ const DetailCourse = () => {
         </div>
 
         {/* Sections */}
-        <Accordion defaultActiveKey="0">
-          <Accordion.Item eventKey="0">
-            <Accordion.Header>Accordion Item #1</Accordion.Header>
-            <Accordion.Body>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </Accordion.Body>
-          </Accordion.Item>
-          <Accordion.Item eventKey="1">
-            <Accordion.Header>Accordion Item #2</Accordion.Header>
-            <Accordion.Body>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </Accordion.Body>
-          </Accordion.Item>
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Chương 1: Giới thiệu</AccordionTrigger>
+            <AccordionContent>
+              Giới thiệu tổng quan khóa học, cài đặt môi trường và các bước đầu
+              tiên.
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>Chương 2: Cấu trúc ngôn ngữ C++</AccordionTrigger>
+            <AccordionContent>
+              Tìm hiểu về biến, kiểu dữ liệu, hàm và vòng lặp trong C++.
+            </AccordionContent>
+          </AccordionItem>
         </Accordion>
       </div>
 
@@ -79,7 +75,10 @@ const DetailCourse = () => {
           Miễn phí
         </h2>
 
-        <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow">
+        <button
+          onClick={() => navigate("/coursevid")}
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow"
+        >
           ĐĂNG KÝ HỌC
         </button>
 
