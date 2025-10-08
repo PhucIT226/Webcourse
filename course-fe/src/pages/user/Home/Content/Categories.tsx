@@ -59,9 +59,13 @@ const Categories = () => {
   const [activeCategory, setActiveCategory] = useState(categories[0]);
 
   return (
-    <div className="container">
-      <h2>All the skills you need in one place</h2>
-      <p>From critical skills to technical topics, browse your category</p>
+    <div className="container mx-auto">
+      <h2 className="font-bold text-xl">
+        All the skills you need in one place
+      </h2>
+      <p className="text-lg mb-4">
+        From critical skills to technical topics, browse your category
+      </p>
 
       {/* Thanh danh mục */}
       <div className="categories mb-4">

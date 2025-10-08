@@ -19,6 +19,8 @@ import Profile from "./pages/admin/setting/profile";
 import User from "./pages/user/user";
 import { useEffect, useState } from "react";
 import DetailCourse from "./pages/user/Home/Content/DetailCourse";
+import CourseVid from "./pages/user/Home/Content/CourseVid";
+import SearchCourses from "./pages/user/Home/Header/SearchCourse";
 
 function App() {
   const navigate = useNavigate();
@@ -70,6 +72,8 @@ function App() {
       )}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/coursevid" element={<CourseVid />} />
+      <Route path="/coursesfound" element={<SearchCourses />} />
     </Routes>
   );
 }

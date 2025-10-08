@@ -16,51 +16,59 @@ const Courses = () => {
   }, []);
 
   return (
-    <div className="container">
-      <div className="row">
-        <div className="course_section mb-3">
-          <h2 className="course-section__title ">
-            Ready to reimagine your career?
-          </h2>
-          <p className="course-section__subtitle">
-            Get the skills and real-world experience employers want with Career
-            Accelerators.
-          </p>
-        </div>
+    <div className="container mx-auto px-4">
+      <div className="course_section mb-6">
+        <h2 className="course-section__title">
+          Ready to reimagine your career?
+        </h2>
+        <p className="course-section__subtitle">
+          Get the skills and real-world experience employers want with Career
+          Accelerators.
+        </p>
+      </div>
 
-        {loading && <p>Loading...</p>}
-        {!loading &&
-          courses.slice(0, 3).map((course: Course) => (
+      {loading && <p className="text-center text-gray-500">Loading...</p>}
+
+      {!loading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {courses.slice(0, 3).map((course: Course) => (
             <div
-              className="cursor-pointer col col-lg-4"
+              key={course.id}
               onClick={() =>
                 navigate(`/course/${course.id}`, {
                   state: { id: 7, color: "green" },
                 })
               }
-              key={course.id}
+              className="cursor-pointer"
             >
-              <div className="course-card mt-3 ">
-                <div className="course-card_image mb-3">
+              <div className="course-card mt-6 bg-white rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-transform">
+                <div className="course-card_image mb-4">
                   {course.thumbnailUrls?.[0] && (
-                    <img src={course.thumbnailUrls[0].url} alt={course.title} />
+                    <img
+                      src={course.thumbnailUrls[0].url}
+                      alt={course.title}
+                      className="w-full h-48 object-cover rounded-t-2xl"
+                    />
                   )}
                 </div>
-                <div className="course-card_title mb-3">{course.title}</div>
-                <div className="course-stats">
-                  <div className="course-card_star">
-                    <MdOutlineStar className="star-color" />
+                <div className="course-card_title mb-3 font-semibold text-lg text-gray-800">
+                  {course.title}
+                </div>
+                <div className="course-stats flex items-center justify-between text-sm text-gray-600">
+                  <div className="course-card_star flex items-center gap-1">
+                    <MdOutlineStar className="star-color text-yellow-500" />
                     <span>4.7</span>
                   </div>
                   <div className="course-card_rating">458k Rating</div>
                   <div className="vid_length">
-                    <span>87,8 total hours</span>
+                    <span>87.8 total hours</span>
                   </div>
                 </div>
               </div>
             </div>
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

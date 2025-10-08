@@ -27,7 +27,9 @@ const Slider = () => {
                 Khóa học ReactJS từ cơ bản tới nâng cao. Kết quả của khóa học
                 này là bạn có thể làm hầu hết các dự án thường gặp với ReactJS.
               </p>
-              <button className="btn btn-info">Đăng ký ngay</button>
+              <button className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition">
+                Đăng ký ngay
+              </button>
             </div>
             <div className="img-box">
               <img src="../src/assets/react.png" alt="ReactJS" />
@@ -43,7 +45,9 @@ const Slider = () => {
                 Học cách xây dựng REST API với Express, Sequelize, và JWT
                 Authentication.
               </p>
-              <button className="btn btn-primary">Học ngay</button>
+              <button className="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition">
+                Học ngay
+              </button>
             </div>
             <div className="img-box">
               <img src="../src/assets/nodejs.png" alt="NodeJS" />
