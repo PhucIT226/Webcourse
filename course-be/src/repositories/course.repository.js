@@ -20,12 +20,14 @@ class CourseRepository {
     instructor,
   }) {
     const where = {};
+
     if (search) {
       where[Op.or] = [
         { title: { [Op.like]: `%${search}%` } },
         { instructorId: { [Op.like]: `%${search}%` } },
       ];
     }
+    
     if (category) where.category = category;
     if (instructor) where.instructor = instructor;
 

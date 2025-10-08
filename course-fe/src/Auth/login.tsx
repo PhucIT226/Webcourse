@@ -37,7 +37,8 @@ const Login = () => {
     setIsLoading(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500)); // delay 1.5s
-      dispatch(signin(data));
+      const response = await dispatch(signin(data)).unwrap();
+      console.log("Login thành công:", response);
       navigate("/");
     } catch (error) {
       console.log(error);

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function CategoryList() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  
   const { data: categories, pagination, loading, error } = useAppSelector(
     (state) => state.category
   );

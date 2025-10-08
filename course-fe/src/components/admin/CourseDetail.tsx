@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import type { Course } from "../../types/course";
 import {
+  FaKey,
   FaUserTie,
   FaUser,
   FaFolderOpen,
@@ -58,6 +59,10 @@ export default function CourseDetail() {
           {/* Cột trái */}
           <div className="space-y-4">
             <p className="flex items-center text-gray-800 font-medium">
+              <FaKey className="mr-3 text-yellow-500 text-lg" />
+              Mã khóa học: {course.id}
+            </p>
+            <p className="flex items-center text-gray-800 font-medium">
               <FaUserTie className="mr-3 text-blue-600 text-lg" />
               Giảng viên: {course.instructor?.name} ({course.instructor?.email})
             </p>
@@ -95,6 +100,10 @@ export default function CourseDetail() {
             <p className="flex items-center text-gray-800 font-medium">
               <FaCalendarAlt className="mr-3 text-indigo-500 text-lg" />
               Ngày tạo: {new Date(course.createdAt || "").toLocaleDateString("vi-VN")}
+            </p>
+            <p className="flex items-center text-gray-800 font-medium">
+              <FaCalendarAlt className="mr-3 text-purple-500 text-lg" />
+              Cập nhật gần nhất: {new Date(course.updatedAt || "").toLocaleDateString("vi-VN")}
             </p>
           </div>
         </div>

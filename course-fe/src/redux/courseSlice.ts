@@ -18,7 +18,7 @@ const initialState: CourseState = {
   error: null,
 };
 
-// Thunks
+// ======================== THUNKS ========================
 export const fetchCourses = createAsyncThunk<
   CourseResDto,
   GetAllCourseParams | undefined,
@@ -80,7 +80,7 @@ export const deleteCourse = createAsyncThunk<
   }
 });
 
-// Slice
+// ======================== SLICE ========================
 const courseSlice = createSlice({
   name: "courses",
   initialState,
