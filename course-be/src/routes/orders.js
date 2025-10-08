@@ -1,19 +1,15 @@
-// import express from 'express';
-// import middlewares from '../middlewares/index.js';
-// import {
-//   getUserOrders,
-//   getOrderById,
-//   createOrder,
-//   updateOrder,
-//   deleteOrder
-// } from '../controllers/order.controller.js';
+import express from 'express';
+import middlewares from '../middlewares/index.js';
+import orderController from '../controllers/order.controller.js';
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.get('/users/:userId/orders', middlewares.auth, getUserOrders);
-// router.get('/:id', middlewares.auth, getOrderById);
-// router.post('/users/:userId/orders', middlewares.auth, createOrder);
-// router.patch('/:id', middlewares.auth, middlewares.role('admin'), updateOrder);
-// router.delete('/:id', middlewares.auth, middlewares.role('admin'), deleteOrder);
+router.get("/", orderController.getAllOrders);
+router.get('/:id', orderController.getOrderById);
+router.patch('/:id', middlewares.auth, middlewares.role('admin'), orderController.updateOrder);
+router.delete('/:id', middlewares.auth, middlewares.role('admin'), orderController.deleteOrder);
 
-// export default router;
+// route riêng cho user
+router.get('/users/:userId/orders', middlewares.auth, orderController.getUserOrders);
+
+export default router;

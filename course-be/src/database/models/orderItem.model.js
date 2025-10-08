@@ -19,15 +19,19 @@ export default (sequelize) => {
       orderId: { type: DataTypes.UUID, allowNull: false },
       courseId: { type: DataTypes.UUID, allowNull: false },
       price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
-      quantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 1,
-      },
       discount: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         defaultValue: 0,
+      },
+      finalPrice: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+      },
+      accessStatus: {
+        type: DataTypes.ENUM("active", "expired", "revoked"),
+        allowNull: false,
+        defaultValue: "active",
       },
     },
     { 
@@ -35,6 +39,15 @@ export default (sequelize) => {
       modelName: "OrderItem",
       tableName: "order_items",
       timestamps: true,
+
+       // Tự động tính finalPrice trước khi lưu
+      hooks: {
+        beforeValidate: (orderItem) => {
+          const price = parseFloat(orderItem.price) || 0;
+          const discount = parseFloat(orderItem.discount) || 0;
+          orderItem.finalPrice = Math.max(price - discount, 0);
+        },
+      },
     }
   );
 

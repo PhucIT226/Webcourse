@@ -5,8 +5,9 @@ export type Category = {
   name: string;
   slug: string;
   description?: string;
-  createdAt?: string;
   status: "active" | "inactive";
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export interface CategoryResDto {

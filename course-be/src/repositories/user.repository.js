@@ -46,7 +46,8 @@ class UserRepository {
   // Lấy user theo id
   async getUserById(id, includeRefreshToken = false) {
     const include = [{ model: db.Role, as: "role" }];
-    if (includeRefreshToken) include.push(db.RefreshToken);
+    if (includeRefreshToken)
+      include.push({ model: db.RefreshToken, as: "refreshToken" });
 
     return this.model.findByPk(id, { include });
   }
@@ -103,8 +104,9 @@ class UserRepository {
   // Update hoặc tạo refresh token mới
   async _updateOrCreateRefreshToken(user, token) {
     const expiresAt = getExpiresAtFromToken(token);
-    if (user.RefreshToken) {
-      await user.RefreshToken.update({ token, expiresAt });
+
+    if (user.refreshToken) {
+      await user.refreshToken.update({ token, expiresAt });
     } else {
       await user.createRefreshToken({ token, expiresAt });
     }
