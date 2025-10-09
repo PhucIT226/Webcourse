@@ -24,7 +24,7 @@ class CourseRepository {
     if (search) {
       where[Op.or] = [
         { title: { [Op.like]: `%${search}%` } },
-        { instructorId: { [Op.like]: `%${search}%` } },
+        { "$instructor.name$": { [Op.like]: `%${search}%` } },
       ];
     }
     

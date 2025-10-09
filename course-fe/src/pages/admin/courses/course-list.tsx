@@ -84,7 +84,7 @@ export default function CourseList() {
                   className="border-b whitespace-nowrap hover:bg-gray-50 transition-colors"
                 >
                   <td className="border text-center px-4 py-2">
-                    {(page - 1) * 10 + index + 1}
+                    {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}
                   </td>
                   <td className="border px-4 py-2 font-medium">
                     {course.title}

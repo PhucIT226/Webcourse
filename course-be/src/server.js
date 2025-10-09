@@ -2,6 +2,8 @@ import express from "express";
 import { createServer } from "http";
 import cors from "cors";
 import dotenv from "dotenv";
+dotenv.config();
+
 import passport from "passport";
 import cookieParser from "cookie-parser";
 import { Strategy, ExtractJwt } from "passport-jwt";
@@ -11,7 +13,6 @@ import db from "./database/models/index.js";
 import AppConfig from "./config/index.js";
 import ApiRouter from "./routes/index.js";
 
-dotenv.config();
 
 const app = express();
 const server = createServer(app);
