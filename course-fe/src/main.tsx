@@ -9,6 +9,7 @@ import "./styles/index.css";
 import "nprogress/nprogress.css";
 import { PersistGate } from "redux-persist/integration/react";
 import "./styles/user/App.scss";
+// import "./styles/App.css";
 
 createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
