@@ -77,7 +77,9 @@ const Header = () => {
               <Button variant="ghost" onClick={handleLogin}>
                 Sign in
               </Button>
-              <Button onClick={handleRegister}>Sign up</Button>
+              <Button variant="ghost" onClick={handleRegister}>
+                Sign up
+              </Button>
             </>
           ) : (
             <DropdownMenu>
