@@ -1,5 +1,4 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import Intro from "./pages/user/Intro/Intro";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./pages/user/Home/Home";
 import Login from "./Auth/login";
 import Register from "./Auth/register";
@@ -17,30 +16,11 @@ import ReviewList from "./pages/admin/reviews/review-list";
 import CouponList from "./pages/admin/coupons/coupon-list";
 import Profile from "./pages/admin/setting/profile";
 import User from "./pages/user/user";
-import { useEffect, useState } from "react";
 import DetailCourse from "./pages/user/Home/Content/DetailCourse";
 import CourseVid from "./pages/user/Home/Content/CourseVid";
 import SearchCourses from "./pages/user/Home/Header/SearchCourse";
 
 function App() {
-  const navigate = useNavigate();
-  const [showIntro, setShowIntro] = useState(true);
-  const hasSeenIntro = localStorage.getItem("hasSeenIntro");
-  const location = useLocation();
-  console.log(location);
-
-  useEffect(() => {
-    if (hasSeenIntro && showIntro) {
-      navigate("intro");
-    }
-  }, [hasSeenIntro, showIntro, navigate]);
-
-  const handleFinishIntro = () => {
-    localStorage.setItem("hasSeenIntro", "true");
-    setShowIntro(false);
-    navigate("/");
-  };
-
   return (
     <Routes>
       {/* User */}
@@ -64,12 +44,6 @@ function App() {
         <Route path="coupon-list" element={<CouponList />} />
         <Route path="profile" element={<Profile />} />
       </Route>
-      {showIntro && (
-        <Route
-          path="/intro"
-          element={<Intro onHandleFinish={handleFinishIntro} />}
-        />
-      )}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/coursevid" element={<CourseVid />} />
