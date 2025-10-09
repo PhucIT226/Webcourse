@@ -1,71 +1,89 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { API_URL } from "../constants";
 import NProgress from "nprogress";
 
-// Helper to get cookie by name
-// function getCookie(name: string): string | undefined {
-//   const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-//   return match ? decodeURIComponent(match[2]) : undefined;
-// }
 NProgress.configure({ showSpinner: false, trickleSpeed: 100 });
+
 const axiosClient = axios.create({
   baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
+  headers: { "Content-Type": "application/json" },
   withCredentials: true,
 });
 
-// just use in case httpOnly set is false in BE side
-// Request interceptor: attach access token from cookie
+// 🔹 Interceptor Request
 axiosClient.interceptors.request.use(
   (config) => {
     NProgress.start();
+
+    const me = localStorage.getItem("me");
+    if (me) {
+      const user = JSON.parse(me);
+      if (user?.accessToken && config.headers) {
+        config.headers.Authorization = `Bearer ${user.accessToken}`;
+      }
+    }
+
     return config;
   },
   (error) => {
     NProgress.done();
+    console.error("❌ [Request Error]:", error);
     return Promise.reject(error);
   }
 );
 
-// Response interceptor: handle token refresh
+// 🔹 Interceptor Response
 axiosClient.interceptors.response.use(
   (response) => {
     NProgress.done();
     return response;
   },
   async (error) => {
+    NProgress.done();
+
     const originalRequest = error.config;
-    // If 401 and not already retried
+
     if (
       error.response &&
       error.response.status === 401 &&
-      !originalRequest._retry
+      !originalRequest._retry &&
+      !originalRequest.url.includes("/auth/refresh")
     ) {
       originalRequest._retry = true;
+      console.warn("⚠️ [401] Access token có thể hết hạn → thử refresh token...");
+
       try {
-        // Call refresh endpoint (assume refreshToken in cookie)
-        await axios.post(
-          `${API_URL}/auth/refresh`,
-          {},
-          { withCredentials: true }
-        );
-        // After refresh, retry original request,
-        /* just use in case httpOnly set is false in BE side
-        const token = getCookie("accessToken");
-        if (token && originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${token}`;
+        const refreshRes = await axiosClient.post("/auth/refresh");
+
+        if (refreshRes.data?.accessToken) {
+          // 🔹 Cập nhật access token mới
+          const me = localStorage.getItem("me");
+          const user = me ? JSON.parse(me) : {};
+          user.accessToken = refreshRes.data.accessToken;
+          localStorage.setItem("me", JSON.stringify(user));
+
+          if (originalRequest.headers) {
+            originalRequest.headers.Authorization = `Bearer ${refreshRes.data.accessToken}`;
+          }
+        } else {
+          console.warn("⚠️ Refresh không trả accessToken (cookie-based auth)");
         }
-        */
-        // store.dispatch(clearAuth());
+
+        // 🔹 Thử lại request gốc
         return axiosClient(originalRequest);
       } catch (refreshError) {
-        // Optionally: redirect to login or handle logout
+        if (axios.isAxiosError(refreshError)) {
+          console.error("❌ [Refresh Error]:", refreshError.response?.data);
+        } else {
+          console.error("❌ [Unknown Error]:", refreshError);
+        }
+
         localStorage.removeItem("me");
+        window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );
