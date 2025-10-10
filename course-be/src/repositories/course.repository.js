@@ -93,9 +93,32 @@ class CourseRepository {
 
   // Cập nhật course
   async updateCourse(id, data) {
-    const course = await this.getCourseById(id);
+    const course = await this.model.findByPk(id, {
+      include: ["instructor", "category"],
+    });
     if (!course) return null;
-    await course.update(data);
+
+    // ✅ Cập nhật thông tin khóa học
+    await course.update({
+      title: data.title,
+      price: data.price,
+      status: data.status,
+    });
+
+    // ✅ Nếu có instructor gửi kèm
+    if (data.instructor && course.instructor) {
+      await course.instructor.update({
+        name: data.instructor.name,
+      });
+    }
+
+    // ✅ Nếu có category gửi kèm
+    if (data.category && course.category) {
+      await course.category.update({
+        name: data.category.name,
+      });
+    }
+
     return course;
   }
 
