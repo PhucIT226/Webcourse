@@ -1,23 +1,12 @@
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-
-// User pages
-import User from "./pages/user/user";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/user/Home/Home";
-import DetailCourse from "./pages/user/Home/Content/DetailCourse";
-import CourseVid from "./pages/user/Home/Content/CourseVid";
-import SearchCourses from "./pages/user/Home/Header/SearchCourse";
-import Intro from "./pages/user/Intro/Intro";
 import Login from "./Auth/login";
 import Register from "./Auth/register";
 
-// Admin pages
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
-import CourseList from "./pages/admin/courses/courses";
+// import CourseList from "./pages/admin/courses/course-list";
 import CourseDetail from "./components/admin/CourseDetail";
-import CourseCreate from "./pages/admin/courses/Course-create";
-import CourseEdit from "./pages/admin/courses/Course-edit";
 import UserList from "./pages/admin/users/user-list";
 import InstructorList from "./pages/admin/instructors/instructor-list";
 import CategoryList from "./pages/admin/categories/category-list";
@@ -34,26 +23,17 @@ import SearchCourses from "./pages/user/Home/Header/SearchCourse";
 function App() {
   return (
     <Routes>
-      {/* User routes */}
+      {/* User */}
       <Route path="/" element={<User />}>
         <Route index element={<Home />} />
         <Route path="/course/:id" element={<DetailCourse />} />
-        <Route path="/coursevid" element={<CourseVid />} />
-        <Route path="/coursesfound" element={<SearchCourses />} />
       </Route>
 
-      {/* Admin routes */}
+      {/* Admin */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<Dashboard />} />
-
-        {/* Course routes */}
-        <Route path="courses">
-          <Route index element={<CourseList />} />
-          <Route path="create" element={<CourseCreate />} />
-          <Route path=":id" element={<CourseDetail />} />
-          <Route path=":id/edit" element={<CourseEdit />} />
-        </Route>
-        
+        {/* <Route path="course-list" element={<CourseList />} /> */}
+        <Route path="course/:id" element={<CourseDetail />} />
         <Route path="student-list" element={<UserList />} />
         <Route path="user-list" element={<UserList />} />
         <Route path="instructor-list" element={<InstructorList />} />
@@ -66,6 +46,8 @@ function App() {
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/coursevid" element={<CourseVid />} />
+      <Route path="/coursesfound" element={<SearchCourses />} />
     </Routes>
   );
 }
