@@ -5,7 +5,7 @@ export type Course = {
   title: string;
   slug: string;
   description?: string;
-  instructor: {name: string};
+  instructor: { name: string };
   category: { name: string };
   price: number;
   studentCount?: number;
@@ -13,6 +13,7 @@ export type Course = {
   updatedAt?: string;
   status: "published" | "draft" | "closed";
   thumbnailUrls?: Image[];
+  categoryId: string;
 };
 
 export interface CourseResDto {
