@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
-import "../styles/auth/login.scss";
 import type { LoginForm } from "../types/auth";
 import { useAppDispatch } from "../hooks";
 import { signin } from "../redux/authSlice";
@@ -23,12 +22,11 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<LoginForm>({
     resolver: yupResolver(schema),
-    defaultValues: {
-      isRemember: false,
-    },
+    defaultValues: { isRemember: false },
   });
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -36,9 +34,8 @@ const Login = () => {
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // delay 1.5s
-      const response = await dispatch(signin(data)).unwrap();
-      console.log("Login thành công:", response);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await dispatch(signin(data));
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -48,55 +45,92 @@ const Login = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <div className="card p-4 shadow col-md-4 col-sm-8 col-12">
-        <h3 className="text-center mb-4">Đăng nhập</h3>
+    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <div className="bg-white shadow-md rounded-xl p-8 w-full max-w-md">
+        <h3 className="text-2xl font-semibold text-center mb-6 text-gray-800">
+          Đăng nhập
+        </h3>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
-            <label className="form-label">Email</label>
+          {/* Email */}
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 font-medium mb-1"
+            >
+              Email
+            </label>
             <input
+              id="email"
               type="email"
-              className={`form-control ${errors.email ? "is-invalid" : ""}`}
               {...register("email")}
               placeholder="Nhập email"
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              }`}
             />
-            <div className="invalid-feedback">{errors.email?.message}</div>
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
-          <div className="mb-2">
-            <label className="form-label">Mật khẩu</label>
+          {/* Password */}
+          <div className="mb-4">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 font-medium mb-1"
+            >
+              Mật khẩu
+            </label>
             <input
+              id="password"
               type="password"
-              className={`form-control ${errors.password ? "is-invalid" : ""}`}
               {...register("password")}
               placeholder="Nhập mật khẩu"
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                errors.password ? "border-red-500" : "border-gray-300"
+              }`}
             />
-            <div className="invalid-feedback">{errors.password?.message}</div>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
-          <div className="d-flex justify-content-end mb-3">
-            <a href="#" className="small text-decoration-none">
+          {/* Forgot password */}
+          <div className="text-right mb-4">
+            <a
+              href="#"
+              className="text-sm text-indigo-500 hover:underline font-medium"
+            >
               Quên mật khẩu?
             </a>
           </div>
+
+          {/* Submit */}
           <button
             type="submit"
-            className="d-flex btn btn-primary w-100 btn-submit"
             disabled={isLoading}
+            className="relative w-full flex justify-center items-center bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {isLoading === true && <FaSpinner className="loaderIcon" />}
-            <span>Đăng nhập</span>
+            {isLoading && (
+              <FaSpinner className="absolute left-4 animate-spin text-white text-lg" />
+            )}
+            <span>Đăng Nhập</span>
           </button>
         </form>
 
-        <p className="text-center mt-3 mb-0">
+        <p className="text-center text-gray-600 mt-6">
           Chưa có tài khoản?{" "}
           <button
-            className="btn-register"
+            type="button"
             onClick={() => navigate("/register")}
+            className="text-indigo-600 hover:underline font-medium cursor-pointer"
           >
-            Register
+            Đăng ký
           </button>
         </p>
       </div>

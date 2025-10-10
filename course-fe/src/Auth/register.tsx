@@ -1,12 +1,10 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import "../styles/auth/register.scss";
 import { useNavigate } from "react-router-dom";
 import type { RegisterForm } from "../types/auth";
 import { authService } from "../services/authService";
 
-// ✅ Schema validate cho Register
 const schema = yup.object({
   name: yup.string().required("Họ tên là bắt buộc"),
   email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
@@ -25,9 +23,10 @@ const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<RegisterForm>({
     resolver: yupResolver(schema),
   });
+
   const navigate = useNavigate();
 
   const onSubmit = async (data: RegisterForm) => {
@@ -36,70 +35,121 @@ const Register = () => {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center min-vh-100">
-      <div className="card p-4 shadow col-md-5 col-sm-8 col-12">
-        <h3 className="text-center mb-4">Đăng ký</h3>
+    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <div className="bg-white shadow-md rounded-xl p-8 w-full max-w-md">
+        <h3 className="text-2xl font-semibold text-center mb-6 text-gray-800">
+          Đăng ký
+        </h3>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* Name */}
-          <div className="mb-3">
-            <label className="form-label">Họ tên</label>
+          {/* Họ tên */}
+          <div className="mb-4">
+            <label
+              htmlFor="name"
+              className="block text-gray-700 font-medium mb-1"
+            >
+              Họ tên
+            </label>
             <input
+              id="name"
               type="text"
-              className={`form-control ${errors.name ? "is-invalid" : ""}`}
               {...register("name")}
               placeholder="Nhập họ tên"
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                errors.name ? "border-red-500" : "border-gray-300"
+              }`}
             />
-            <div className="invalid-feedback">{errors.name?.message}</div>
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+            )}
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Email</label>
+          {/* Email */}
+          <div className="mb-4">
+            <label
+              htmlFor="email"
+              className="block text-gray-700 font-medium mb-1"
+            >
+              Email
+            </label>
             <input
+              id="email"
               type="email"
-              className={`form-control ${errors.email ? "is-invalid" : ""}`}
               {...register("email")}
               placeholder="Nhập email"
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                errors.email ? "border-red-500" : "border-gray-300"
+              }`}
             />
-            <div className="invalid-feedback">{errors.email?.message}</div>
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Mật khẩu</label>
+          {/* Mật khẩu */}
+          <div className="mb-4">
+            <label
+              htmlFor="password"
+              className="block text-gray-700 font-medium mb-1"
+            >
+              Mật khẩu
+            </label>
             <input
+              id="password"
               type="password"
-              className={`form-control ${errors.password ? "is-invalid" : ""}`}
               {...register("password")}
               placeholder="Nhập mật khẩu"
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                errors.password ? "border-red-500" : "border-gray-300"
+              }`}
             />
-            <div className="invalid-feedback">{errors.password?.message}</div>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Xác nhận mật khẩu</label>
+          {/* Xác nhận mật khẩu */}
+          <div className="mb-6">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-gray-700 font-medium mb-1"
+            >
+              Xác nhận mật khẩu
+            </label>
             <input
+              id="confirmPassword"
               type="password"
-              className={`form-control ${
-                errors.confirmPassword ? "is-invalid" : ""
-              }`}
               {...register("confirmPassword")}
               placeholder="Nhập lại mật khẩu"
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                errors.confirmPassword ? "border-red-500" : "border-gray-300"
+              }`}
             />
-            <div className="invalid-feedback">
-              {errors.confirmPassword?.message}
-            </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">
+          {/* Nút Đăng ký */}
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition"
+          >
             Đăng ký
           </button>
         </form>
 
-        <p className="text-center mt-3 mb-0">
+        <p className="text-center text-gray-600 mt-6">
           Đã có tài khoản?{" "}
           <button
-            onClickCapture={() => navigate("/login")}
-            className="btn-login"
+            onClick={() => navigate("/login")}
+            className="text-indigo-600 hover:underline font-medium cursor-pointer"
           >
             Đăng nhập
           </button>

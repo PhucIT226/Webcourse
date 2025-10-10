@@ -1,4 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useAppDispatch } from "../../../hooks";
+import { createCourse, updateCourse } from "../../../redux/courseSlice";
+import type { TAny } from "../../../types/common";
+
+type Props = {
+  initialData?: TAny;
+  onClose: () => void;
+import { useEffect } from "react";
 import type { Course } from "../../../types/course";
 
 type Props = {
@@ -18,6 +26,13 @@ export default function CourseForm({ initialData, onSubmit }: Props) {
   const [thumbnailFiles, setThumbnailFiles] = useState<File[]>([]);
   const [preview, setPreview] = useState<string[]>([]);
 
+  const handleSubmit = (e: TAny) => {
+    e.preventDefault();
+    const payload = { title, instructor, category, price, status };
+    if (initialData?.id) {
+      dispatch(updateCourse({ id: initialData.id, course: payload }));
+    } else {
+      dispatch(createCourse(payload));
   useEffect(() => {
     if (initialData) {
       setTitle(initialData.title || "");
