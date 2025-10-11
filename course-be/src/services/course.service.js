@@ -6,8 +6,8 @@ class CourseService {
   }
 
   // Lấy danh sách courses
-  getListCourses({ page, pageSize, search, category, instructor }) {
-    return this.repository.getAllCourses({ page, pageSize, search, category, instructor });
+  getListCourses({ page, pageSize, search, category, instructor, sortField, sortOrder }) {
+    return this.repository.getAllCourses({ page, pageSize, search, category, instructor, sortField, sortOrder });
   }
 
   // Lấy course theo id

@@ -8,8 +8,8 @@ router.get('/', courseController.getAllCourses);
 router.get('/:id', courseController.getCourseById);
 
 // ===== Instructor/Admin =====
-router.post('/', middlewares.auth, middlewares.role('instructor', 'admin'), courseController.createCourse);
-router.patch('/:id', middlewares.auth, middlewares.role('instructor', 'admin'), courseController.updateCourse);
+router.post('/', middlewares.auth, middlewares.role('instructor', 'admin'), middlewares.upload.single('thumbnail'), courseController.createCourse);
+router.patch('/:id', middlewares.auth, middlewares.role('instructor', 'admin'), middlewares.upload.single('thumbnail'), courseController.updateCourse);
 router.delete('/:id', middlewares.auth, middlewares.role('instructor', 'admin'), courseController.deleteCourse);
 
 // ===== Instructor Dashboard =====
