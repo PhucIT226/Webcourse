@@ -1,12 +1,21 @@
 import { Route, Routes } from "react-router-dom";
+
+// User pages
+import User from "./pages/user/user";
 import Home from "./pages/user/Home/Home";
+import DetailCourse from "./pages/user/Home/Content/DetailCourse";
+import CourseVid from "./pages/user/Home/Content/CourseVid";
+import SearchCourses from "./pages/user/Home/Header/SearchCourse";
 import Login from "./Auth/login";
 import Register from "./Auth/register";
 
+// Admin pages
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
-// import CourseList from "./pages/admin/courses/course-list";
+import CourseList from "./pages/admin/courses/courses";
 import CourseDetail from "./components/admin/CourseDetail";
+import CourseCreate from "./pages/admin/courses/Course-create";
+import CourseEdit from "./pages/admin/courses/Course-edit";
 import UserList from "./pages/admin/users/user-list";
 import InstructorList from "./pages/admin/instructors/instructor-list";
 import CategoryList from "./pages/admin/categories/category-list";
@@ -15,25 +24,30 @@ import OrderList from "./pages/admin/orders/order-list";
 import ReviewList from "./pages/admin/reviews/review-list";
 import CouponList from "./pages/admin/coupons/coupon-list";
 import Profile from "./pages/admin/setting/profile";
-import User from "./pages/user/user";
-import DetailCourse from "./pages/user/Home/Content/DetailCourse";
-import CourseVid from "./pages/user/Home/Content/CourseVid";
-import SearchCourses from "./pages/user/Home/Header/SearchCourse";
 
 function App() {
   return (
     <Routes>
-      {/* User */}
+      {/* User routes */}
       <Route path="/" element={<User />}>
         <Route index element={<Home />} />
         <Route path="/course/:id" element={<DetailCourse />} />
+        <Route path="/coursevid" element={<CourseVid />} />
+        <Route path="/coursesfound" element={<SearchCourses />} />
       </Route>
 
-      {/* Admin */}
+      {/* Admin routes */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<Dashboard />} />
-        {/* <Route path="course-list" element={<CourseList />} /> */}
-        <Route path="course/:id" element={<CourseDetail />} />
+
+        {/* Course routes */}
+        <Route path="courses">
+          <Route index element={<CourseList />} />
+          <Route path="create" element={<CourseCreate />} />
+          <Route path=":id" element={<CourseDetail />} />
+          <Route path=":id/edit" element={<CourseEdit />} />
+        </Route>
+        
         <Route path="student-list" element={<UserList />} />
         <Route path="user-list" element={<UserList />} />
         <Route path="instructor-list" element={<InstructorList />} />
@@ -44,10 +58,9 @@ function App() {
         <Route path="coupon-list" element={<CouponList />} />
         <Route path="profile" element={<Profile />} />
       </Route>
+
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/coursevid" element={<CourseVid />} />
-      <Route path="/coursesfound" element={<SearchCourses />} />
     </Routes>
   );
 }

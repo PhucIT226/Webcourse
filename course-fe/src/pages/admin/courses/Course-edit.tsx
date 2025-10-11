@@ -11,6 +11,7 @@ export default function CourseEdit() {
 
   useEffect(() => {
     const fetchData = async () => {
+      
       try {
         const res = await CourseService.getById(id!);
         setCourse(res);
@@ -37,7 +38,7 @@ export default function CourseEdit() {
 
   return (
     <div className="p-6 max-w-2xl mx-auto bg-white rounded-lg shadow">
-      <h1 className="text-2xl font-bold mb-4">Chỉnh sửa khóa học</h1>
+      <h1 className="text-3xl text-center font-extrabold text-indigo-600 tracking-wide mb-4">Chỉnh sửa khóa học</h1>
       <CourseForm initialData={course} onSubmit={handleUpdate} />
     </div>
   );

@@ -16,6 +16,8 @@ export default function CourseDetail() {
   const location = useLocation();
   const course = location.state?.course as Course | undefined;
 
+  console.log("🖼️ Course data:", course);
+
   if (!course) {
     return (
       <div className="p-6 bg-gray-50 min-h-screen flex flex-col items-center justify-center">
@@ -116,7 +118,7 @@ export default function CourseDetail() {
               {course.thumbnailUrls.map((img, i) => (
                 <img
                   key={i}
-                  src={img.url}
+                  src={`http://localhost:3000${img.url}`}
                   alt={course.title}
                   className="w-48 h-32 object-cover rounded-xl border border-gray-200 shadow-sm hover:scale-105 transition-transform duration-300"
                 />
@@ -130,7 +132,10 @@ export default function CourseDetail() {
       <div className="mt-8 flex justify-end">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white px-5 py-2 rounded-lg shadow-lg transition-all duration-300 font-medium"
+          className="
+            flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-purple-500 
+            hover:from-indigo-600 hover:to-purple-600 text-white px-5 py-2 rounded-lg 
+            shadow-lg transition-all duration-300 font-medium"
         >
           <FaArrowLeft className="text-lg" />
           Quay lại
