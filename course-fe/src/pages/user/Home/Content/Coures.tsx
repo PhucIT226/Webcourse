@@ -36,7 +36,10 @@ const Courses = () => {
               key={course.id}
               onClick={() =>
                 navigate(`/course/${course.id}`, {
-                  state: { id: 7, color: "green" },
+                  state: {
+                    courseTitle: course.title,
+                    courseDes: course.description,
+                  },
                 })
               }
               className="cursor-pointer"

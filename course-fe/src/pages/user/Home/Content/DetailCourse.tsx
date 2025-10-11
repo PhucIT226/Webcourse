@@ -1,52 +1,85 @@
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../../../../components/ui/accordion";
+import { useSelector } from "react-redux";
+
+import type { RootState } from "../../../../redux/store";
+import type { TAny } from "../../../../types/common";
+import { fetchLessons } from "../../../../redux/lessonSlice";
+import { useAppDispatch } from "../../../../hooks";
 
 const DetailCourse = () => {
-  //   const location = useLocation();
-  //   console.log(location);
+  const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch;
+
+  const { lessons, loading } = useSelector((state: RootState) => state.lesson);
+
+  const courseId = location?.state?.courseId;
+
+  useEffect(() => {
+    if (courseId) {
+      dispatch(fetchLessons());
+    }
+  }, [dispatch, courseId]);
+
+  // Lấy danh sách chương (group by position)
+  const chapters = lessons.reduce((acc: TAny[], lesson) => {
+    const chapterIndex = Math.floor(lesson.position / 10) + 1; // ví dụ mỗi 10 lesson 1 chương
+    if (!acc[chapterIndex - 1]) acc[chapterIndex - 1] = [];
+    acc[chapterIndex - 1].push(lesson);
+    return acc;
+  }, []);
 
   return (
     <div className="flex flex-col md:flex-row gap-10 p-8 max-w-6xl mx-auto">
       {/* Left content */}
       <div className="flex-1">
         <h1 className="text-3xl font-bold mb-2">
-          Lập trình C++ cơ bản, nâng cao
+          {location?.state?.courseTitle}
         </h1>
         <p className="text-gray-700 mb-6 leading-relaxed">
-          Khóa học lập trình C++ từ cơ bản tới nâng cao dành cho người mới bắt
-          đầu. Mục tiêu của khóa học này nhằm giúp các bạn nắm được các khái
-          niệm căn cơ của lập trình, giúp các bạn có nền tảng vững chắc để chinh
-          phục con đường trở thành một lập trình viên.
+          {location?.state?.courseDes}
         </p>
 
         {/* Course info summary */}
         <div className="flex flex-wrap gap-4 text-gray-600 text-sm mb-6">
-          <span>11 chương</span>
-          <span>• 138 bài học</span>
-          <span>• Thời lượng 10 giờ 29 phút</span>
+          <span>{chapters.length} chương</span>
+          <span>• {lessons.length} bài học</span>
+          <span>
+            • Thời lượng{" "}
+            {lessons.reduce((sum, l) => sum + (l.duration || 0), 0)} phút
+          </span>
         </div>
 
         {/* Sections */}
         <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger>Chương 1: Giới thiệu</AccordionTrigger>
-            <AccordionContent>
-              Giới thiệu tổng quan khóa học, cài đặt môi trường và các bước đầu
-              tiên.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger>Chương 2: Cấu trúc ngôn ngữ C++</AccordionTrigger>
-            <AccordionContent>
-              Tìm hiểu về biến, kiểu dữ liệu, hàm và vòng lặp trong C++.
-            </AccordionContent>
-          </AccordionItem>
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            chapters.map((chapter, idx) => (
+              <AccordionItem key={idx} value={`item-${idx + 1}`}>
+                <AccordionTrigger>Chương {idx + 1}</AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-1">
+                    {chapter.map((lesson: TAny) => (
+                      <li key={lesson.id} className="text-gray-700">
+                        {lesson.title}{" "}
+                        {lesson.isFreePreview && (
+                          <span className="text-green-500">(Free Preview)</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            ))
+          )}
         </Accordion>
       </div>
 
@@ -83,8 +116,11 @@ const DetailCourse = () => {
 
         <ul className="text-gray-600 text-sm mt-5 space-y-2">
           <li>💡 Trình độ cơ bản</li>
-          <li>📚 Tổng số 138 bài học</li>
-          <li>⏱️ Thời lượng 10 giờ 29 phút</li>
+          <li>📚 Tổng số {lessons.length} bài học</li>
+          <li>
+            ⏱️ Thời lượng{" "}
+            {lessons.reduce((sum, l) => sum + (l.duration || 0), 0)} phút
+          </li>
           <li>💻 Học mọi lúc, mọi nơi</li>
         </ul>
       </div>

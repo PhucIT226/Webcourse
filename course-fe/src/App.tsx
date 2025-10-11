@@ -39,15 +39,8 @@ function App() {
       {/* Admin routes */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<Dashboard />} />
-
-        {/* Course routes */}
-        <Route path="courses">
-          <Route index element={<CourseList />} />
-          <Route path="create" element={<CourseCreate />} />
-          <Route path=":id" element={<CourseDetail />} />
-          <Route path=":id/edit" element={<CourseEdit />} />
-        </Route>
-        
+        <Route path="course-list" element={<CourseList />} />
+        <Route path="course/:id" element={<CourseDetail />} />
         <Route path="student-list" element={<UserList />} />
         <Route path="user-list" element={<UserList />} />
         <Route path="instructor-list" element={<InstructorList />} />
