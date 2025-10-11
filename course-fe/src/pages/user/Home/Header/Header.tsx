@@ -43,7 +43,6 @@ const Header = () => {
     setSearch(trimmed); // nếu vẫn muốn lưu state search
     navigate(`/coursesfound?search=${trimmed}`);
   };
-  console.log(handleSearch);
   return (
     <header className=" w-full border-b bg-white shadow-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">

@@ -61,7 +61,7 @@ const Categories = () => {
       {/* List khóa học */}
       <div className="courses grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {filteredCourses.length === 0 ? (
-          <p>No courses in this category yet.</p>
+          <b>No courses in this category yet.</b>
         ) : (
           filteredCourses.map((course) => (
             <div
@@ -76,9 +76,7 @@ const Categories = () => {
                 />
               )}
               <h3 className="font-semibold mt-2">{course.title}</h3>
-              <p className="mt-1">
-                <p>{course.price?.toLocaleString?.() || 0} ₫</p>{" "}
-              </p>
+              <p className="mt-1">{course.price?.toLocaleString?.() || 0} ₫ </p>
             </div>
           ))
         )}
