@@ -6,9 +6,9 @@ class UserService {
     this.repository = new UserRepository();
   }
 
-  // Lấy danh sách users (có phân trang, search, lọc role)
-  getListUsers({ page, limit, role, search }) {
-    return this.repository.getAllUsers({ page, limit, role, search });
+  // Lấy danh sách users
+  getListUsers({ page, pageSize, role, search, sortField, sortOrder }) {
+    return this.repository.getAllUsers({ page, pageSize, role, search, sortField, sortOrder });
   }
 
   // Lấy user theo id

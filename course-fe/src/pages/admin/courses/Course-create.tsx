@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import CourseForm from "./course-form";
+import CourseForm from "../../../components/admin/courses/course-form";
 import CourseService from "../../../services/courseService";
 
 export default function CourseCreate() {

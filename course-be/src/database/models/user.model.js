@@ -9,6 +9,7 @@ export default (sequelize) => {
       this.hasMany(models.Order, { foreignKey: "userId", as: "orders" });
       this.hasMany(models.Review, { foreignKey: "userId", as: "reviews" });
       this.hasOne(models.RefreshToken, { foreignKey: "userId", as: "refreshToken" });
+      this.hasMany(models.Enrollment, { foreignKey: "userId", as: "enrollments" });
     }
   }
 
