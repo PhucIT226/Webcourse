@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import type { Course } from "../../types/course";
+import type { Course } from "../../../types/course";
 import {
   FaKey,
   FaUserTie,

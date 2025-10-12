@@ -42,7 +42,7 @@ const menu: MenuType = [
   },
   {
     label: "Học viên",
-    to: "student-list",
+    to: "users",
     icon: FaUser,
     defaultColor: "text-green-600",
     children: [],

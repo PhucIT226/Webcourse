@@ -12,11 +12,14 @@ import Register from "./Auth/register";
 // Admin pages
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
+
 import CourseList from "./pages/admin/courses/courses";
-import CourseDetail from "./components/admin/CourseDetail";
-import CourseCreate from "./pages/admin/courses/Course-create";
-import CourseEdit from "./pages/admin/courses/Course-edit";
-import UserList from "./pages/admin/users/user-list";
+import CourseDetail from "./components/admin/courses/CourseDetail";
+import CourseCreate from "./pages/admin/courses/course-create";
+import CourseEdit from "./pages/admin/courses/course-edit";
+
+import UserList from "./pages/admin/users/users";
+
 import InstructorList from "./pages/admin/instructors/instructor-list";
 import CategoryList from "./pages/admin/categories/category-list";
 import CategoryDetail from "./components/admin/CategoryDetail";
@@ -39,10 +42,23 @@ function App() {
       {/* Admin routes */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<Dashboard />} />
-        <Route path="course-list" element={<CourseList />} />
-        <Route path="course/:id" element={<CourseDetail />} />
-        <Route path="student-list" element={<UserList />} />
-        <Route path="user-list" element={<UserList />} />
+
+        {/* Course routes */}
+        <Route path="courses">
+          <Route index element={<CourseList />} />
+          <Route path="create" element={<CourseCreate />} />
+          <Route path=":id" element={<CourseDetail />} />
+          <Route path=":id/edit" element={<CourseEdit />} />
+        </Route>
+
+        {/* Student routes */}
+        <Route path="users">
+          <Route index element={<UserList />} />
+          {/* <Route path="create" element={<StudentCreate />} />
+          <Route path=":id" element={<StudentDetail />} />
+          <Route path=":id/edit" element={<StudentEdit />} /> */}
+        </Route>
+
         <Route path="instructor-list" element={<InstructorList />} />
         <Route path="category-list" element={<CategoryList />} />
         <Route path="category/:id" element={<CategoryDetail />} />

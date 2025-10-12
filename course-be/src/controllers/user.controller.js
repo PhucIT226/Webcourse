@@ -9,8 +9,23 @@ class UserController extends BaseController {
 
   // Lấy danh sách users (có phân trang, search, lọc role)
   async getListUsers(req, res) {
-    const { page = 1, limit = 10, role, search } = req.query;
-    const result = await this.service.getListUsers({ page, limit, role, search });
+    const {
+      page = 1,
+      pageSize = 10, 
+      role, 
+      search,
+      sortField,
+      sortOrder,
+    } = req.query;
+
+    const result = await this.service.getListUsers({ 
+      page, 
+      pageSize, 
+      role, 
+      search,
+      sortField,
+      sortOrder,
+    });
 
     res.json({
       status: true,
