@@ -1,24 +1,29 @@
 import db from "../database/models/index.js";
 import { v4 as uuidv4 } from "uuid";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 class CourseRepository {
   constructor() {
     this.model = db.Course;
-    this.enrollmentModel = db.Enrollment; // Bảng lưu học viên đăng ký khóa học
-    this.paymentModel = db.Payment; // Bảng lưu thông tin thanh toán
-    this.categoryModel = db.Category; // bảng categories
-    this.roleModel = db.Role; // bảng roles (của user/instructor)
+    this.enrollmentModel = db.Enrollment;
+    this.paymentModel = db.Payment;
+    this.categoryModel = db.Category;
+    this.roleModel = db.Role;
   }
 
-  // Lấy tất cả course (có phân trang + search + lọc category/instructor)
+  // Lấy tất cả course (có phân trang + search + lọc category/instructor + sort)
   async getAllCourses({
     page = 1,
     pageSize = 10,
     search,
     category,
     instructor,
+    sortField = "createdAt",
+    sortOrder = "desc",
   }) {
+    // Chuyển sortOrder sang chữ thường để Sequelize nhận
+    const orderDir = sortOrder.toLowerCase() === "asc" ? "ASC" : "DESC";
+
     const where = {};
 
     if (search) {
@@ -27,20 +32,35 @@ class CourseRepository {
         { "$instructor.name$": { [Op.like]: `%${search}%` } },
       ];
     }
-    
+
     if (category) where.category = category;
     if (instructor) where.instructor = instructor;
+
+    // Xác định cột order
+    const orderArray = [];
+    const directColumns = ["title", "price", "status", "createdAt", "updatedAt"];
+
+    if (directColumns.includes(sortField)) {
+      orderArray.push([sortField, orderDir]);
+    } else if (sortField === "studentCount") {
+      orderArray.push(Sequelize.literal(`COUNT(enrollments.id) ${orderDir}`));
+    } else if (sortField === "instructor") {
+      orderArray.push([{ model: db.User, as: "instructor" }, "name", orderDir]);
+    } else if (sortField === "category") {
+      orderArray.push([{ model: this.categoryModel, as: "category" }, "name", orderDir]);
+    }
 
     const { count, rows } = await this.model.findAndCountAll({
       where,
       offset: (page - 1) * pageSize,
       limit: +pageSize,
-      order: [["createdAt", "DESC"]],
+      order: orderArray.length ? orderArray : [["createdAt", "DESC"]],
       include: [
         {
           model: this.enrollmentModel,
           as: "enrollments",
           attributes: [],
+          required: false,
         },
         {
           model: this.categoryModel,
@@ -55,7 +75,7 @@ class CourseRepository {
       ],
       attributes: {
         include: [
-          [db.Sequelize.fn("COUNT", db.Sequelize.col("*")), "studentCount"],
+          [Sequelize.fn("COUNT", Sequelize.col("enrollments.id")), "studentCount"],
         ],
       },
       group: ["Course.id", "category.id", "instructor.id"],
@@ -73,56 +93,44 @@ class CourseRepository {
     };
   }
 
-  // Lấy course theo ID
   async getCourseById(id) {
     return this.model.findByPk(id);
   }
 
-  // Tạo course mới
   async createCourse(courseData) {
     return this.model.create({
       id: uuidv4(),
       title: courseData.title,
-      instructor: courseData.instructor,
-      category: courseData.category,
+      slug: courseData.slug,
+      description: courseData.description,
+      shortDescription: courseData.shortDescription,
       price: courseData.price,
       status: courseData.status || "draft",
-      thumbnailUrls: courseData.thumbnailUrls || [],
+      thumbnailUrl: courseData.thumbnailUrl,
+      categoryId: courseData.categoryId,
+      instructorId: courseData.instructorId,
     });
   }
 
-  // Cập nhật course
   async updateCourse(id, data) {
-    const course = await this.model.findByPk(id, {
-      include: ["instructor", "category"],
-    });
+    const course = await this.model.findByPk(id);
     if (!course) return null;
 
-    // ✅ Cập nhật thông tin khóa học
     await course.update({
-      title: data.title,
-      price: data.price,
-      status: data.status,
+      title: data.title ?? course.title,
+      slug: data.slug ?? course.slug,
+      description: data.description ?? course.description,
+      shortDescription: data.shortDescription ?? course.shortDescription,
+      price: data.price ?? course.price,
+      status: data.status ?? course.status,
+      thumbnailUrl: data.thumbnailUrl ?? course.thumbnailUrl,
+      categoryId: data.categoryId ?? course.categoryId,
+      instructorId: data.instructorId ?? course.instructorId,
     });
-
-    // ✅ Nếu có instructor gửi kèm
-    if (data.instructor && course.instructor) {
-      await course.instructor.update({
-        name: data.instructor.name,
-      });
-    }
-
-    // ✅ Nếu có category gửi kèm
-    if (data.category && course.category) {
-      await course.category.update({
-        name: data.category.name,
-      });
-    }
 
     return course;
   }
 
-  // Xóa course
   async deleteCourse(id) {
     const course = await this.getCourseById(id);
     if (!course) return false;
@@ -130,8 +138,7 @@ class CourseRepository {
     return true;
   }
 
-  // ========== Instructor Dashboard ==========
-
+  // Instructor Dashboard
   async getInstructorCourses(instructorId) {
     return this.getAllCourses({ instructor: instructorId });
   }
@@ -139,18 +146,14 @@ class CourseRepository {
   async getInstructorStudents(instructorId) {
     return this.enrollmentModel.findAll({
       where: { instructorId },
-      include: [
-        { model: db.User, as: "student", attributes: ["id", "name", "email"] },
-      ],
+      include: [{ model: db.User, as: "student", attributes: ["id", "name", "email"] }],
     });
   }
 
   async getInstructorRevenue(instructorId) {
     const result = await this.paymentModel.findAll({
       where: { instructorId },
-      attributes: [
-        [db.sequelize.fn("SUM", db.sequelize.col("amount")), "totalRevenue"],
-      ],
+      attributes: [[db.sequelize.fn("SUM", db.sequelize.col("amount")), "totalRevenue"]],
       raw: true,
     });
     return result[0]?.totalRevenue || 0;

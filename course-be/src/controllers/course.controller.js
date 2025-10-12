@@ -1,5 +1,6 @@
 import CourseService from "../services/course.service.js";
 import BaseController from "./base.controller.js";
+import slugify from "slugify";
 
 class CourseController extends BaseController {
   constructor() {
@@ -9,8 +10,8 @@ class CourseController extends BaseController {
 
   // Lấy danh sách courses
   async getAllCourses(req, res) {
-    const { page = 1, pageSize = 10, search, category, instructor } = req.query;
-    const result = await this.service.getListCourses({ page, pageSize, search, category, instructor });
+    const { page = 1, pageSize = 10, search, category, instructor, sortField, sortOrder } = req.query;
+    const result = await this.service.getListCourses({ page, pageSize, search, category, instructor, sortField, sortOrder });
 
     res.json({
       status: true,
@@ -39,6 +40,20 @@ class CourseController extends BaseController {
   // Tạo course mới
   async createCourse(req, res) {
     const data = req.body;
+
+    if (!data.slug && data.title) {
+      data.slug = slugify(data.title, { lower: true, strict: true });
+    }
+
+    if (req.file) {
+      data.thumbnailUrl = `/uploads/${req.file.filename}`;
+    } else {
+      data.thumbnailUrl = "/uploads/default-thumbnail.jpg";
+    }
+
+    data.categoryId = data.categoryId;
+    data.instructorId = data.instructorId;
+
     const newCourse = await this.service.createCourse(data);
 
     res.status(201).json({
@@ -52,16 +67,30 @@ class CourseController extends BaseController {
   async updateCourse(req, res) {
     const { id } = req.params;
     const data = req.body;
-    const updated = await this.service.updateCourse(id, data);
 
-    if (!updated) {
-      return res.status(404).json({ status: false, message: "Course not found" });
+    if (req.file) {
+      data.thumbnailUrl = `/uploads/${req.file.filename}`;
     }
 
-    res.json({
+    if (data.title && !data.slug) {
+      data.slug = slugify(data.title, { lower: true, strict: true });
+    }
+
+    data.categoryId = data.categoryId;
+    data.instructorId = data.instructorId;
+
+    const updatedCourse = await this.service.updateCourse(id, data);
+    
+    if (!updatedCourse) {
+      return res
+        .status(404)
+        .json({ status: false, message: "Course not found" });
+    }
+
+     res.status(201).json({
       status: true,
       message: "Course updated successfully",
-      data: updated,
+      data: updatedCourse,
     });
   }
 
