@@ -18,7 +18,13 @@ export default function CourseList() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
-    dispatch(fetchCourses({ page, pageSize: 15, search, sortField, sortOrder }));
+    dispatch(fetchCourses({
+      page, 
+      pageSize: 15, 
+      search, 
+      sortField, 
+      sortOrder 
+    }));
   }, [dispatch, page, search, sortField, sortOrder]);
 
   const handleDelete = (id: string) => {
@@ -167,7 +173,7 @@ export default function CourseList() {
                   <td className="border text-center px-4 py-2">
                     {new Date(course.createdAt || "").toLocaleDateString("vi-VN")}
                   </td>
-                  <td className="border px-4 py-2 text-right flex gap-2 justify-end">
+                  <td className="border px-4 py-2 text-center flex gap-2 justify-center">
                     <button
                       onClick={() =>
                         navigate(`/admin/courses/${course.id}`, { state: { course } })

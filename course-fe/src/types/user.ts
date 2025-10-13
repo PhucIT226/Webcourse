@@ -1,15 +1,23 @@
-import type { Pagination } from "./common";
+import type { Image, Pagination } from "./common";
 
 export type User = {
   id?: string;
+  roleId?: string;
   name: string;
   email: string;
-  phone: string;
-  address?: string;
+  password?: string;
+  profile?: {
+    fullName?: string;
+    phone?: string;
+    address?: string;
+    dateOfBirth?: string;
+  };
   courseCount?: number; 
   progress?: string; 
   status: "active" | "inactive" | "banned" | "pending";
   createdAt?: string;
+  updatedAt?: string;
+  avatarUrls?: Image[];
 };
 
 export interface UserResDto {

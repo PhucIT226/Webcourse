@@ -16,7 +16,6 @@ export async function up(queryInterface, Sequelize) {
     fullName: { type: Sequelize.STRING(100), allowNull: true },
     phone: { type: Sequelize.STRING(20), allowNull: true },
     address: { type: Sequelize.STRING(255), allowNull: true },
-    avatarUrl: { type: Sequelize.STRING(255), allowNull: true },
     dateOfBirth: { type: Sequelize.DATEONLY, allowNull: true },
     createdAt: {
       type: Sequelize.DATE,

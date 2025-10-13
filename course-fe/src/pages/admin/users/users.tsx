@@ -63,29 +63,34 @@ export default function UserList() {
           <h1 className="text-xl font-bold">Quản lý người dùng</h1>
 
           <div className="flex gap-3">
+            {/* Nút Học viên */}
             <button
               onClick={() => {
                 setActiveRole("student");
                 setPage(1);
               }}
-              className={`px-4 py-2 rounded-md text-sm font-medium border transition ${
-                activeRole === "student"
-                  ? "bg-white text-yellow-700 border-white"
-                  : "border-transparent hover:bg-yellow-600"
-              }`}
+              className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200
+                ${
+                  activeRole === "student"
+                    ? "bg-green-500 text-white border-green-600 shadow-md"
+                    : "bg-white text-green-700 border-green-400 hover:bg-green-50"
+                }`}
             >
               Học viên
             </button>
+
+            {/* Nút Giảng viên */}
             <button
               onClick={() => {
                 setActiveRole("instructor");
                 setPage(1);
               }}
-              className={`px-4 py-2 rounded-md text-sm font-medium border transition ${
-                activeRole === "instructor"
-                  ? "bg-white text-yellow-700 border-white"
-                  : "border-transparent hover:bg-yellow-600"
-              }`}
+              className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200
+                ${
+                  activeRole === "instructor"
+                    ? "bg-blue-500 text-white border-blue-600 shadow-md"
+                    : "bg-white text-blue-700 border-blue-400 hover:bg-blue-50"
+                }`}
             >
               Giảng viên
             </button>
@@ -115,7 +120,7 @@ export default function UserList() {
       {/* Button add */}
       <div className="mb-4">
         <button
-          onClick={() => navigate("/admin/courses/create")}
+          onClick={() => navigate("/admin/users/create")}
           className="bg-green-600 hover:bg-green-700 text-lg text-white px-4 py-2 rounded-md text-sm"
         >
           Thêm khóa học
@@ -144,17 +149,12 @@ export default function UserList() {
               >
                 Email {renderSortIcon("email")}
               </th>
+              <th className="border text-center px-4 py-3">STĐ</th>
               <th
                 className="border text-center px-4 py-3 cursor-pointer"
-                onClick={() => handleSort("phone")}
+                onClick={() => handleSort("dateOfBirth")}
               >
-                STĐ {renderSortIcon("phone")}
-              </th>
-              <th
-                className="border text-center px-4 py-3 cursor-pointer"
-                onClick={() => handleSort("address")}
-              >
-                Địa chỉ {renderSortIcon("address")}
+                Ngày sinh {renderSortIcon("dateOfBirth")}
               </th>
               <th
                 className="border text-center px-4 py-3 cursor-pointer"
@@ -183,8 +183,8 @@ export default function UserList() {
                   </td>
                   <td className="border px-4 py-2 font-medium">{user.name}</td>
                   <td className="border px-4 py-2">{user.email}</td>
-                  <td className="border px-4 py-2">{user.phone || "—"}</td>
-                  <td className="border px-4 py-2">{user.address || "—"}</td>
+                  <td className="border px-4 py-2">{user.profile?.phone || "—"}</td>
+                  <td className="border px-4 py-2">{user.profile?.dateOfBirth || "—"}</td>
                   <td className="border px-4 py-2">
                     <span
                       className={`px-2 py-1 rounded text-xs font-medium
@@ -204,7 +204,7 @@ export default function UserList() {
                   <td className="border text-center px-4 py-2">
                     {new Date(user.createdAt || "").toLocaleDateString("vi-VN")}
                   </td>
-                  <td className="border px-4 py-2 text-right flex gap-2 justify-end">
+                  <td className="border px-4 py-2 text-center flex gap-2 justify-center">
                     <button
                       onClick={() =>
                         navigate(`/admin/users/${user.id}`, { state: { user } })
