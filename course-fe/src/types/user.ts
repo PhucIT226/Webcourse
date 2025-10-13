@@ -1,14 +1,23 @@
-import type { Pagination } from "./common";
+import type { Image, Pagination } from "./common";
 
 export type User = {
   id?: string;
+  roleId?: string;
   name: string;
   email: string;
-  phone: string;
-  courseCount?: number; // số khóa học đã tham gia
-  progress?: string; // tiến độ học tập (vd: "50%", "Đã hoàn thành", ...)
-  status: "active" | "inactive" | "banned"; // trạng thái tài khoản
+  password?: string;
+  profile?: {
+    fullName?: string;
+    phone?: string;
+    address?: string;
+    dateOfBirth?: string;
+  };
+  courseCount?: number; 
+  progress?: string; 
+  status: "active" | "inactive" | "banned" | "pending";
   createdAt?: string;
+  updatedAt?: string;
+  avatarUrls?: Image[];
 };
 
 export interface UserResDto {
@@ -22,4 +31,5 @@ export type GetAllUserParams = {
   search?: string;
   sortField?: string;
   sortOrder?: "asc" | "desc";
+  role?: "student" | "instructor";
 };

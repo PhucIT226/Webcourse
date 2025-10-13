@@ -39,7 +39,6 @@ export async function up(queryInterface) {
     phone: "0123456789",
     address: "123 Admin Street",
     dateOfBirth: "2000-01-01",
-    avatarUrl: null,
     createdAt: now,
     updatedAt: now,
   });
@@ -66,7 +65,6 @@ export async function up(queryInterface) {
       phone: faker.phone.number(),
       address: faker.location.streetAddress(),
       dateOfBirth: faker.date.birthdate({ min: 25, max: 50, mode: "age" }),
-      avatarUrl: null,
       createdAt: now,
       updatedAt: now,
     });
@@ -94,7 +92,6 @@ export async function up(queryInterface) {
       phone: faker.phone.number(),
       address: faker.location.streetAddress(),
       dateOfBirth: faker.date.birthdate({ min: 18, max: 40, mode: "age" }),
-      avatarUrl: null,
       createdAt: now,
       updatedAt: now,
     });

@@ -41,17 +41,10 @@ const menu: MenuType = [
     children: [],
   },
   {
-    label: "Học viên",
-    to: "student-list",
+    label: "Người dùng",
+    to: "users",
     icon: FaUser,
     defaultColor: "text-green-600",
-    children: [],
-  },
-  {
-    label: "Giảng viên",
-    to: "instructor-list",
-    icon: FaUserTie,
-    defaultColor: "text-purple-600",
     children: [],
   },
   {

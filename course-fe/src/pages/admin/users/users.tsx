@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { fetchCourses, deleteCourse } from "../../../redux/courseSlice";
-import type { Course } from "../../../types/course";
+import { fetchUsers, deleteUser } from "../../../redux/userSlice";
+import type { User } from "../../../types/user";
 import { useNavigate } from "react-router-dom";
 
-export default function CourseList() {
+export default function UserList() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { data: courses, pagination, loading, error } = useAppSelector(
-    (state) => state.course
+  const { data: users, pagination, loading, error } = useAppSelector(
+    (state) => state.user
   );
 
+  const [activeRole, setActiveRole] = useState<"student" | "instructor">("student");
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -18,18 +19,19 @@ export default function CourseList() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
-    dispatch(fetchCourses({
+    dispatch(fetchUsers({ 
       page, 
       pageSize: 15, 
       search, 
       sortField, 
-      sortOrder 
+      sortOrder, 
+      role: activeRole,
     }));
-  }, [dispatch, page, search, sortField, sortOrder]);
+  }, [dispatch, page, search, sortField, sortOrder, activeRole ]);
 
   const handleDelete = (id: string) => {
     if (confirm("Bạn có chắc muốn xóa khóa học này?")) {
-      dispatch(deleteCourse(id));
+      dispatch(deleteUser(id));
     }
   };
 
@@ -56,13 +58,48 @@ export default function CourseList() {
   return (
     <div className="p-6">
       {/* Header + Search */}
-      <div className="sticky top-16 z-20 p-4 my-4 bg-yellow-700 shadow-lg rounded-sm text-white ">
+      <div className="sticky top-16 z-20 p-4 my-4 bg-yellow-700 shadow-lg rounded-sm text-white">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">Quản lý khóa học</h1>
+          <h1 className="text-xl font-bold">Quản lý người dùng</h1>
+
+          <div className="flex gap-3">
+            {/* Nút Học viên */}
+            <button
+              onClick={() => {
+                setActiveRole("student");
+                setPage(1);
+              }}
+              className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200
+                ${
+                  activeRole === "student"
+                    ? "bg-green-500 text-white border-green-600 shadow-md"
+                    : "bg-white text-green-700 border-green-400 hover:bg-green-50"
+                }`}
+            >
+              Học viên
+            </button>
+
+            {/* Nút Giảng viên */}
+            <button
+              onClick={() => {
+                setActiveRole("instructor");
+                setPage(1);
+              }}
+              className={`px-4 py-2 rounded-md text-sm font-medium border transition-all duration-200
+                ${
+                  activeRole === "instructor"
+                    ? "bg-blue-500 text-white border-blue-600 shadow-md"
+                    : "bg-white text-blue-700 border-blue-400 hover:bg-blue-50"
+                }`}
+            >
+              Giảng viên
+            </button>
+          </div>
+
           <div className="flex gap-2">
             <input
               type="text"
-              placeholder="Tìm khóa học..."
+              placeholder={`Tìm ${activeRole === "student" ? "học viên" : "giảng viên"}...`}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="border bg-white px-3 py-2 rounded-md text-sm text-black"
@@ -83,7 +120,7 @@ export default function CourseList() {
       {/* Button add */}
       <div className="mb-4">
         <button
-          onClick={() => navigate("/admin/courses/create")}
+          onClick={() => navigate("/admin/users/create")}
           className="bg-green-600 hover:bg-green-700 text-lg text-white px-4 py-2 rounded-md text-sm"
         >
           Thêm khóa học
@@ -102,27 +139,22 @@ export default function CourseList() {
               <th className="border text-center px-4 py-3">STT</th>
               <th
                 className="border text-center px-4 py-3 cursor-pointer"
-                onClick={() => handleSort("title")}
+                onClick={() => handleSort("name")}
               >
-                Tên {renderSortIcon("title")}
+                Họ tên {renderSortIcon("name")}
               </th>
               <th
                 className="border text-center px-4 py-3 cursor-pointer"
-                onClick={() => handleSort("instructor")}
+                onClick={() => handleSort("email")}
               >
-                Giảng viên {renderSortIcon("instructor")}
+                Email {renderSortIcon("email")}
               </th>
+              <th className="border text-center px-4 py-3">STĐ</th>
               <th
                 className="border text-center px-4 py-3 cursor-pointer"
-                onClick={() => handleSort("price")}
+                onClick={() => handleSort("dateOfBirth")}
               >
-                Giá {renderSortIcon("price")}
-              </th>
-              <th
-                className="border text-center px-4 py-3 cursor-pointer"
-                onClick={() => handleSort("studentCount")}
-              >
-                Học viên {renderSortIcon("studentCount")}
+                Ngày sinh {renderSortIcon("dateOfBirth")}
               </th>
               <th
                 className="border text-center px-4 py-3 cursor-pointer"
@@ -140,56 +172,55 @@ export default function CourseList() {
             </tr>
           </thead>
           <tbody>
-            {courses.length > 0 ? (
-              courses.map((course: Course, index: number) => (
+            {users.length > 0 ? (
+              users.map((user: User, index: number) => (
                 <tr
-                  key={course.id}
+                  key={user.id}
                   className="border-b whitespace-nowrap hover:bg-gray-50 transition-colors"
                 >
                   <td className="border text-center px-4 py-2">
                     {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}
                   </td>
-                  <td className="border px-4 py-2 font-medium">{course.title}</td>
-                  <td className="border px-4 py-2">{course.instructor?.name}</td>
-                  <td className="border px-4 py-2 text-right">
-                    {Number(course.price).toLocaleString("vi-VN")} đ
-                  </td>
-                  <td className="border text-center px-4 py-2">
-                    {course.studentCount ?? 0}
-                  </td>
+                  <td className="border px-4 py-2 font-medium">{user.name}</td>
+                  <td className="border px-4 py-2">{user.email}</td>
+                  <td className="border px-4 py-2">{user.profile?.phone || "—"}</td>
+                  <td className="border px-4 py-2">{user.profile?.dateOfBirth || "—"}</td>
                   <td className="border px-4 py-2">
                     <span
-                      className={`px-2 py-1 rounded text-xs ${
-                        course.status === "published"
-                          ? "bg-green-100 text-green-600"
-                          : course.status === "draft"
-                          ? "bg-yellow-100 text-yellow-600"
-                          : "bg-gray-200 text-gray-600"
-                      }`}
+                      className={`px-2 py-1 rounded text-xs font-medium
+                        ${
+                          user.status === "active"
+                            ? "bg-green-100 text-green-600"
+                            : user.status === "inactive"
+                            ? "bg-yellow-100 text-yellow-600"
+                            : user.status === "banned"
+                            ? "bg-red-100 text-red-600"
+                            : "bg-blue-100 text-blue-600" // pending
+                        }`}
                     >
-                      {course.status}
+                      {user.status}
                     </span>
                   </td>
                   <td className="border text-center px-4 py-2">
-                    {new Date(course.createdAt || "").toLocaleDateString("vi-VN")}
+                    {new Date(user.createdAt || "").toLocaleDateString("vi-VN")}
                   </td>
                   <td className="border px-4 py-2 text-center flex gap-2 justify-center">
                     <button
                       onClick={() =>
-                        navigate(`/admin/courses/${course.id}`, { state: { course } })
+                        navigate(`/admin/users/${user.id}`, { state: { user } })
                       }
                       className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
                     >
                       Chi tiết
                     </button>
                     <button
-                      onClick={() => navigate(`/admin/courses/${course.id}/edit`)}
+                      onClick={() => navigate(`/admin/users/${user.id}/edit`)}
                       className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded"
                     >
                       Sửa
                     </button>
                     <button
-                      onClick={() => handleDelete(course.id!)}
+                      onClick={() => handleDelete(user.id!)}
                       className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
                     >
                       Xóa
@@ -200,7 +231,7 @@ export default function CourseList() {
             ) : (
               <tr>
                 <td colSpan={9} className="px-4 py-4 text-center text-gray-500">
-                  Không có khóa học nào
+                  Không có học viên nào
                 </td>
               </tr>
             )}

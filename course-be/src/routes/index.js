@@ -6,7 +6,7 @@ import usersRoutes from './users.js';
 // import profilesRoutes from './profiles.js';
 import categoriesRoutes from './categories.js';
 import coursesRoutes from './courses.js';
-import lessonsRoutes from './lessons.js';
+// import lessonsRoutes from './lessons.js';
 import ordersRoutes from './orders.js';
 import orderItemsRoutes from './orderItems.js';
 // import paymentsRoutes from './payments.js';
@@ -25,7 +25,7 @@ export default {
       .use("/courses", coursesRoutes)
       // .use("/courses/:courseId/lessons", lessonsRoutes)
       // .use("/courses/:courseId/reviews", reviewsRoutes)
-      .use("/lessons", lessonsRoutes)
+      // .use("/lessons", lessonsRoutes)
       .use("/categories", categoriesRoutes)
       .use("/orders", ordersRoutes)
       .use("/orderItem", orderItemsRoutes)

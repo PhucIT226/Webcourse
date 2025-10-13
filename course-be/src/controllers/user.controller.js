@@ -1,5 +1,6 @@
 import UserService from "../services/user.service.js";
 import BaseController from "./base.controller.js";
+import slugify from "slugify";
 
 class UserController extends BaseController {
   constructor() {
@@ -9,8 +10,23 @@ class UserController extends BaseController {
 
   // Lấy danh sách users (có phân trang, search, lọc role)
   async getListUsers(req, res) {
-    const { page = 1, limit = 10, role, search } = req.query;
-    const result = await this.service.getListUsers({ page, limit, role, search });
+    const {
+      page = 1,
+      pageSize = 10, 
+      role, 
+      search,
+      sortField,
+      sortOrder,
+    } = req.query;
+
+    const result = await this.service.getListUsers({ 
+      page, 
+      pageSize, 
+      role, 
+      search,
+      sortField,
+      sortOrder,
+    });
 
     res.json({
       status: true,
@@ -38,8 +54,23 @@ class UserController extends BaseController {
 
   // Tạo user mới
   async createUser(req, res) {
-    const userData = req.body;
-    const newUser = await this.service.createUser(userData);
+    const data = req.body;
+
+    if (typeof data.profile === "string") {
+      try {
+        data.profile = JSON.parse(data.profile);
+      } catch {
+        data.profile = null;
+      }
+    }
+
+    if (req.file) {
+      data.avatarUrl = `/uploads/${req.file.filename}`;
+    } else {
+      data.avatarUrl = "/uploads/default-avatar.jpg";
+    }
+
+    const newUser = await this.service.createUser(data);
 
     res.status(201).json({
       status: true,

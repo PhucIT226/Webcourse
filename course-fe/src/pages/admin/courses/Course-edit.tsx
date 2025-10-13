@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import CourseForm from "./course-form";
+import CourseForm from "../../../components/admin/courses/CourseForm";
 import CourseService from "../../../services/courseService";
 import type { Course } from "../../../types/course";
 

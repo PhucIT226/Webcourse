@@ -23,7 +23,6 @@ export default (sequelize) => {
       fullName: { type: DataTypes.STRING(100) },
       phone: { type: DataTypes.STRING(20) },
       address: { type: DataTypes.STRING(255) },
-      avatarUrl: { type: DataTypes.STRING(255) },
       dateOfBirth: { type: DataTypes.DATEONLY },
     },
     {

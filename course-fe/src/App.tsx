@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 // User pages
 import User from "./pages/user/user";
 import Home from "./pages/user/Home/Home";
-import DetailCourse from "./pages/user/Home/Content/DetailCourse";
+// import DetailCourse from "./pages/user/Home/Content/DetailCourse";
 import CourseVid from "./pages/user/Home/Content/CourseVid";
 import SearchCourses from "./pages/user/Home/Header/SearchCourse";
 import Login from "./Auth/login";
@@ -12,11 +12,16 @@ import Register from "./Auth/register";
 // Admin pages
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
+
 import CourseList from "./pages/admin/courses/courses";
-import CourseDetail from "./components/admin/CourseDetail";
-// import CourseCreate from "./pages/admin/courses/Course-create";
-// import CourseEdit from "./pages/admin/courses/Course-edit";
-import UserList from "./pages/admin/users/user-list";
+import CourseDetail from "./components/admin/courses/CourseDetail";
+import CourseCreate from "./pages/admin/courses/course-create";
+import CourseEdit from "./pages/admin/courses/course-edit";
+
+import UserList from "./pages/admin/users/users";
+import UserDetail from "./components/admin/users/UserDetail";
+import UserCreate from "./pages/admin/users/user-create";
+
 import InstructorList from "./pages/admin/instructors/instructor-list";
 import CategoryList from "./pages/admin/categories/category-list";
 import CategoryDetail from "./components/admin/CategoryDetail";
@@ -39,10 +44,23 @@ function App() {
       {/* Admin routes */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<Dashboard />} />
-        <Route path="course-list" element={<CourseList />} />
-        <Route path="course/:id" element={<CourseDetail />} />
-        <Route path="student-list" element={<UserList />} />
-        <Route path="user-list" element={<UserList />} />
+
+        {/* Course routes */}
+        <Route path="courses">
+          <Route index element={<CourseList />} />
+          <Route path="create" element={<CourseCreate />} />
+          <Route path=":id" element={<CourseDetail />} />
+          <Route path=":id/edit" element={<CourseEdit />} />
+        </Route>
+
+        {/* Student routes */}
+        <Route path="users">
+          <Route index element={<UserList />} />
+          <Route path="create" element={<UserCreate />} />
+          <Route path=":id" element={<UserDetail />} />
+          {/* <Route path=":id/edit" element={<StudentEdit />} /> */}
+        </Route>
+
         <Route path="instructor-list" element={<InstructorList />} />
         <Route path="category-list" element={<CategoryList />} />
         <Route path="category/:id" element={<CategoryDetail />} />
