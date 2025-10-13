@@ -36,8 +36,8 @@ function App() {
       {/* User routes */}
       <Route path="/" element={<User />}>
         <Route index element={<Home />} />
-        {/* <Route path="/course/:id" element={<DetailCourse />} /> */}
-        <Route path="/coursevid" element={<CourseVid />} />
+        <Route path="/course/:id" element={<DetailCourse />} />
+        <Route path="/coursevid/:id" element={<CourseVid />} />
         <Route path="/coursesfound" element={<SearchCourses />} />
       </Route>
 

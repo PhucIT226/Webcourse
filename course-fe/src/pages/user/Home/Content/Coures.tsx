@@ -39,6 +39,7 @@ const Courses = () => {
                   state: {
                     courseTitle: course.title,
                     courseDes: course.description,
+                    courseId: course.id,
                   },
                 })
               }
