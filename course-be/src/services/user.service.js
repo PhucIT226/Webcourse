@@ -17,12 +17,27 @@ class UserService {
   }
 
   // Tạo user mới (hash password trước khi lưu)
-  async createUser(userData) {
-    if (userData.password) {
-      userData.passwordHash = await hashPassword(userData.password);
-      delete userData.password; // tránh lưu plaintext
+  async createUser(data) {
+    if (!data.password) {
+      throw new Error("Password is required");
     }
-    return this.repository.createUser(userData);
+    if (!data.roleId) {
+      throw new Error("roleId is required");
+    }
+
+    if (data.profile && typeof data.profile === "string") {
+      try {
+        data.profile = JSON.parse(data.profile);
+      } catch {
+        console.warn("Profile parse failed, ignoring");
+        data.profile = null;
+      }
+    }
+
+    data.passwordHash = await hashPassword(data.password);
+    delete data.password;
+
+    return this.repository.createUser(data);
   }
 
   // Cập nhật user

@@ -12,17 +12,21 @@ const UserService = {
     return res.data.data;
   },
 
-  async create(user: Partial<User>, avatarFile?: File): Promise<User> {
+  async create(user: Partial<User>, files?: File[]): Promise<User> {
     const formData = new FormData();
 
     Object.entries(user).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        formData.append(key, String(value));
+        if (key === "profile") {
+          formData.append(key, JSON.stringify(value)); // ✅ gửi JSON đúng định dạng
+        } else {
+          formData.append(key, String(value));
+        }
       }
     });
 
-    if (avatarFile) {
-      formData.append("avatar", avatarFile);
+    if (files && files.length > 0) {
+      formData.append("avatar", files[0]);
     }
 
     const res = await axios.post<User>("/users", formData, {
@@ -37,7 +41,11 @@ const UserService = {
 
     Object.entries(user).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        formData.append(key, String(value));
+        if (key === "profile") {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, String(value));
+        }
       }
     });
 

@@ -10,8 +10,25 @@ class CourseController extends BaseController {
 
   // Lấy danh sách courses
   async getAllCourses(req, res) {
-    const { page = 1, pageSize = 10, search, category, instructor, sortField, sortOrder } = req.query;
-    const result = await this.service.getListCourses({ page, pageSize, search, category, instructor, sortField, sortOrder });
+    const {
+      page = 1, 
+      pageSize = 10, 
+      search, 
+      category, 
+      instructor, 
+      sortField, 
+      sortOrder 
+    } = req.query;
+
+    const result = await this.service.getListCourses({ 
+      page, 
+      pageSize, 
+      search, 
+      category, 
+      instructor, 
+      sortField, 
+      sortOrder 
+    });
 
     res.json({
       status: true,

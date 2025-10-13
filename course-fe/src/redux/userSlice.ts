@@ -101,7 +101,12 @@ const userSlice = createSlice({
         fetchUsers.fulfilled,
         (state, action: PayloadAction<UserResDto>) => {
           state.loading = false;
-          state.data = action.payload.data;
+          state.data = action.payload.data.map((user: TAny) => ({
+            ...user,
+            avatarUrls: user.avatarUrl
+              ? [{ url: user.avatarUrl }]
+              : [],
+          }));
           state.pagination = action.payload.pagination;
         }
       )

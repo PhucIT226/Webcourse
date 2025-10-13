@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import CourseForm from "../../../components/admin/courses/course-form";
+import CourseForm from "../../../components/admin/courses/CourseForm";
 import CourseService from "../../../services/courseService";
 
 export default function CourseCreate() {
@@ -18,7 +18,7 @@ export default function CourseCreate() {
 
   return (
     <div className="p-6 max-w-2xl mx-auto bg-white rounded-lg shadow">
-      <h1 className="text-3xl text-center font-extrabold text-indigo-600 tracking-wide mb-4">Thêm khóa học mới</h1>
+      <h1 className="text-3xl text-center font-extrabold text-indigo-600 tracking-wide mb-6 py-4">Thêm khóa học mới</h1>
       <CourseForm onSubmit={handleCreate} />
     </div>
   );

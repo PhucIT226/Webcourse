@@ -25,7 +25,8 @@ class UserRepository {
       where[Op.or] = [
         { name: { [Op.like]: `%${search}%` } },
         { email: { [Op.like]: `%${search}%` } },
-        { phone: { [Op.like]: `%${search}%` } },
+        { "$profile.phone$": { [Op.like]: `%${search}%` } },
+        { "$profile.dateOfBirth$": { [Op.like]: `%${search}%` } },
       ];
     }
 
@@ -44,7 +45,7 @@ class UserRepository {
 
     const include = [
       { model: db.Role, as: "role" },
-      { model: db.Profile, as: "profile", attributes: ["phone", "address"] },
+      { model: db.Profile, as: "profile", attributes: ["fullName", "phone", "address", "dateOfBirth"] },
     ];
 
     if (role) {
@@ -72,7 +73,15 @@ class UserRepository {
 
   // Lấy user theo id
   async getUserById(id, includeRefreshToken = false) {
-    const include = [{ model: db.Role, as: "role" }];
+    const include = [
+      { model: db.Role, as: "role" },
+      {
+        model: db.Profile,
+        as: "profile",
+        attributes: ["fullName", "phone", "address", "dateOfBirth"],
+      },
+    ];
+
     if (includeRefreshToken)
       include.push({ model: db.RefreshToken, as: "refreshToken" });
 
@@ -81,14 +90,29 @@ class UserRepository {
 
   // Tạo user
   async createUser(userData) {
-    return this.model.create({
+    const newUser = await this.model.create({
       id: uuidv4(),
       name: userData.name,
       email: userData.email,
       passwordHash: userData.passwordHash,
       roleId: userData.roleId || null,
-      avatarUrl: userData.avatarUrl || null,
+      avatarUrl: userData.avatarUrl || "/uploads/default-avatar.jpg",
     });
+
+    // ✅ Nếu có profile => tạo kèm
+    if (userData.profile) {
+      await db.Profile.create({
+        id: uuidv4(),
+        userId: newUser.id,
+        fullName: userData.profile.fullName,
+        phone: userData.profile.phone || null,
+        address: userData.profile.address || null,
+        dateOfBirth: userData.profile.dateOfBirth || null,
+      });
+    }
+
+    // Lấy lại user có include role + profile
+    return this.getUserById(newUser.id);
   }
 
   // Cập nhật user

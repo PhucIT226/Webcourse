@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 // User pages
 import User from "./pages/user/user";
 import Home from "./pages/user/Home/Home";
-import DetailCourse from "./pages/user/Home/Content/DetailCourse";
+// import DetailCourse from "./pages/user/Home/Content/DetailCourse";
 import CourseVid from "./pages/user/Home/Content/CourseVid";
 import SearchCourses from "./pages/user/Home/Header/SearchCourse";
 import Login from "./Auth/login";
@@ -19,6 +19,8 @@ import CourseCreate from "./pages/admin/courses/course-create";
 import CourseEdit from "./pages/admin/courses/course-edit";
 
 import UserList from "./pages/admin/users/users";
+import UserDetail from "./components/admin/users/UserDetail";
+import UserCreate from "./pages/admin/users/user-create";
 
 import InstructorList from "./pages/admin/instructors/instructor-list";
 import CategoryList from "./pages/admin/categories/category-list";
@@ -34,7 +36,7 @@ function App() {
       {/* User routes */}
       <Route path="/" element={<User />}>
         <Route index element={<Home />} />
-        <Route path="/course/:id" element={<DetailCourse />} />
+        {/* <Route path="/course/:id" element={<DetailCourse />} /> */}
         <Route path="/coursevid" element={<CourseVid />} />
         <Route path="/coursesfound" element={<SearchCourses />} />
       </Route>
@@ -54,9 +56,9 @@ function App() {
         {/* Student routes */}
         <Route path="users">
           <Route index element={<UserList />} />
-          {/* <Route path="create" element={<StudentCreate />} />
-          <Route path=":id" element={<StudentDetail />} />
-          <Route path=":id/edit" element={<StudentEdit />} /> */}
+          <Route path="create" element={<UserCreate />} />
+          <Route path=":id" element={<UserDetail />} />
+          {/* <Route path=":id/edit" element={<StudentEdit />} /> */}
         </Route>
 
         <Route path="instructor-list" element={<InstructorList />} />
