@@ -5,6 +5,7 @@ import userSlice from "./userSlice";
 import authSlice from "./authSlice";
 import categorySlice from "./categorySlice";
 import orderSlice from "./orderSlice";
+import lessonSlice from "./lessonSlice";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
 // import userSlice from "./userSlice";
@@ -24,6 +25,7 @@ export const store = configureStore({
     user: userSlice,
     category: categorySlice,
     order: orderSlice,
+    lesson: lessonSlice,
   },
 });
 export const persitor = persistStore(store);

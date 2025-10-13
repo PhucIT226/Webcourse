@@ -14,8 +14,8 @@ import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
 import CourseList from "./pages/admin/courses/courses";
 import CourseDetail from "./components/admin/CourseDetail";
-import CourseCreate from "./pages/admin/courses/Course-create";
-import CourseEdit from "./pages/admin/courses/Course-edit";
+// import CourseCreate from "./pages/admin/courses/Course-create";
+// import CourseEdit from "./pages/admin/courses/Course-edit";
 import UserList from "./pages/admin/users/user-list";
 import InstructorList from "./pages/admin/instructors/instructor-list";
 import CategoryList from "./pages/admin/categories/category-list";
@@ -32,7 +32,7 @@ function App() {
       <Route path="/" element={<User />}>
         <Route index element={<Home />} />
         <Route path="/course/:id" element={<DetailCourse />} />
-        <Route path="/coursevid" element={<CourseVid />} />
+        <Route path="/coursevid/:id" element={<CourseVid />} />
         <Route path="/coursesfound" element={<SearchCourses />} />
       </Route>
 

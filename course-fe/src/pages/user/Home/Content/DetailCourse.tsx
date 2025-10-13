@@ -1,4 +1,7 @@
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../../hooks";
+import { fetchLessons } from "../../../../redux/lessonSlice";
 import {
   Accordion,
   AccordionContent,
@@ -8,41 +11,61 @@ import {
 
 const DetailCourse = () => {
   const location = useLocation();
+  const courseId = location.state?.courseId;
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { lessons, loading } = useAppSelector((state) => state.lesson);
+
+  useEffect(() => {
+    if (courseId) {
+      dispatch(fetchLessons({ courseId }));
+    }
+  }, [courseId, dispatch]);
+
+  const totalDuration =
+    lessons.length > 0
+      ? Math.round(
+          lessons.map((l) => l.duration || 0).reduce((a, b) => a + b, 0) /
+            lessons.length
+        )
+      : 0;
+
   return (
     <div className="flex flex-col md:flex-row gap-10 p-8 max-w-6xl mx-auto">
       {/* Left content */}
       <div className="flex-1">
         <h1 className="text-3xl font-bold mb-2">
-          {location?.state.courseTitle}
+          {location?.state?.courseTitle}
         </h1>
         <p className="text-gray-700 mb-6 leading-relaxed">
-          {location?.state.courseDes}
+          {location?.state?.courseDes}
         </p>
 
-        {/* Course info summary */}
+        {/* Info summary */}
         <div className="flex flex-wrap gap-4 text-gray-600 text-sm mb-6">
-          <span>11 chương</span>
-          <span>• 138 bài học</span>
-          <span>• Thời lượng 10 giờ 29 phút</span>
+          <span>Tổng {lessons.length} bài học</span>
+          {lessons.length > 0 && (
+            <span>⏱️ Thời lượng trung bình: {totalDuration} phút</span>
+          )}
         </div>
 
-        {/* Sections */}
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="item-1">
-            <AccordionTrigger>Chương 1: Giới thiệu</AccordionTrigger>
-            <AccordionContent>
-              Giới thiệu tổng quan khóa học, cài đặt môi trường và các bước đầu
-              tiên.
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger>Chương 2: Cấu trúc ngôn ngữ C++</AccordionTrigger>
-            <AccordionContent>
-              Tìm hiểu về biến, kiểu dữ liệu, hàm và vòng lặp trong C++.
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        {/* Lesson list */}
+        {loading ? (
+          <p>Đang tải...</p>
+        ) : lessons.length === 0 ? (
+          <p>Chưa có bài học nào trong khóa này.</p>
+        ) : (
+          <Accordion type="single" collapsible className="w-full">
+            {lessons.map((lesson, index) => (
+              <AccordionItem key={lesson.id} value={`item-${index}`}>
+                <AccordionTrigger>{lesson.title}</AccordionTrigger>
+                <AccordionContent>
+                  {lesson.content || "Nội dung đang cập nhật..."}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        )}
       </div>
 
       {/* Right sidebar */}
@@ -70,7 +93,11 @@ const DetailCourse = () => {
         </h2>
 
         <button
-          onClick={() => navigate("/coursevid")}
+          onClick={() =>
+            navigate(`/coursevid/${courseId}`, {
+              state: { courseId: courseId },
+            })
+          }
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow"
         >
           ĐĂNG KÝ HỌC
@@ -78,8 +105,8 @@ const DetailCourse = () => {
 
         <ul className="text-gray-600 text-sm mt-5 space-y-2">
           <li>💡 Trình độ cơ bản</li>
-          <li>📚 Tổng số 138 bài học</li>
-          <li>⏱️ Thời lượng 10 giờ 29 phút</li>
+          <li>📚 Tổng {lessons.length} bài học</li>
+          <li>⏱️ Thời lượng trung bình {totalDuration} phút</li>
           <li>💻 Học mọi lúc, mọi nơi</li>
         </ul>
       </div>
