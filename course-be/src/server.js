@@ -30,6 +30,9 @@ app.use(
     credentials: true,
   })
 ); // Enable CORS for all routes
+// console.log('req.cookies:', req.cookies);
+// console.log('req.body:', req.body);
+
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser());
 

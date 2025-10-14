@@ -25,6 +25,7 @@ export default function UserForm({ initialData, onSubmit }: Props) {
   const [status, setStatus] = useState<"active" | "inactive" | "banned" | "pending">("active");
   const [avatarFiles, setAvatarFiles] = useState<File[]>([]);
   const [preview, setPreview] = useState<string[]>([]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -56,9 +57,35 @@ export default function UserForm({ initialData, onSubmit }: Props) {
     setPreview(files.map((f) => URL.createObjectURL(f)));
   };
 
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!roleId) newErrors.roleId = "Vui lòng chọn vai trò.";
+    if (!name.trim()) newErrors.name = "Tên không được để trống.";
+    if (!email.trim()) newErrors.email = "Email không được để trống.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Email không hợp lệ.";
+    if (!initialData && password.trim().length < 6)
+      newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
+
+    if (phone && !/^\d{9,11}$/.test(phone))
+      newErrors.phone = "Số điện thoại chỉ được chứa 9–11 chữ số.";
+
+    if (dateOfBirth) {
+      const dob = new Date(dateOfBirth);
+      if (dob > new Date()) newErrors.dateOfBirth = "Ngày sinh không được lớn hơn hôm nay.";
+    } else {
+      newErrors.dateOfBirth = "Vui lòng chọn ngày sinh.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   // 🧩 Gửi form
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     const data: Partial<User> = {
       roleId,
       name: name.trim(),
@@ -71,79 +98,93 @@ export default function UserForm({ initialData, onSubmit }: Props) {
       },
       status,
     };
+
     onSubmit(data, avatarFiles);
   };
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       {/* Role */}
-      <select
-        value={roleId}
-        onChange={(e) => setRoleId(e.target.value)}
-        className="border px-3 py-2 rounded"
-        required
-      >
-        <option value="">-- Chọn role --</option>
-        {roles.map((r) => (
-          <option key={r.id} value={r.id}>
-            {r.name}
-          </option>
-        ))}
-      </select>
+      <div>
+        <select
+          value={roleId}
+          onChange={(e) => setRoleId(e.target.value)}
+          className="border px-3 py-2 rounded w-full"
+        >
+          <option value="">-- Chọn vai trò --</option>
+          {roles
+            .filter((r) => r.name !== "admin")
+            .map((r) => (
+              <option key={r.id} value={r.id}>
+                {r.name}
+              </option>
+            ))}
+        </select>
+        {errors.roleId && <p className="text-red-500 text-sm mt-1">{errors.roleId}</p>}
+      </div>
 
       {/* Tên */}
-      <input
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Tên người dùng"
-        className="border px-3 py-2 rounded"
-        required
-      />
+      <div>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Tên người dùng"
+          className="border px-3 py-2 rounded w-full"
+        />
+        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+      </div>
 
       {/* Email */}
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-        className="border px-3 py-2 rounded"
-        required
-      />
+      <div>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          className="border px-3 py-2 rounded w-full"
+        />
+        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+      </div>
 
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder={initialData ? "Để trống nếu không đổi" : "Mật khẩu"}
-        className="border px-3 py-2 rounded"
-        required={!initialData} // required khi tạo mới
-      />
+      <div>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder={initialData ? "Để trống nếu không đổi" : "Mật khẩu"}
+          className="border px-3 py-2 rounded w-full"
+        />
+        {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+      </div>
 
       {/* Phone */}
-      <textarea
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        placeholder="Số điện thoại"
-        className="border px-3 py-2 rounded min-h-[60px]"
-      />
+      <div>
+        <input
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="Số điện thoại"
+          className="border px-3 py-2 rounded w-full"
+        />
+        {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+      </div>
 
       {/* Address */}
       <textarea
         value={address}
         onChange={(e) => setAddress(e.target.value)}
         placeholder="Địa chỉ"
-        className="border px-3 py-2 rounded min-h-[120px]"
+        className="border px-3 py-2 rounded min-h-[80px]"
       />
 
       {/* Date of Birth */}
-      <input
-        type="date"
-        value={dateOfBirth}
-        onChange={(e) =>
-          setDateOfBirth(e.target.value)
-        }
-        className="border px-3 py-2 rounded"
-        required
-      />
+      <div>
+        <input
+          type="date"
+          value={dateOfBirth}
+          onChange={(e) => setDateOfBirth(e.target.value)}
+          className="border px-3 py-2 rounded w-full"
+        />
+        {errors.dateOfBirth && <p className="text-red-500 text-sm mt-1">{errors.dateOfBirth}</p>}
+      </div>
 
       {/* Status */}
       <select

@@ -3,6 +3,10 @@ import type { Image, Pagination } from "./common";
 export type User = {
   id?: string;
   roleId?: string;
+  role?: {
+    id: string;
+    name: string;
+  };
   name: string;
   email: string;
   password?: string;

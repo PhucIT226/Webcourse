@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 // User pages
 import User from "./pages/user/user";
 import Home from "./pages/user/Home/Home";
-// import DetailCourse from "./pages/user/Home/Content/DetailCourse";
+import DetailCourse from "./pages/user/Home/Content/DetailCourse";
 import CourseVid from "./pages/user/Home/Content/CourseVid";
 import SearchCourses from "./pages/user/Home/Header/SearchCourse";
 import Login from "./Auth/login";
@@ -15,8 +15,8 @@ import Dashboard from "./pages/admin/dashboard/dashboard";
 
 import CourseList from "./pages/admin/courses/courses";
 import CourseDetail from "./components/admin/courses/CourseDetail";
-import CourseCreate from "./pages/admin/courses/course-create";
-import CourseEdit from "./pages/admin/courses/course-edit";
+import CourseCreate from "./pages/admin/courses/Course-create";
+import CourseEdit from "./pages/admin/courses/Course-edit";
 
 import UserList from "./pages/admin/users/users";
 import UserDetail from "./components/admin/users/UserDetail";

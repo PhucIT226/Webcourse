@@ -16,6 +16,15 @@ export default function CourseDetail() {
   const location = useLocation();
   const user = location.state?.user as User | undefined;
 
+  const roleLabel = (roleName?: string) => {
+    if (!roleName) return "—";
+    const map: Record<string, string> = {
+      student: "Học viên",
+      instructor: "Giảng viên",
+    };
+    return map[roleName] ?? roleName;
+  };
+
   if (!user) {
     return (
       <div className="p-6 bg-gray-50 min-h-screen flex flex-col items-center justify-center">
@@ -61,7 +70,7 @@ export default function CourseDetail() {
               <FaUserTie className="mr-3 text-blue-600 text-lg" />
               Vai trò:{" "}
               <span className="ml-2 capitalize">
-                {user.status === "active" ? "Học viên" : "Giảng viên"}
+                {roleLabel(user.role?.name)}
               </span>
             </p>
             <p className="flex items-center text-gray-800 font-medium">

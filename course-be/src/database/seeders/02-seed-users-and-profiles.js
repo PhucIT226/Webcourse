@@ -36,7 +36,7 @@ export async function up(queryInterface) {
     id: uuidv4(),
     userId: adminId,
     fullName: "Admin User",
-    phone: "0123456789",
+    phone: faker.phone.number(),
     address: "123 Admin Street",
     dateOfBirth: "2000-01-01",
     createdAt: now,

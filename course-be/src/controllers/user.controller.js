@@ -55,6 +55,7 @@ class UserController extends BaseController {
   // Tạo user mới
   async createUser(req, res) {
     const data = req.body;
+    const newUser = await this.service.createUser(data);
 
     if (typeof data.profile === "string") {
       try {
@@ -70,7 +71,6 @@ class UserController extends BaseController {
       data.avatarUrl = "/uploads/default-avatar.jpg";
     }
 
-    const newUser = await this.service.createUser(data);
 
     res.status(201).json({
       status: true,
@@ -85,8 +85,22 @@ class UserController extends BaseController {
     const userData = req.body;
     const updatedUser = await this.service.updateUser(id, userData);
 
+    if (typeof data.profile === "string") {
+      try {
+        data.profile = JSON.parse(data.profile);
+      } catch {
+        data.profile = null;
+      }
+    }
+
+    if (req.file) {
+      data.avatarlUrl = `/uploads/${req.file.filename}`;
+    }
+
     if (!updatedUser) {
-      return res.status(404).json({ status: false, message: "User not found" });
+      return res
+      .status(404)
+      .json({ status: false, message: "User not found" });
     }
 
     res.json({

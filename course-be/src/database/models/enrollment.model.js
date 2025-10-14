@@ -17,6 +17,7 @@ export default (sequelize) => {
         primaryKey: true,
         allowNull: false,
       },
+      progress: { type: DataTypes.JSON, allowNull: true },
       startedAt: { type: DataTypes.DATE, allowNull: true },
       completedAt: { type: DataTypes.DATE, allowNull: true },
     },

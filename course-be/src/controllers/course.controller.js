@@ -57,6 +57,7 @@ class CourseController extends BaseController {
   // Tạo course mới
   async createCourse(req, res) {
     const data = req.body;
+    const newCourse = await this.service.createCourse(data);
 
     if (!data.slug && data.title) {
       data.slug = slugify(data.title, { lower: true, strict: true });
@@ -71,7 +72,6 @@ class CourseController extends BaseController {
     data.categoryId = data.categoryId;
     data.instructorId = data.instructorId;
 
-    const newCourse = await this.service.createCourse(data);
 
     res.status(201).json({
       status: true,
@@ -84,6 +84,7 @@ class CourseController extends BaseController {
   async updateCourse(req, res) {
     const { id } = req.params;
     const data = req.body;
+    const updatedCourse = await this.service.updateCourse(id, data);
 
     if (req.file) {
       data.thumbnailUrl = `/uploads/${req.file.filename}`;
@@ -96,7 +97,6 @@ class CourseController extends BaseController {
     data.categoryId = data.categoryId;
     data.instructorId = data.instructorId;
 
-    const updatedCourse = await this.service.updateCourse(id, data);
     
     if (!updatedCourse) {
       return res
