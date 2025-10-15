@@ -1,6 +1,6 @@
 import AppConfig from "../../config/index.js";
 import Sequelize from "sequelize";
-import fs from 'fs';
+// import fs from 'fs';
 import userModel from "./user.model.js";
 import profileModel from "./profile.model.js";
 import categoryModel from "./category.model.js";
@@ -18,13 +18,6 @@ import refreshTokenModel from "./refreshToken.model.js";
 
 const sequelize = new Sequelize(AppConfig.database.url, {
   dialect: AppConfig.database.dialect, // ✅ Rất quan trọng!
-  "dialectOptions": {
-          "ssl": {
-            require: true,
-            "rejectUnauthorized": false, 
-            "ca": fs.readFileSync(`./ca.pem`),
-          }
-        },
   pool: AppConfig.database.pool,
 });
 
