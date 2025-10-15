@@ -49,14 +49,14 @@ const menu: MenuType = [
   },
   {
     label: "Danh mục",
-    to: "category-list",
+    to: "categories",
     icon: FaTags,
     defaultColor: "text-pink-500",
     children: [],
   },
   {
     label: "Đơn hàng",
-    to: "order-list",
+    to: "orders",
     icon: FaCreditCard,
     defaultColor: "text-orange-500",
     children: [],

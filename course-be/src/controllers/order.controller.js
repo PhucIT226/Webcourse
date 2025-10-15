@@ -9,13 +9,24 @@ class OrderController extends BaseController {
 
   // 🔹 Lấy danh sách tất cả orders (admin)
   async getAllOrders(req, res) {
-    const { page = 1, pageSize = 10, search, status, paymentStatus } = req.query;
+    const { 
+      page = 1, 
+      pageSize = 10, 
+      search, 
+      status, 
+      paymentStatus,
+      sortField, 
+      sortOrder
+    } = req.query;
+
     const result = await this.service.getListOrders({
       page,
       pageSize,
       search,
       status,
       paymentStatus,
+      sortField, 
+      sortOrder
     });
 
     res.json({
@@ -42,25 +53,14 @@ class OrderController extends BaseController {
     });
   }
 
-  // 🔹 Tạo order mới (userId lấy từ params)
-  async createOrder(req, res) {
-    const data = req.body;
-    data.userId = req.params.userId; // Lấy từ params
-    const newOrder = await this.service.createOrder(data);
-
-    res.status(201).json({
-      status: true,
-      message: "Order created successfully",
-      data: newOrder,
-    });
-  }
-
   // 🔹 Cập nhật order (admin)
   async updateOrder(req, res) {
     const { id } = req.params;
     const data = req.body;
     const updated = await this.service.updateOrder(id, data);
-
+    
+    data.userId = data.userId;
+    
     if (!updated) {
       return res.status(404).json({ status: false, message: "Order not found" });
     }

@@ -5,6 +5,7 @@ import {
   FaUser,
   FaBirthdayCake,
   FaPhoneAlt,
+  FaAlgolia,
   FaMapMarkerAlt,
   FaUserTie,
   FaCalendarAlt,
@@ -90,7 +91,7 @@ export default function CourseDetail() {
               Địa chỉ: {user.profile?.address || "Chưa có"}
             </p>
             <p className="flex items-center text-gray-800 font-medium">
-              <FaUser className="mr-3 text-purple-500 text-lg" />
+              <FaAlgolia className="mr-3 text-pink-500 text-lg" />
               Trạng thái:
               <span
                 className={`ml-2 px-3 py-1 rounded-full text-xs font-semibold shadow-sm ${
