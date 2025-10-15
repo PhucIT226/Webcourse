@@ -115,7 +115,10 @@ class UserRepository {
   // Cập nhật user
   async updateUser(id, userData) {
     // Tìm user hiện tại
-    const user = await this.model.findByPk(id, { include: db.Profile });
+    const user = await this.model.findByPk(id, {
+      include: [{ model: db.Profile, as: "profile" }],
+    });
+
     if (!user) return null;
 
     // Xử lý password nếu có
