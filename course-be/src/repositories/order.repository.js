@@ -1,6 +1,5 @@
 import db from "../database/models/index.js";
-import { v4 as uuidv4 } from "uuid";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 class OrderRepository {
   constructor() {
@@ -10,16 +9,19 @@ class OrderRepository {
     this.courseModel = db.Course;
   }
 
-  // Lấy tất cả đơn hàng (admin hoặc lọc theo userId)
+  // 🔹 Lấy tất cả đơn hàng (admin hoặc lọc theo userId)
   async getAllOrders({
-    page = 1, 
-    pageSize = 10, 
-    search, 
-    paymentStatus, 
-    userId 
+    page = 1,
+    pageSize = 10,
+    search,
+    paymentStatus,
+    sortField = "createdAt",
+    sortOrder = "desc",
   }) {
+    const orderDir = sortOrder.toLowerCase() === "asc" ? "ASC" : "DESC";
     const where = {};
 
+    // 🔍 Tìm kiếm theo id hoặc tên user
     if (search) {
       where[Op.or] = [
         { id: { [Op.like]: `%${search}%` } },
@@ -28,13 +30,37 @@ class OrderRepository {
     }
 
     if (paymentStatus) where.paymentStatus = paymentStatus;
-    if (userId) where.userId = userId; // <-- filter theo userId nếu có
 
+    // 🧩 Xử lý sắp xếp
+    const orderArray = [];
+
+    // Sort trực tiếp các cột thuộc bảng Order
+    const directColumns = [
+      "totalAmount",
+      "status",
+      "paymentStatus",
+      "createdAt",
+    ];
+
+    if (directColumns.includes(sortField)) {
+      orderArray.push([sortField, orderDir]);
+    }
+    // Sort theo tên user
+    else if (sortField === "user") {
+      orderArray.push([{ model: this.userModel, as: "user" }, "name", orderDir]);
+    } 
+    // Mặc định sort theo ngày tạo
+    else {
+      orderArray.push(["createdAt", "DESC"]);
+    }
+
+    // ⚙️ Truy vấn dữ liệu
     const { count, rows } = await this.model.findAndCountAll({
       where,
       offset: (page - 1) * pageSize,
       limit: +pageSize,
-      order: [["createdAt", "DESC"]],
+      distinct: true,
+      order: orderArray,
       include: [
         {
           model: this.userModel,
@@ -48,7 +74,7 @@ class OrderRepository {
             {
               model: this.courseModel,
               as: "course",
-              attributes: ["id", "title", "price"],
+              attributes: ["id", "title", "price", "thumbnailUrl"],
             },
           ],
         },
@@ -58,14 +84,17 @@ class OrderRepository {
     return {
       data: rows,
       pagination: {
-        total: count.length ? count.length : count,
+        total: typeof count === "number" ? count : count.length,
         page: +page,
         pageSize: +pageSize,
-        totalPages: Math.ceil((count.length ? count.length : count) / pageSize),
+        totalPages: Math.ceil(
+          (typeof count === "number" ? count : count.length) / pageSize
+        ),
       },
     };
   }
 
+  // 🔹 Lấy 1 order theo id
   async getOrderById(id) {
     return this.model.findByPk(id, {
       include: [
@@ -73,12 +102,19 @@ class OrderRepository {
         {
           model: this.itemModel,
           as: "items",
-          include: [{ model: this.courseModel, as: "course", attributes: ["id", "title", "price"] }],
+          include: [
+            {
+              model: this.courseModel,
+              as: "course",
+              attributes: ["id", "title", "price", "thumbnailUrl"],
+            },
+          ],
         },
       ],
     });
   }
 
+  // 🔹 Lấy danh sách order của user
   async getUserOrders(userId) {
     return this.model.findAll({
       where: { userId },
@@ -87,34 +123,37 @@ class OrderRepository {
         {
           model: this.itemModel,
           as: "items",
-          include: [{ model: this.courseModel, as: "course" }],
+          include: [
+            {
+              model: this.courseModel,
+              as: "course",
+              attributes: ["id", "title", "price", "thumbnailUrl"],
+            },
+          ],
         },
       ],
     });
   }
 
-  async createOrder(orderData) {
-    const orderId = uuidv4();
-
-    const order = await this.model.create({
-      id: orderId,
-      userId: orderData.userId,
-      totalAmount: orderData.totalAmount,
-      paymentMethod: orderData.paymentMethod || null,
-      paymentStatus: orderData.paymentStatus || "unpaid",
-      note: orderData.note || null,
-    });
-
-    return this.getOrderById(orderId);
-  }
-
+  // 🔹 Cập nhật order
   async updateOrder(id, data) {
     const order = await this.model.findByPk(id);
     if (!order) return null;
-    await order.update(data);
-    return this.getOrderById(id);
+
+    await order.update({
+      userId: data.userId ?? order.userId,
+      couponId: data.couponId ?? order.couponId,
+      totalAmount: data.totalAmount ?? order.totalAmount,
+      status: data.status ?? order.status,
+      paymentMethod: data.paymentMethod ?? order.paymentMethod,
+      paymentStatus: data.paymentStatus ?? order.paymentStatus,
+      note: data.note ?? order.note,
+    });
+
+    return order;
   }
 
+  // 🔹 Xóa order
   async deleteOrder(id) {
     const order = await this.model.findByPk(id);
     if (!order) return false;

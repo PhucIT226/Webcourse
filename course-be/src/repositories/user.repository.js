@@ -31,12 +31,14 @@ class UserRepository {
     }
 
     const orderArray = [];
-    const directColumns = ["name", "email", "status", "createdAt", "updatedAt"];
+    const directColumns = ["name", "email", "status", "createdAt"];
 
     if (directColumns.includes(sortField)) {
       orderArray.push([sortField, orderDir]);
-    } else if (sortField === "instructor") {
-      orderArray.push([{ model: db.User, as: "instructor" }, "name", orderDir]);
+    } else if (sortField === "dateOfBirth") {
+      orderArray.push([{ model: db.Profile, as: "profile" }, "dateOfBirth", orderDir]);
+    } else if (["fullName"].includes(sortField)) {
+      orderArray.push([{ model: db.Profile, as: "profile" }, sortField, orderDir]);
     }
 
     const include = [

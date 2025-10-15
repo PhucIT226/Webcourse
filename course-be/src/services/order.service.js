@@ -6,16 +6,12 @@ class OrderService {
   }
 
   // Admin: lấy tất cả orders
-  getListOrders({ page, pageSize, search, paymentStatus, userId }) {
-    return this.repository.getAllOrders({ page, pageSize, search, paymentStatus, userId });
+  getListOrders({ page, pageSize, search, paymentStatus, userId, sortField, sortOrder }) {
+    return this.repository.getAllOrders({ page, pageSize, search, paymentStatus, userId, sortField, sortOrder });
   }
 
   getOrderById(id) {
     return this.repository.getOrderById(id);
-  }
-
-  createOrder(data) {
-    return this.repository.createOrder(data);
   }
 
   updateOrder(id, data) {

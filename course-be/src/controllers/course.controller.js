@@ -58,20 +58,20 @@ class CourseController extends BaseController {
   async createCourse(req, res) {
     const data = req.body;
     const newCourse = await this.service.createCourse(data);
-
+    
     if (!data.slug && data.title) {
       data.slug = slugify(data.title, { lower: true, strict: true });
     }
-
+    
     if (req.file) {
       data.thumbnailUrl = `/uploads/${req.file.filename}`;
     } else {
       data.thumbnailUrl = "/uploads/default-thumbnail.jpg";
     }
-
+    
+    
     data.categoryId = data.categoryId;
     data.instructorId = data.instructorId;
-
 
     res.status(201).json({
       status: true,

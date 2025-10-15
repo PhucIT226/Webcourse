@@ -38,7 +38,7 @@ class CourseRepository {
 
     // Xác định cột order
     const orderArray = [];
-    const directColumns = ["title", "price", "status", "createdAt", "updatedAt"];
+    const directColumns = ["title", "price", "status", "createdAt"];
 
     if (directColumns.includes(sortField)) {
       orderArray.push([sortField, orderDir]);

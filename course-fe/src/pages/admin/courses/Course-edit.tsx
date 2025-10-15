@@ -11,7 +11,6 @@ export default function CourseEdit() {
 
   useEffect(() => {
     const fetchData = async () => {
-      
       try {
         const res = await CourseService.getById(id!);
         setCourse(res);
