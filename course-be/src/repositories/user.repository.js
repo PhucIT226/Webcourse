@@ -35,12 +35,8 @@ class UserRepository {
 
     if (directColumns.includes(sortField)) {
       orderArray.push([sortField, orderDir]);
-    } else if (sortField === "studentCount") {
-      orderArray.push(Sequelize.literal(`COUNT(enrollments.id) ${orderDir}`));
     } else if (sortField === "instructor") {
       orderArray.push([{ model: db.User, as: "instructor" }, "name", orderDir]);
-    } else if (sortField === "category") {
-      orderArray.push([{ model: this.categoryModel, as: "category" }, "name", orderDir]);
     }
 
     const include = [
@@ -96,7 +92,8 @@ class UserRepository {
       email: userData.email,
       passwordHash: userData.passwordHash,
       roleId: userData.roleId || null,
-      avatarUrl: userData.avatarUrl || "/uploads/default-avatar.jpg",
+      avatarUrl: userData.avatarUrl,
+      status: userData.status || "active",
     });
 
     // ✅ Nếu có profile => tạo kèm
@@ -116,24 +113,52 @@ class UserRepository {
   }
 
   // Cập nhật user
-  async updateUser(id, data, updateRefreshToken = false) {
-    const { refreshToken, passwordHash, ...rest } = data;
-    const user = await this.getUserById(id, updateRefreshToken);
+  async updateUser(id, userData) {
+    // Tìm user hiện tại
+    const user = await this.model.findByPk(id, { include: db.Profile });
     if (!user) return null;
 
-    // Update refresh token nếu có
-    if (updateRefreshToken && refreshToken) {
-      await this._updateOrCreateRefreshToken(user, refreshToken);
+    // Xử lý password nếu có
+    if (userData.password) {
+      userData.passwordHash = await hashPassword(userData.password);
+      delete userData.password;
     }
 
-    // Update thông tin cơ bản
-    const updateData = {
-      ...rest,
-      ...(passwordHash ? { passwordHash } : {}),
-    };
+    // Update fields cơ bản của User
+    await user.update({
+      name: userData.name ?? user.name,
+      email: userData.email ?? user.email,
+      passwordHash: userData.passwordHash ?? user.passwordHash,
+      roleId: userData.roleId ?? user.roleId,
+      avatarUrl: userData.avatarUrl ?? user.avatarUrl,
+      status: userData.status ?? user.status,
+    });
 
-    await user.update(updateData);
-    return user;
+    // Xử lý profile
+    if (userData.profile) {
+      if (user.Profile) {
+        // Nếu đã có profile thì update
+        await user.Profile.update({
+          fullName: userData.profile.fullName ?? user.Profile.fullName,
+          phone: userData.profile.phone ?? user.Profile.phone,
+          address: userData.profile.address ?? user.Profile.address,
+          dateOfBirth: userData.profile.dateOfBirth ?? user.Profile.dateOfBirth,
+        });
+      } else {
+        // Nếu chưa có profile thì tạo mới
+        await db.Profile.create({
+          id: uuidv4(),
+          userId: user.id,
+          fullName: userData.profile.fullName,
+          phone: userData.profile.phone || null,
+          address: userData.profile.address || null,
+          dateOfBirth: userData.profile.dateOfBirth || null,
+        });
+      }
+    }
+
+    // Trả về user kèm profile
+    return this.getUserById(user.id);
   }
 
   // Xóa user (có thể đổi thành soft delete sau này)

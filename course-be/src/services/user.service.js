@@ -41,12 +41,22 @@ class UserService {
   }
 
   // Cập nhật user
-  async updateUser(id, userData, updateRefreshToken = false) {
-    if (userData.password) {
-      userData.passwordHash = await hashPassword(userData.password);
-      delete userData.password;
+  async updateUser(id, data) {
+    if (data.password) {
+      data.passwordHash = await hashPassword(data.password);
+      delete data.password;
     }
-    return this.repository.updateUser(id, userData, updateRefreshToken);
+
+    if (data.profile && typeof data.profile === "string") {
+      try {
+        data.profile = JSON.parse(data.profile);
+      } catch {
+        console.warn("Profile parse failed, ignoring");
+        data.profile = null;
+      }
+    }
+
+    return this.repository.updateUser(id, data);
   }
 
   // Xóa user

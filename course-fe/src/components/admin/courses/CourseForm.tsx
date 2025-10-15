@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import type { Course } from "../../../types/course";
 import axios from "../../../services/axiosClient";
 import { useNavigate } from "react-router-dom";
-import {
-  FaArrowLeft,
-} from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 
 type Category = { id: string; name: string };
 type Instructor = { id: string; name: string };
@@ -21,7 +19,7 @@ export default function CourseForm({ initialData, onSubmit }: Props) {
   const [slug, setSlug] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState<number | "">("");
   const [status, setStatus] = useState<"published" | "draft" | "closed">(
     "draft"
   );
@@ -31,6 +29,7 @@ export default function CourseForm({ initialData, onSubmit }: Props) {
   const [instructors, setInstructors] = useState<Instructor[]>([]);
   const [thumbnailFiles, setThumbnailFiles] = useState<File[]>([]);
   const [preview, setPreview] = useState<string[]>([]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // 🧩 Load danh mục & giảng viên
   useEffect(() => {
@@ -81,18 +80,34 @@ export default function CourseForm({ initialData, onSubmit }: Props) {
     setPreview(files.map((f) => URL.createObjectURL(f)));
   };
 
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+
+    if (!title.trim()) newErrors.title = "Vui lòng nhập tên khóa học";
+    else if (title.length < 5) newErrors.title = "Tên khóa học phải từ 5 ký tự";
+
+    if (!shortDescription.trim()) newErrors.shortDescription = "Vui lòng nhập mô tả ngắn";
+    else if (shortDescription.length < 10)
+      newErrors.shortDescription = "Mô tả ngắn phải từ 10 ký tự";
+
+    if (!description.trim()) newErrors.description = "Vui lòng nhập mô tả chi tiết";
+    else if (description.length < 20)
+      newErrors.description = "Mô tả chi tiết phải từ 20 ký tự";
+
+    if (price === "" || Number(price) <= 0) newErrors.price = "Giá khóa học phải lớn hơn 0";
+
+    if (!categoryId) newErrors.categoryId = "Vui lòng chọn danh mục";
+    if (!instructorId) newErrors.instructorId = "Vui lòng chọn giảng viên";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   // 🧩 Gửi form
   const handleSubmit = (e: React.FormEvent) => {
-    console.log({
-    title,
-    slug,
-    categoryId,
-    instructorId,
-    price,
-  });
-
-
     e.preventDefault();
+    if (!validateForm()) return;
+
     const data: Partial<Course> = {
       title: title.trim(),
       slug: slug.trim(),
@@ -103,19 +118,22 @@ export default function CourseForm({ initialData, onSubmit }: Props) {
       categoryId,
       instructorId,
     };
+
     onSubmit(data, thumbnailFiles);
   };
 
   return (
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       {/* Title */}
-      <input
-        value={title}
-        onChange={handleTitleChange}
-        placeholder="Tên khóa học"
-        className="border px-3 py-2 rounded"
-        required
-      />
+      <div>
+        <input
+          value={title}
+          onChange={handleTitleChange}
+          placeholder="Tên khóa học"
+          className="border px-3 py-2 rounded w-full"
+        />
+        {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
+      </div>
 
       {/* Slug */}
       <input
@@ -126,62 +144,78 @@ export default function CourseForm({ initialData, onSubmit }: Props) {
       />
 
       {/* Short Description */}
-      <textarea
-        value={shortDescription}
-        onChange={(e) => setShortDescription(e.target.value)}
-        placeholder="Mô tả ngắn"
-        className="border px-3 py-2 rounded min-h-[60px]"
-      />
+      <div>
+        <textarea
+          value={shortDescription}
+          onChange={(e) => setShortDescription(e.target.value)}
+          placeholder="Mô tả ngắn"
+          className="border px-3 py-2 rounded min-h-[60px] w-full"
+        />
+        {errors.shortDescription && (
+          <p className="text-red-500 text-sm mt-1">{errors.shortDescription}</p>
+        )}
+      </div>
 
       {/* Description */}
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        placeholder="Mô tả chi tiết khóa học"
-        className="border px-3 py-2 rounded min-h-[120px]"
-      />
+      <div>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Mô tả chi tiết khóa học"
+          className="border px-3 py-2 rounded min-h-[120px] w-full"
+        />
+        {errors.description && (
+          <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+        )}
+      </div>
 
       {/* Price */}
-      <input
-        type="number"
-        value={price === 0 ? "" : price}
-        onChange={(e) =>
-          setPrice(e.target.value === "" ? 0 : Number(e.target.value))
-        }
-        placeholder="Giá khóa học"
-        className="border px-3 py-2 rounded"
-        required
-      />
+      <div>
+        <input
+          type="number"
+          value={price}
+          onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
+          placeholder="Giá khóa học"
+          className="border px-3 py-2 rounded w-full"
+        />
+        {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+      </div>
 
       {/* Category */}
-      <select
-        value={categoryId}
-        onChange={(e) => setCategoryId(e.target.value)}
-        className="border px-3 py-2 rounded"
-        required
-      >
-        <option value="">-- Chọn danh mục --</option>
-        {categories.map((cat) => (
-          <option key={cat.id} value={cat.id}>
-            {cat.name}
-          </option>
-        ))}
-      </select>
+      <div>
+        <select
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
+          className="border px-3 py-2 rounded w-full"
+        >
+          <option value="">-- Chọn danh mục --</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+        {errors.categoryId && <p className="text-red-500 text-sm mt-1">{errors.categoryId}</p>}
+      </div>
 
       {/* Instructor */}
-      <select
-        value={instructorId}
-        onChange={(e) => setInstructorId(e.target.value)}
-        className="border px-3 py-2 rounded"
-        required
-      >
-        <option value="">-- Chọn giảng viên --</option>
-        {instructors.map((cat) => (
-          <option key={cat.id} value={cat.id}>
-            {cat.name}
-          </option>
-        ))}
-      </select>
+      <div>
+        <select
+          value={instructorId}
+          onChange={(e) => setInstructorId(e.target.value)}
+          className="border px-3 py-2 rounded w-full"
+        >
+          <option value="">-- Chọn giảng viên --</option>
+          {instructors.map((ins) => (
+            <option key={ins.id} value={ins.id}>
+              {ins.name}
+            </option>
+          ))}
+        </select>
+        {errors.instructorId && (
+          <p className="text-red-500 text-sm mt-1">{errors.instructorId}</p>
+        )}
+      </div>
 
       {/* Status */}
       <select

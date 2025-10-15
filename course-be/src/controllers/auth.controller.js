@@ -56,23 +56,28 @@ class AuthController extends BaseController {
   }
 
   async refreshToken(req, res) {
-  const token = req.cookies.refreshToken || req.body.refreshToken;
-  console.log(">>> Refresh token received:", token);
-  
-  if (!token)
-    return res.status(401).json({ message: "Missing refresh token" });
+    const token = req.cookies?.refreshToken || req.body?.refreshToken;
+    console.log(">>> Refresh token received:", token);
 
-  const payload = JwtHelper.verifyToken(token, "refresh");
-  if (!payload)
-    return res.status(403).json({ message: "Invalid refresh token" });
+    if (!token)
+      return res.status(401).json({ message: "Missing refresh token" });
 
-  const user = await this.service.getUserById(payload.sub, true);
-  console.log(">>> Token in DB:", user?.refreshToken);
+    const payload = JwtHelper.verifyToken(token, "refresh");
+    if (!payload)
+      return res.status(403).json({ message: "Invalid refresh token" });
 
-    if (!user || user.refreshToken?.token !== token)
+    const user = await this.service.getUserById(payload.sub, true);
+
+    // Kiểm tra user tồn tại trước khi đọc refreshToken
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Kiểm tra refreshToken tồn tại và trùng với token client gửi
+    if (!user.refreshToken || user.refreshToken !== token) {
       return res.status(403).json({ message: "Refresh token revoked" });
+    }
 
-    // ✅ Truyền this.service vào helper
     const { accessToken, refreshToken } = await JwtHelper.generateTokens(
       payload.sub,
       false,
