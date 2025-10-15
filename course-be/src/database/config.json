@@ -1,0 +1,17 @@
+{
+  "development": {
+    "username": "avnadmin",
+    "password": "AVNS_WZhxQ4IMKE0YxL99W4O",
+    "database": "defaultdb",
+    "host": "mysql-15379d01-phuphanbdb.d.aivencloud.com",
+    "port": 20142,
+    "dialect": "mysql",
+    "dialectOptions": {
+          "ssl": {
+            "require": true,
+            "rejectUnauthorized": false, 
+            "ca": "./ca.pem"
+          }
+        }
+  }
+}
