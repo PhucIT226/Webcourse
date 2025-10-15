@@ -2,6 +2,8 @@ import express from "express";
 import { createServer } from "http";
 import cors from "cors";
 import dotenv from "dotenv";
+import { stripeWebhook } from "./controllers/payment.controller.js";
+import paymentRoutes from "./routes/payments.js";
 dotenv.config();
 
 import passport from "passport";
@@ -12,7 +14,6 @@ import { Server } from "socket.io";
 import db from "./database/models/index.js";
 import AppConfig from "./config/index.js";
 import ApiRouter from "./routes/index.js";
-
 
 const app = express();
 const server = createServer(app);
@@ -35,7 +36,15 @@ app.use(
 
 app.use(express.json()); // Middleware to parse JSON bodies
 app.use(cookieParser());
+// app.use(`/api/${AppConfig.apiVersion}/payments`, paymentRoutes);
+app.post(
+  `/api/v1/payments/webhook`,
+  express.raw({ type: "application/json" }),
+  stripeWebhook
+);
 
+// Các route payments khác vẫn dùng json
+app.use(`/api/v1/payments`, express.json(), paymentRoutes);
 // ===== PASSPORT JWT STRATEGY =====
 const jwtFromRequest = ExtractJwt.fromExtractors([
   ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -76,7 +85,6 @@ app.use("/uploads", express.static("uploads"));
 
 app.use(`/api/${AppConfig.apiVersion}`, ApiRouter[AppConfig.apiVersion]);
 
-
 // ===== Error handler (catch all) =====
 // ===== Error handler (catch all) =====
 app.use((err, req, res, next) => {
@@ -85,7 +93,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     error: "Internal Server Error",
     message: err.message, // show message để debug
-    stack: err.stack,     // show stack trace để biết ở đâu lỗi
+    stack: err.stack, // show stack trace để biết ở đâu lỗi
   });
 });
 

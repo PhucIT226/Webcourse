@@ -29,6 +29,7 @@ import OrderList from "./pages/admin/orders/order-list";
 import ReviewList from "./pages/admin/reviews/review-list";
 import CouponList from "./pages/admin/coupons/coupon-list";
 import Profile from "./pages/admin/setting/profile";
+import PaymentPage from "./pages/user/Payment/PaymentPage";
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
 
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/payment/:id" element={<PaymentPage />} />
     </Routes>
   );
 }
