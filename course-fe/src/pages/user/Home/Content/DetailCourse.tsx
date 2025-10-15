@@ -94,8 +94,12 @@ const DetailCourse = () => {
 
         <button
           onClick={() =>
-            navigate(`/coursevid/${courseId}`, {
-              state: { courseId: courseId },
+            navigate(`/payment/${courseId}`, {
+              state: {
+                courseId: courseId,
+                courseTitle: location.state?.courseTitle,
+                coursePrice: location.state?.coursePrice, // nếu có giá
+              },
             })
           }
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow"
