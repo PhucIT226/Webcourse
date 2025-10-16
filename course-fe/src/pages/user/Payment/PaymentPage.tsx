@@ -84,9 +84,9 @@ const PaymentPage = () => {
         Giá: {coursePrice ? `$${coursePrice}` : "Miễn phí"}
       </p>
 
-      {/* <Elements stripe={stripePromise} options={{ clientSecret }}>
+      <Elements stripe={stripePromise} options={{ clientSecret }}>
         <CheckoutForm clientSecret={clientSecret} orderId="" />
-      </Elements> */}
+      </Elements>
     </div>
   );
 };
