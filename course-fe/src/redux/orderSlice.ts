@@ -43,6 +43,18 @@ export const fetchOrderById = createAsyncThunk<
   }
 });
 
+export const createOrder = createAsyncThunk<
+  Order,
+  Partial<Order>,
+  { rejectValue: string }
+>("orders/create", async (order, { rejectWithValue }) => {
+  try {
+    return await OrderService.create(order);
+  } catch (err: TAny) {
+    return rejectWithValue(err.response?.data?.message || err.message);
+  }
+});
+
 export const updateOrder = createAsyncThunk<
   Order,
   { id: string; order: Partial<Order> },
@@ -107,6 +119,11 @@ const orderSlice = createSlice({
           if (!existing) state.data.push(action.payload);
         }
       )
+
+       // Create
+      .addCase(createOrder.fulfilled, (state, action: PayloadAction<Order>) => {
+        state.data.push(action.payload);
+      })
 
       // Update
       .addCase(

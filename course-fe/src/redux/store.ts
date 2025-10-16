@@ -5,6 +5,8 @@ import userSlice from "./userSlice";
 import authSlice from "./authSlice";
 import categorySlice from "./categorySlice";
 import orderSlice from "./orderSlice";
+import reviewSlice from "./reviewSlice";
+import couponSlice from "./couponSlice";
 import lessonSlice from "./lessonSlice";
 import paymentSlice from "./paymentSlice";
 import persistStore from "redux-persist/es/persistStore";
@@ -26,6 +28,8 @@ export const store = configureStore({
     user: userSlice,
     category: categorySlice,
     order: orderSlice,
+    review: reviewSlice,
+    coupon: couponSlice,
     lesson: lessonSlice,
     payment: paymentSlice,
   },

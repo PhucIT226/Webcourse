@@ -63,14 +63,14 @@ const menu: MenuType = [
   },
   {
     label: "Đánh giá",
-    to: "review-list",
+    to: "reviews",
     icon: FaStarHalfAlt,
     defaultColor: "text-yellow-500",
     children: [],
   },
   {
     label: "Voucher",
-    to: "coupon-list",
+    to: "coupons",
     icon: FaGift,
     defaultColor: "text-red-500",
     children: [],

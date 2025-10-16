@@ -102,7 +102,7 @@ export default function OrderList() {
               >
                 Tổng tiền {renderSortIcon("totalAmount")}
               </th>
-              <th className="border text-center px-4 py-3 cursor-pointer">Phương thức</th>
+              <th className="border text-center px-4 py-3">Phương thức</th>
               <th
                 className="border text-center px-4 py-3 cursor-pointer"
                 onClick={() => handleSort("paymentStatus")}

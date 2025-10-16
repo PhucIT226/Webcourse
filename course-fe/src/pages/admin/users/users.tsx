@@ -123,7 +123,7 @@ export default function UserList() {
           onClick={() => navigate("/admin/users/create")}
           className="bg-green-600 hover:bg-green-700 text-lg text-white px-4 py-2 rounded-md text-sm"
         >
-          Thêm khóa học
+          Thêm người dùng
         </button>
       </div>
 

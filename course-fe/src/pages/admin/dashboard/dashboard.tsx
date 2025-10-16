@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   FaUser,
-  FaUserTie,
   FaGraduationCap,
   FaCreditCard,
   FaChartLine,
@@ -35,36 +34,37 @@ type MenuType = Menu & { defaultColor: string; value?: number };
 const menu: MenuType[] = [
   {
     label: "Khóa học",
-    to: "product-list",
+    to: "courses",
     icon: FaGraduationCap,
     defaultColor: "text-blue-600",
     children: [],
     value: 30,
   },
   {
-    label: "Học viên",
-    to: "user-list",
+    label: "Người dùng",
+    to: "uses",
     icon: FaUser,
     defaultColor: "text-green-600",
     children: [],
     value: 350,
   },
   {
-    label: "Giảng viên",
-    to: "category-list",
-    icon: FaUserTie,
-    defaultColor: "text-purple-600",
-    children: [],
-    value: 40,
-  },
-  {
     label: "Đơn hàng",
-    to: "tag-list",
+    to: "orders",
     icon: FaCreditCard,
     defaultColor: "text-orange-500",
     children: [],
     value: 85,
   },
+  {
+    label: "Đánh giá",
+    to: "reviews",
+    icon: FaCreditCard,
+    defaultColor: "text-orange-500",
+    children: [],
+    value: 85,
+  },
+  
 ];
 
 const incomeData = [
