@@ -20,8 +20,12 @@ export default (sequelize) => {
         allowNull: false,
         unique: true,
       },
-      type: {
-        type: DataTypes.ENUM("percent", "amount"),
+      description: { 
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
+      discountType: { 
+        type: DataTypes.ENUM("percentage", "fixed"),
         allowNull: false,
       },
       value: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
@@ -41,6 +45,11 @@ export default (sequelize) => {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         defaultValue: 0,
+      },
+      status: {
+        type: DataTypes.ENUM("active", "inactive", "expired"),
+        allowNull: false,
+        defaultValue: "active",
       },
     },
     {

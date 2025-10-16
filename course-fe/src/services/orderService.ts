@@ -12,6 +12,17 @@ const OrderService = {
     return res.data.data;
   },
 
+  async create(order: Partial<Order>): Promise<Order> {
+    const res = await axios.post<{ status: boolean; message: string; data: Order }>(
+      "/orders",
+      order,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    return res.data.data;
+  },
+
   async update(id: string, order: Partial<Order>): Promise<Order> {
     const res = await axios.patch<{ status: boolean; message: string; data: Order }>(
       `/orders/${id}`,

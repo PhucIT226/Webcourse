@@ -14,6 +14,10 @@ class OrderService {
     return this.repository.getOrderById(id);
   }
 
+  createOrder(data) {
+    return this.repository.createOrder(data);
+  }
+
   updateOrder(id, data) {
     return this.repository.updateOrder(id, data);
   }

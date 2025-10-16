@@ -11,7 +11,8 @@ export async function up(queryInterface, Sequelize) {
       allowNull: false,
       unique: true
     },
-    type: { type: Sequelize.ENUM("percent", "amount"), allowNull: false },
+    description: { type: Sequelize.STRING(255), allowNull: true },
+    discountType: { type: Sequelize.ENUM("percentage", "fixed"), allowNull: false },
     value: { type: Sequelize.DECIMAL(10, 2), allowNull: false },
     usageCount: {
       type: Sequelize.INTEGER,
@@ -29,6 +30,11 @@ export async function up(queryInterface, Sequelize) {
       type: Sequelize.DECIMAL(10, 2),
       allowNull: false,
       defaultValue: 0,
+    },
+    status: {
+      type: Sequelize.ENUM("active", "inactive", "expired"),
+      allowNull: false,
+      defaultValue: "active",
     },
     createdAt: {
       type: Sequelize.DATE,

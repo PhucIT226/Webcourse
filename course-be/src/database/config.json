@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "",
-    "database": "courses_db",
-    "host": "127.0.0.1",
+    "username": "avnadmin",
+    "password": "AVNS_WZhxQ4IMKE0YxL99W4O",
+    "database": "defaultdb",
+    "host": "mysql-15379d01-phuphanbdb.d.aivencloud.com",
     "dialect": "mysql"
   }
 }

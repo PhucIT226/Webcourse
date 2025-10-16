@@ -33,8 +33,14 @@ import OrderList from "./pages/admin/orders/orders";
 import OrderDetail from "./components/admin/orders/OrderDetail";
 import OrderEdit from "./pages/admin/orders/order-edit";
 
-import ReviewList from "./pages/admin/reviews/review-list";
-import CouponList from "./pages/admin/coupons/coupon-list";
+import ReviewList from "./pages/admin/reviews/reviews";
+import ReviewDetail from "./components/admin/reviews/ReviewDetail";
+
+import CouponList from "./pages/admin/coupons/coupons";
+import CouponDetail from "./components/admin/coupons/CouponDetail";
+import CouponCreate from "./pages/admin/coupons/coupon-create";
+import CouponEdit from "./pages/admin/coupons/coupon-edit";
+
 import Profile from "./pages/admin/setting/profile";
 import PaymentPage from "./pages/user/Payment/PaymentPage";
 
@@ -84,8 +90,20 @@ function App() {
           <Route path=":id/edit" element={<OrderEdit />} />
         </Route>
 
-        <Route path="review-list" element={<ReviewList />} />
-        <Route path="coupon-list" element={<CouponList />} />
+        {/* Review routes */}
+        <Route path="reviews">
+          <Route index element={<ReviewList />} />
+          <Route path=":id" element={<ReviewDetail />} />
+        </Route>
+
+        {/* Coupon routes */}
+        <Route path="coupons">
+          <Route index element={<CouponList />} />
+          <Route path="create" element={<CouponCreate />} />
+          <Route path=":id" element={<CouponDetail />} />
+          <Route path=":id/edit" element={<CouponEdit />} />
+        </Route>
+
         <Route path="profile" element={<Profile />} />
       </Route>
 

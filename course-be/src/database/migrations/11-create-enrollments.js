@@ -38,6 +38,12 @@ export async function up(queryInterface, Sequelize) {
       defaultValue: Sequelize.fn("NOW"),
     },
   });
+
+  await queryInterface.addConstraint("enrollments", {
+    fields: ["userId", "courseId"],
+    type: "unique",
+    name: "unique_user_course_enrollment",
+  });
 }
 
 export async function down(queryInterface) {
