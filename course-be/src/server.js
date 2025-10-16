@@ -33,18 +33,17 @@ app.use(
 ); // Enable CORS for all routes
 // console.log('req.cookies:', req.cookies);
 // console.log('req.body:', req.body);
-
-app.use(express.json()); // Middleware to parse JSON bodies
-app.use(cookieParser());
-// app.use(`/api/${AppConfig.apiVersion}/payments`, paymentRoutes);
 app.post(
-  `/api/v1/payments/webhook`,
+  `/api/${AppConfig.apiVersion}/payments/webhook`,
   express.raw({ type: "application/json" }),
   stripeWebhook
 );
 
+app.use(express.json()); // Middleware to parse JSON bodies
+app.use(cookieParser());
+app.use(`/api/${AppConfig.apiVersion}/payments`, paymentRoutes);
+
 // Các route payments khác vẫn dùng json
-app.use(`/api/v1/payments`, express.json(), paymentRoutes);
 // ===== PASSPORT JWT STRATEGY =====
 const jwtFromRequest = ExtractJwt.fromExtractors([
   ExtractJwt.fromAuthHeaderAsBearerToken(),
