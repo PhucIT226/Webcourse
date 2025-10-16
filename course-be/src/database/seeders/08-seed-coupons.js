@@ -9,13 +9,15 @@ export async function up(queryInterface) {
     coupons.push({
       id: uuidv4(),
       code: uuidv4().slice(0, 8).toUpperCase(),
-      type: faker.helpers.arrayElement(["percent", "amount"]),
+      description: faker.lorem.sentence(),
+      discountType: faker.helpers.arrayElement(["percentage", "fixed"]),
       value: faker.number.int({ min: 5, max: 50 }),
       usageCount: 0,
       maxUsage: faker.number.int({ min: 1, max: 100 }),
       validFrom: faker.date.past(),
       validTo: faker.date.future(),
       minOrderValue: faker.number.int({ min: 0, max: 500000 }),
+      status: faker.helpers.arrayElement(["active", "inactive", "expired"]),
       createdAt: now,
       updatedAt: now,
     });

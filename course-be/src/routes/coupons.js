@@ -1,21 +1,15 @@
-// import express from 'express';
-// import middlewares from '../middlewares/index.js';
-// import {
-//   getCoupons,
-//   getCouponById,
-//   createCoupon,
-//   updateCoupon,
-//   deleteCoupon
-// } from '../controllers/coupon.controller.js';
+import express from 'express';
+import middlewares from '../middlewares/index.js';
+import couponController from '../controllers/coupon.controller.js';
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.get('/', getCoupons);
-// router.get('/:id', getCouponById);
+router.get('/', couponController.getAllCoupons);
+router.get('/:id', couponController.getCouponById);
 
-// // Chỉ admin thao tác
-// router.post('/', middlewares.auth, middlewares.role('admin'), createCoupon);
-// router.patch('/:id', middlewares.auth, middlewares.role('admin'), updateCoupon);
-// router.delete('/:id', middlewares.auth, middlewares.role('admin'), deleteCoupon);
+// Chỉ admin thao tác
+router.post('/', middlewares.auth, middlewares.role('admin'), couponController.createCoupon);
+router.patch('/:id', middlewares.auth, middlewares.role('admin'), couponController.updateCoupon);
+router.delete('/:id', middlewares.auth, middlewares.role('admin'), couponController.deleteCoupon);
 
-// export default router;
+export default router;

@@ -24,7 +24,6 @@ class OrderRepository {
     // 🔍 Tìm kiếm theo id hoặc tên user
     if (search) {
       where[Op.or] = [
-        { id: { [Op.like]: `%${search}%` } },
         { "$user.name$": { [Op.like]: `%${search}%` } },
       ];
     }
