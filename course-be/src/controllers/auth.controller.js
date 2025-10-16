@@ -14,10 +14,9 @@ class AuthController extends BaseController {
     const { name, email, password } = req.body;
 
     const existingUser = await this.service.getUserByEmail(email);
-    if (existingUser)
-      return res.status(400).json({ message: "User exists" });
+    if (existingUser) return res.status(400).json({ message: "User exists" });
 
-    const passwordHash = await HashHelper.hashPassword(password);
+    // const passwordHash = await HashHelper.hashPassword(password);
 
     const studentRole = await db.Role.findOne({ where: { name: "student" } });
     if (!studentRole) {
@@ -27,7 +26,7 @@ class AuthController extends BaseController {
     await this.service.createUser({
       name,
       email,
-      passwordHash,
+      password,
       roleId: studentRole.id,
     });
 
@@ -52,7 +51,14 @@ class AuthController extends BaseController {
     // Set token vào cookie
     JwtHelper.setTokensAsCookies(res, accessToken, refreshToken);
 
-    res.json({ accessToken, refreshToken });
+    const userData = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      roleId: user.roleId,
+    };
+
+    res.json({ accessToken, refreshToken, user: userData });
   }
 
   async refreshToken(req, res) {
@@ -102,4 +108,4 @@ class AuthController extends BaseController {
   }
 }
 
-export default new AuthController;
+export default new AuthController();

@@ -31,6 +31,7 @@ const Register = () => {
 
   const onSubmit = async (data: RegisterForm) => {
     await authService.signup(data);
+    console.log(data);
     navigate("/login");
   };
 
