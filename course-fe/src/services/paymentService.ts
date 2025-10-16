@@ -1,33 +1,16 @@
-import type { TAny } from "../types/common";
-import axios from "./axiosClient";
+// src/services/paymentService.ts
+import axios from "axios";
 
-interface CreatePaymentIntentPayload {
+export const createPayment = async (payload: {
   courseId: string;
-  orderId: string;
-}
-
-interface CreatePaymentIntentResponse {
-  clientSecret: string;
-  [key: string]: TAny;
-}
-
-export const createPayment = async (
-  payload: CreatePaymentIntentPayload
-): Promise<CreatePaymentIntentResponse> => {
-  try {
-    // axios trả về response.data đã là object JSON
-    const { data } = await axios.post<CreatePaymentIntentResponse>(
-      "payments/create-payment-intent",
-      payload // axios tự stringify
-    );
-
-    return data;
-  } catch (error: TAny) {
-    // Axios lỗi thường có response.data.message
-    const message =
-      error?.response?.data?.message ||
-      error.message ||
-      "Failed to create payment intent";
-    throw new Error(message);
-  }
+  userId: string;
+  orderId?: string;
+}) => {
+  const res = await axios.post(
+    "http://localhost:3000/api/v1/payments/create-payment-intent",
+    payload,
+    { withCredentials: true }
+  );
+  console.log("📨 Response from backend:", res.data);
+  return res.data;
 };

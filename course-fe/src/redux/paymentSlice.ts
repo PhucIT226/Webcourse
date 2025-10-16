@@ -1,11 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-
-import type { TAny } from "../types/common";
 import { createPayment } from "../services/paymentService";
 
 interface PaymentState {
   clientSecret: string | null;
+  orderId: string | null;
   loading: boolean;
   error: string | null;
 }
@@ -13,11 +11,12 @@ interface PaymentState {
 interface PaymentPayload {
   courseId: string;
   userId: string;
-  orderId: string; // Added orderId to match CreatePaymentIntentPayload
+  orderId?: string;
 }
 
 const initialState: PaymentState = {
   clientSecret: null,
+  orderId: null,
   loading: false,
   error: null,
 };
@@ -29,6 +28,7 @@ export const createPaymentIntent = createAsyncThunk<
 >("payment/createPaymentIntent", async (payload, { rejectWithValue }) => {
   try {
     const data = await createPayment(payload);
+    console.log("💾 createPaymentIntent response:", data);
     return {
       clientSecret: data.clientSecret,
       orderId: data.orderId,
@@ -48,21 +48,16 @@ const paymentSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(
-        createPaymentIntent.fulfilled,
-        (
-          state,
-          action: PayloadAction<{ clientSecret: string; orderId: string }>
-        ) => {
-          state.loading = false;
-          state.clientSecret = action.payload.clientSecret;
-          state.orderId = action.payload.orderId;
-        }
-      )
+      .addCase(createPaymentIntent.fulfilled, (state, action) => {
+        state.loading = false;
+        state.clientSecret = action.payload.clientSecret; // ✅ không ghi đè
+        state.orderId = action.payload.orderId;
+      })
       .addCase(createPaymentIntent.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Unknown error";
       });
   },
 });
+
 export default paymentSlice.reducer;

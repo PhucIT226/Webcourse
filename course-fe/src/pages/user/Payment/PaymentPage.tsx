@@ -10,6 +10,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
+import type { TAny } from "../../../types/common";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -19,7 +20,7 @@ interface LocationState {
   coursePrice: number;
 }
 
-const CheckoutForm = ({ clientSecret, orderId }: any) => {
+const CheckoutForm = ({ clientSecret }: TAny) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -60,18 +61,17 @@ const PaymentPage = () => {
   console.log(location);
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?.id);
+  console.log(userId);
   const { clientSecret, loading } = useAppSelector((state) => state.payment);
+  console.log(clientSecret);
   const { courseId, courseTitle, coursePrice } =
-    (location.state as LocationState) || {};
+    location.state as LocationState;
+
   useEffect(() => {
     if (courseId && userId) {
       dispatch(createPaymentIntent({ courseId, userId, orderId: "" }));
     }
   }, [courseId, userId, dispatch]);
-
-  if (!courseId) {
-    return <p>Không tìm thấy khóa học để thanh toán.</p>;
-  }
 
   if (loading || !clientSecret) return <p>Đang tạo đơn thanh toán...</p>;
 
@@ -84,9 +84,9 @@ const PaymentPage = () => {
         Giá: {coursePrice ? `$${coursePrice}` : "Miễn phí"}
       </p>
 
-      <Elements stripe={stripePromise} options={{ clientSecret }}>
+      {/* <Elements stripe={stripePromise} options={{ clientSecret }}>
         <CheckoutForm clientSecret={clientSecret} orderId="" />
-      </Elements>
+      </Elements> */}
     </div>
   );
 };
