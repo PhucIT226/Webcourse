@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import courseSlice from "./courseSlice";
 import userSlice from "./userSlice";
 import authSlice from "./authSlice";
+import dashboardSlice from "./dashboardSlice";
 import categorySlice from "./categorySlice";
 import orderSlice from "./orderSlice";
 import reviewSlice from "./reviewSlice";
@@ -23,6 +24,7 @@ export const store = configureStore({
   reducer: {
     // product: productSlice,
     auth: persistedReducer,
+    dashboard: dashboardSlice,
     // users: userSlice,
     course: courseSlice,
     user: userSlice,

@@ -4,6 +4,7 @@ import authRoutes from "./auth.js";
 import rolesRoutes from "./roles.js";
 import usersRoutes from "./users.js";
 // import profilesRoutes from './profiles.js';
+import dashboardRoutes from "./dashboard.js";
 import categoriesRoutes from "./categories.js";
 import coursesRoutes from "./courses.js";
 import lessonsRoutes from "./lessons.js";
@@ -22,6 +23,7 @@ export default {
     .use("/roles", rolesRoutes)
     .use("/users", usersRoutes)
     //   .use("/profiles", profilesRoutes)
+    .use("/dashboard", dashboardRoutes)
     .use("/courses", coursesRoutes)
     // .use("/courses/:courseId/lessons", lessonsRoutes)
     // .use("/courses/:courseId/reviews", reviewsRoutes)

@@ -3,17 +3,13 @@ import {
   FaBars,
   FaThLarge,
   FaUser,
-  FaUserTie,
   FaGraduationCap,
-  FaRegBell,
-  FaRegCommentDots,
   FaTags,
   FaGift,
   FaUserCog,
   FaStarHalfAlt,
   FaCreditCard,
 } from "react-icons/fa";
-import ThemeToggle from "../components/admin/ThemeToggle";
 import { Link, useLocation } from "react-router-dom";
 import type { Menu } from "../types/menu";
 import type { TAny } from "../types/common";
@@ -77,7 +73,7 @@ const menu: MenuType = [
   },
   {
     label: "Cài đặt",
-    to: "profile",
+    to: "setting",
     icon: FaUserCog,
     defaultColor: "text-gray-500",
     children: [],
@@ -202,14 +198,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <SearchBar placeholder="Tìm kiếm..." />
           </div>
           <div className="flex items-center gap-4">
-            <FaRegBell className="text-gray-400 text-lg cursor-pointer" />
-            <ThemeToggle />
-            <img
-              src="https://flagcdn.com/us.svg"
-              alt="US"
-              className="w-6 h-6 rounded-full border"
-            />
-            <FaRegCommentDots className="text-gray-400 text-lg cursor-pointer" />
             <Link to="profile">
               <img
                 src="https://randomuser.me/api/portraits/men/32.jpg"
