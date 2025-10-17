@@ -13,35 +13,42 @@ import Register from "./Auth/register";
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
 
+// Admin course
 import CourseList from "./pages/admin/courses/courses";
 import CourseDetail from "./components/admin/courses/CourseDetail";
 import CourseCreate from "./pages/admin/courses/Course-create";
 import CourseEdit from "./pages/admin/courses/Course-edit";
 
+// Admin user
 import UserList from "./pages/admin/users/users";
 import UserDetail from "./components/admin/users/UserDetail";
 import UserCreate from "./pages/admin/users/user-create";
 import UserEdit from "./pages/admin/users/user-edit";
 
+// Admin category
 import CategoryList from "./pages/admin/categories/categories";
 import CategoryDetail from "./components/admin/categories/CategoryDetail";
 import CategoryCreate from "./pages/admin/categories/category-create";
 import CategoryEdit from "./pages/admin/categories/category-edit";
 
-
+// Admin order
 import OrderList from "./pages/admin/orders/orders";
 import OrderDetail from "./components/admin/orders/OrderDetail";
 import OrderEdit from "./pages/admin/orders/order-edit";
 
+// Admin review
 import ReviewList from "./pages/admin/reviews/reviews";
 import ReviewDetail from "./components/admin/reviews/ReviewDetail";
 
+// Admin coupon
 import CouponList from "./pages/admin/coupons/coupons";
 import CouponDetail from "./components/admin/coupons/CouponDetail";
 import CouponCreate from "./pages/admin/coupons/coupon-create";
 import CouponEdit from "./pages/admin/coupons/coupon-edit";
 
-import Profile from "./pages/admin/setting/profile";
+// Admin setting
+import Setting from "./pages/admin/setting/setting";
+
 import PaymentPage from "./pages/user/Payment/PaymentPage";
 
 function App() {
@@ -104,7 +111,13 @@ function App() {
           <Route path=":id/edit" element={<CouponEdit />} />
         </Route>
 
-        <Route path="profile" element={<Profile />} />
+        {/* Setting routes */}
+        <Route path="setting">
+          <Route index element={<Setting />} />
+          <Route path="create" element={<CouponCreate />} />
+          <Route path=":id" element={<CouponDetail />} />
+          <Route path=":id/edit" element={<CouponEdit />} />
+        </Route>
       </Route>
 
       <Route path="/login" element={<Login />} />
