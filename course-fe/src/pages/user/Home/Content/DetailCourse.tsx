@@ -11,7 +11,11 @@ import {
 
 const DetailCourse = () => {
   const location = useLocation();
+  console.log(location);
   const courseId = location.state?.courseId;
+  const courseTitle = location.state?.courseTitle;
+  const coursePrice = location.state?.coursePrice;
+  console.log(coursePrice);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { lessons, loading } = useAppSelector((state) => state.lesson);
@@ -97,8 +101,8 @@ const DetailCourse = () => {
             navigate(`/payment/${courseId}`, {
               state: {
                 courseId: courseId,
-                courseTitle: location.state?.courseTitle,
-                coursePrice: location.state?.coursePrice, // nếu có giá
+                courseTitle: courseTitle,
+                coursePrice: coursePrice,
               },
             })
           }

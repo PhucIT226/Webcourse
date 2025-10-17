@@ -46,7 +46,7 @@ export const purchaseCourse = async (req, res) => {
     // 5️⃣ Tạo Payment record trong DB
     await db.Payment.create({
       orderId: order.id,
-      paymentMethod: "stripe",
+      paymentMethod: "bank",
       transactionId: paymentIntent.id,
       amount: course.price,
       status: "pending",
@@ -72,7 +72,7 @@ export const stripeWebhook = async (req, res) => {
     if (event.type === "payment_intent.succeeded") {
       const paymentIntent = event.data.object;
       await db.Payment.update(
-        { status: "succeeded", paidAt: new Date() },
+        { status: "success", paidAt: new Date() },
         { where: { transactionId: paymentIntent.id } }
       );
     }

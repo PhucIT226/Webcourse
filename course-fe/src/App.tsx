@@ -28,7 +28,6 @@ import CategoryDetail from "./components/admin/categories/CategoryDetail";
 import CategoryCreate from "./pages/admin/categories/category-create";
 import CategoryEdit from "./pages/admin/categories/category-edit";
 
-
 import OrderList from "./pages/admin/orders/orders";
 import OrderDetail from "./components/admin/orders/OrderDetail";
 import OrderEdit from "./pages/admin/orders/order-edit";

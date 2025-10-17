@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-
+import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { createPaymentIntent } from "../../../redux/paymentSlice";
 import { loadStripe } from "@stripe/stripe-js";
 import {
@@ -9,26 +9,23 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
 import type { TAny } from "../../../types/common";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
-interface LocationState {
-  courseId: string;
-  courseTitle: string;
-  coursePrice: number;
-}
-
-const CheckoutForm = ({ clientSecret }: TAny) => {
+// ========================== Checkout Form ==========================
+const CheckoutForm = ({ clientSecret }: { clientSecret: string }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
+    setLoading(true);
     const card = elements.getElement(CardElement)!;
+
     const { error, paymentIntent } = await stripe.confirmCardPayment(
       clientSecret,
       {
@@ -39,54 +36,89 @@ const CheckoutForm = ({ clientSecret }: TAny) => {
     if (error) {
       alert(error.message);
     } else if (paymentIntent?.status === "succeeded") {
-      alert("Thanh toán thành công!");
+      alert("🎉 Thanh toán thành công!");
     }
+    setLoading(false);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="border p-3 rounded-md">
+        <CardElement options={{ hidePostalCode: true }} />
+      </div>
+
       <button
         type="submit"
-        className="mt-4 bg-green-500 px-6 py-2 text-white rounded-md"
+        disabled={loading}
+        className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-md font-semibold transition"
       >
-        Thanh toán
+        {loading ? "Đang xử lý..." : "Thanh toán ngay"}
       </button>
     </form>
   );
 };
 
+// ========================== Main Payment Page ==========================
 const PaymentPage = () => {
   const location = useLocation();
   console.log(location);
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?.id);
-  console.log(userId);
   const { clientSecret, loading } = useAppSelector((state) => state.payment);
-  console.log(clientSecret);
-  const { courseId, courseTitle, coursePrice } =
-    location.state as LocationState;
+
+  const { courseId, courseTitle, coursePrice } = location.state || {};
 
   useEffect(() => {
     if (courseId && userId) {
-      dispatch(createPaymentIntent({ courseId, userId, orderId: "" }));
+      dispatch(createPaymentIntent({ courseId, userId }));
     }
   }, [courseId, userId, dispatch]);
 
   if (loading || !clientSecret) return <p>Đang tạo đơn thanh toán...</p>;
 
   return (
-    <div className="max-w-xl mx-auto p-8">
-      <h1 className="text-3xl font-bold mb-4">
-        Thanh toán khóa học: {courseTitle}
-      </h1>
-      <p className="mb-6">
-        Giá: {coursePrice ? `$${coursePrice}` : "Miễn phí"}
-      </p>
+    <div className="max-w-5xl mx-auto mt-10 p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* ===== Left: Billing & Card Info ===== */}
+      <div>
+        <h2 className="text-2xl font-bold mb-4">Checkout</h2>
 
-      <Elements stripe={stripePromise} options={{ clientSecret }}>
-        <CheckoutForm clientSecret={clientSecret} orderId="" />
-      </Elements>
+        <p className="text-sm text-gray-500 mb-6">
+          Udemy is required by law to collect applicable transaction taxes for
+          purchases made in certain tax jurisdictions.
+        </p>
+
+        {/* Card payment */}
+        <h3 className="font-semibold mb-3">Payment method</h3>
+        <Elements stripe={stripePromise} options={{ clientSecret }}>
+          <CheckoutForm clientSecret={clientSecret} />
+        </Elements>
+      </div>
+
+      {/* ===== Right: Order summary ===== */}
+      <div className="border rounded-md p-6 bg-gray-50">
+        <h3 className="text-xl font-bold mb-4">Order Summary</h3>
+        <p className="flex justify-between mb-2">
+          <span>Course:</span>
+          <span className="font-semibold">{courseTitle}</span>
+        </p>
+        <p className="flex justify-between mb-2">
+          <span>Price:</span>
+          <span className="font-semibold">${coursePrice}</span>
+        </p>
+        <hr className="my-4" />
+        <p className="flex justify-between text-lg font-bold">
+          <span>Total:</span>
+          <span>${coursePrice}</span>
+        </p>
+
+        <div className="mt-6 text-sm text-gray-600">
+          <p className="font-semibold mb-1">30-Day Money-Back Guarantee 💸</p>
+          <p>
+            Not satisfied? Get a full refund within 30 days. Simple and
+            straightforward!
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
