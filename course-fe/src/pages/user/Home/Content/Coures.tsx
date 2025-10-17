@@ -40,6 +40,7 @@ const Courses = () => {
                     courseTitle: course.title,
                     courseDes: course.description,
                     courseId: course.id,
+                    courePrice: course.price,
                   },
                 })
               }

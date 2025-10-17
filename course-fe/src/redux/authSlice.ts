@@ -61,6 +61,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
         state.accessToken = action.payload?.accessToken;
+        state.accessToken = action.payload?.refreshToken;
         state.user = action.payload.user || null;
 
         // Lưu vào localStorage
