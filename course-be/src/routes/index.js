@@ -3,7 +3,7 @@ import { Router } from "express";
 import authRoutes from "./auth.js";
 import rolesRoutes from "./roles.js";
 import usersRoutes from "./users.js";
-// import profilesRoutes from './profiles.js';
+import profileRoutes from './profile.js';
 import dashboardRoutes from "./dashboard.js";
 import categoriesRoutes from "./categories.js";
 import coursesRoutes from "./courses.js";
@@ -22,7 +22,7 @@ export default {
     .use("/auth", authRoutes)
     .use("/roles", rolesRoutes)
     .use("/users", usersRoutes)
-    //   .use("/profiles", profilesRoutes)
+    .use("/profile", profileRoutes)
     .use("/dashboard", dashboardRoutes)
     .use("/courses", coursesRoutes)
     // .use("/courses/:courseId/lessons", lessonsRoutes)
