@@ -50,6 +50,7 @@ import CouponEdit from "./pages/admin/coupons/coupon-edit";
 import Setting from "./pages/admin/setting/setting";
 
 import PaymentPage from "./pages/user/Payment/PaymentPage";
+import UserProfile from "./pages/user/Home/Header/UserProfile";
 
 function App() {
   return (
@@ -123,6 +124,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/payment/:id" element={<PaymentPage />} />
+      <Route path="/profile/:id" element={<UserProfile />} />
     </Routes>
   );
 }

@@ -23,13 +23,17 @@ class AuthController extends BaseController {
       return res.status(500).json({ message: "Default role not found" });
     }
 
-    await this.service.createUser({
+    const user = await this.service.createUser({
       name,
       email,
       password,
       roleId: studentRole.id,
     });
 
+    await db.Profile.create({
+      userId: user.id,
+      fullName: user.name,
+    });
     res.status(201).json({ message: "User created" });
   }
 
