@@ -1,19 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCamera } from "react-icons/fa";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { fetchProfile, updateProfile } from "../../../redux/profileSlice";
 
 export const ProfileSettings = () => {
+  const dispatch = useAppDispatch();
+  const profile = useAppSelector((state) => state.profile.data);
+  const loading = useAppSelector((state) => state.profile.loading);
+
   const [formData, setFormData] = useState({
-    name: "Admin Master",
-    email: "admin@email.com",
+    name: "",
+    email: "",
     phone: "",
     dob: "",
     address: "",
     avatar: "",
+    file: null as File | null,
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  useEffect(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        name: profile.name,
+        email: profile.email,
+        phone: profile.phone || "",
+        dob: profile.dob || "",
+        address: profile.address || "",
+        avatar: profile.avatarUrl || "",
+        file: null,
+      });
+    }
+  }, [profile]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -22,14 +45,14 @@ export const ProfileSettings = () => {
     const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
-      setFormData((prev) => ({ ...prev, avatar: url }));
+      setFormData((prev) => ({ ...prev, avatar: url, file }));
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("🔄 Profile update:", formData);
-    // TODO: Gọi API cập nhật user profile (sau khi có backend)
+    const { file, ...data } = formData;
+    dispatch(updateProfile({ profile: data, file: file || undefined }));
   };
 
   return (
@@ -41,10 +64,7 @@ export const ProfileSettings = () => {
         <div className="flex flex-col items-center gap-3">
           <div className="relative w-24 h-24 rounded-full overflow-hidden">
             <img
-              src={
-                formData.avatar ||
-                "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
-              }
+              src={formData.avatar || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"}
               alt="Avatar"
               className="w-full h-full object-cover"
             />
@@ -62,66 +82,27 @@ export const ProfileSettings = () => {
               onChange={handleAvatarChange}
             />
           </div>
-
-          {/* Name + Email */}
           <div className="text-center">
             <p className="font-medium text-gray-700 text-lg">{formData.name}</p>
             <p className="text-md text-gray-500">{formData.email}</p>
           </div>
         </div>
 
-        {/* Name */}
-        <div>
-          <label className="text-lg text-gray-600">Tên hiển thị</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-            placeholder="Nhập tên admin..."
-          />
-        </div>
+        {/* Các field */}
+        {["name", "email", "phone", "dob"].map((key) => (
+          <div key={key}>
+            <label className="text-lg text-gray-600">{key === "dob" ? "Ngày sinh" : key === "phone" ? "Số điện thoại" : key === "name" ? "Tên hiển thị" : "Email"}</label>
+            <input
+              type={key === "email" ? "email" : key === "dob" ? "date" : "text"}
+              name={key}
+              value={formData[key as keyof typeof formData] || ""}
+              onChange={handleChange}
+              className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-md"
+              placeholder={key}
+            />
+          </div>
+        ))}
 
-        {/* Email */}
-        <div>
-          <label className="text-lg text-gray-600">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-md"
-            placeholder="admin@email.com"
-          />
-        </div>
-
-        {/* Ngày sinh */}
-        <div>
-          <label className="text-lg text-gray-600">Ngày sinh</label>
-          <input
-            type="date"
-            name="dob"
-            value={formData.dob}
-            onChange={handleChange}
-            className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-md"
-          />
-        </div>
-
-        {/* Số điện thoại */}
-        <div>
-          <label className="text-lg text-gray-600">Số điện thoại</label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="w-full mt-1 border border-gray-200 rounded-lg px-3 py-2 text-md"
-            placeholder="Nhập số điện thoại..."
-          />
-        </div>
-
-        {/* Địa chỉ */}
         <div>
           <label className="text-lg text-gray-600">Địa chỉ</label>
           <textarea
@@ -137,9 +118,10 @@ export const ProfileSettings = () => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-4 py-2 text-lg font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+            disabled={loading}
+            className="px-4 py-2 text-lg font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all disabled:opacity-50"
           >
-            Lưu thay đổi
+            {loading ? "Đang lưu..." : "Lưu thay đổi"}
           </button>
         </div>
       </form>

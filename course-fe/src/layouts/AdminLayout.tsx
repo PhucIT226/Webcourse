@@ -6,10 +6,10 @@ import {
   FaGraduationCap,
   FaTags,
   FaGift,
-  FaUserCog,
   FaStarHalfAlt,
   FaCreditCard,
 } from "react-icons/fa";
+import { IoMdSettings } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
 import type { Menu } from "../types/menu";
 import type { TAny } from "../types/common";
@@ -26,14 +26,14 @@ const menu: MenuType = [
     label: "Dashboard",
     to: "",
     icon: FaThLarge,
-    defaultColor: "text-gray-600",
+    defaultColor: "text-blue-600",
     badge: 4,
   },
   {
     label: "Khóa học",
     to: "courses",
     icon: FaGraduationCap,
-    defaultColor: "text-blue-600",
+    defaultColor: "text-purple-600",
     children: [],
   },
   {
@@ -69,13 +69,6 @@ const menu: MenuType = [
     to: "coupons",
     icon: FaGift,
     defaultColor: "text-red-500",
-    children: [],
-  },
-  {
-    label: "Cài đặt",
-    to: "setting",
-    icon: FaUserCog,
-    defaultColor: "text-gray-500",
     children: [],
   },
 ];
@@ -127,7 +120,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 <li key={item.label}>
                   <Link
                     to={item.to}
-                    className={`flex items-center px-4 py-2 rounded-lg cursor-pointer group ${
+                    className={`flex items-center text-lg px-4 py-4 rounded-lg cursor-pointer group ${
                       item.active
                         ? "bg-[#eff6ff] text-[#2563eb] font-semibold"
                         : "text-gray-700 hover:bg-[#dbeafe] hover:text-[#2563eb]"
@@ -198,12 +191,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <SearchBar placeholder="Tìm kiếm..." />
           </div>
           <div className="flex items-center gap-4">
-            <Link to="profile">
-              <img
-                src="https://randomuser.me/api/portraits/men/32.jpg"
-                alt="User"
-                className="w-8 h-8 rounded-full border-2 border-blue-200"
-              />
+            <Link to="setting">
+              <IoMdSettings className="text-3xl" />
             </Link>
           </div>
         </header>
