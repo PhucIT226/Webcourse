@@ -71,10 +71,21 @@ export const stripeWebhook = async (req, res) => {
     );
     if (event.type === "payment_intent.succeeded") {
       const paymentIntent = event.data.object;
+      const orderId = paymentIntent.metadata.orderId;
       await db.Payment.update(
         { status: "success", paidAt: new Date() },
         { where: { transactionId: paymentIntent.id } }
       );
+      // 2️⃣ Cập nhật Order
+      await db.Order.update(
+        { status: "paid", paymentStatus: "paid" },
+        { where: { id: orderId } }
+      );
+      await db.OrderItem.update(
+        { accessStatus: "active" },
+        { where: { orderId } }
+      );
+      console.log(`✅ Đã cấp quyền truy cập cho order #${orderId}`);
     }
     res.json({ received: true });
   } catch (error) {

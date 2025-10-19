@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { createPayment } from "../services/paymentService";
+import type { TAny } from "../types/common";
 
 interface PaymentState {
   clientSecret: string | null;
@@ -33,7 +34,7 @@ export const createPaymentIntent = createAsyncThunk<
       clientSecret: data.clientSecret,
       orderId: data.orderId,
     };
-  } catch (err: any) {
+  } catch (err: TAny) {
     return rejectWithValue(err?.message || "Something went wrong");
   }
 });
