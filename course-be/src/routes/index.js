@@ -13,7 +13,6 @@ import orderItemsRoutes from "./orderItems.js";
 import paymentsRoutes from "./payments.js";
 import reviewsRoutes from './reviews.js';
 import couponsRoutes from './coupons.js';
-import profilesRoutes from "./profiles.js";
 // import enrollmentsRoutes from './enrollments.js';
 // import certificatesRoutes from './certificates.js';
 import uploadsRoutes from "./uploads.js";
@@ -23,7 +22,6 @@ export default {
     .use("/auth", authRoutes)
     .use("/roles", rolesRoutes)
     .use("/users", usersRoutes)
-    .use("/profiles", profilesRoutes)
     .use("/profile", profileRoutes)
     .use("/dashboard", dashboardRoutes)
     .use("/courses", coursesRoutes)
