@@ -8,6 +8,7 @@ import {
   FaGift,
   FaStarHalfAlt,
   FaCreditCard,
+  FaSearch,
 } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
@@ -77,6 +78,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [menus, setMenus] = useState(menu);
   const location = useLocation();
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     setMenus((prevMenus: TAny) =>
@@ -188,11 +190,26 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             >
               <FaBars />
             </button>
-            <SearchBar placeholder="Tìm kiếm..." />
+            <div className="flex items-center gap-2">
+              <SearchBar
+                placeholder="Tìm kiếm..."
+                value={searchText}
+                onChange={setSearchText}
+              />
+              <button
+                className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition"
+                onClick={() => {
+                  console.log("🔍 Search text:", searchText);
+                  // TODO: gọi API search global ở đây
+                }}
+              >
+                <FaSearch />
+              </button>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <Link to="setting">
-              <IoMdSettings className="text-3xl" />
+              <IoMdSettings className="text-2xl" />
             </Link>
           </div>
         </header>
