@@ -71,7 +71,7 @@ export const stripeWebhook = async (req, res) => {
     );
     if (event.type === "payment_intent.succeeded") {
       const paymentIntent = event.data.object;
-      const orderId = paymentIntent.metadata.orderId;
+      const { orderId, courseId } = paymentIntent.metadata;
       await db.Payment.update(
         { status: "success", paidAt: new Date() },
         { where: { transactionId: paymentIntent.id } }
@@ -81,9 +81,10 @@ export const stripeWebhook = async (req, res) => {
         { status: "paid", paymentStatus: "paid" },
         { where: { id: orderId } }
       );
+
       await db.OrderItem.update(
         { accessStatus: "active" },
-        { where: { orderId } }
+        { where: { orderId, courseId } }
       );
       console.log(`✅ Đã cấp quyền truy cập cho order #${orderId}`);
     }
