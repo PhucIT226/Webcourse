@@ -11,6 +11,7 @@ import reviewSlice from "./reviewSlice";
 import couponSlice from "./couponSlice";
 import lessonSlice from "./lessonSlice";
 import paymentSlice from "./paymentSlice";
+import profileSlice from "./profileSlice";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
 // import userSlice from "./userSlice";
@@ -35,6 +36,7 @@ export const store = configureStore({
     coupon: couponSlice,
     lesson: lessonSlice,
     payment: paymentSlice,
+    profile: profileSlice,
   },
 });
 export const persitor = persistStore(store);

@@ -1,7 +1,7 @@
 import { useNavigate, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../redux/store";
-import { useAppDispatch } from "../../../../hooks";
+import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { signout } from "../../../../redux/authSlice";
 import { Button } from "../../../../components/ui/button";
 import { Input } from "../../../../components/ui/input";
@@ -19,9 +19,8 @@ import {
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const userid = useAppSelector((state) => state.auth.user?.id);
 
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
@@ -91,7 +90,9 @@ const Header = () => {
               >
                 <DropdownMenuLabel>Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/profile")}>
+                <DropdownMenuItem
+                  onClick={() => navigate(`/profile/${userid}`)}
+                >
                   Profile
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate("/admin")}>
