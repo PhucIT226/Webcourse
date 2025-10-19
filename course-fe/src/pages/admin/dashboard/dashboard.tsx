@@ -17,9 +17,11 @@ import { RecentReviews } from "../../../components/admin/dashboards/RecentReview
 import { Notifications } from "../../../components/admin/dashboards/Notifications";
 import { DashboardPDFPreview } from "../../../components/admin/dashboards/DashboardPDFPreview";
 import type { VisibleSections } from "../../../types/dashboard";
+import { useNavigate } from "react-router-dom";
 
 const DashboardPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { summary, loading } = useAppSelector((state) => state.dashboard);
   const [showPreview, setShowPreview] = useState(false);
 
@@ -75,24 +77,28 @@ const DashboardPage = () => {
             value={summary?.totalCourses ?? 0}
             icon={<FaBookOpen className="text-orange-500" />}
             loading={loading}
+            onClick={() => navigate("/admin/courses")}
           />
           <StatCard
             title="Tổng học viên"
             value={summary?.totalUsers ?? 0}
             icon={<FaUserGraduate className="text-blue-500" />}
             loading={loading}
+            onClick={() => navigate("/admin/users")}
           />
           <StatCard
             title="Tổng đơn hàng"
             value={summary?.totalOrders ?? 0}
             icon={<FaCartArrowDown className="text-yellow-500" />}
             loading={loading}
+            onClick={() => navigate("/admin/orders")}
           />
           <StatCard
             title="Doanh thu"
             value={Math.ceil(summary?.totalRevenue ?? 0).toLocaleString("vi-VN")}
             icon={<FaMoneyBillWave className="text-green-500" />}
             loading={loading}
+            onClick={() => navigate("/admin/revenue")}
           />
         </div>
       )}
