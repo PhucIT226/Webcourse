@@ -1,5 +1,3 @@
-// types/dashboard.ts
-
 export type DashboardSummary = {
   totalUsers: number;
   totalCourses: number;
@@ -8,7 +6,7 @@ export type DashboardSummary = {
 };
 
 export type RevenueStat = {
-  month: string; // format YYYY-MM
+  month: string;
   totalRevenue: number;
 };
 
@@ -48,4 +46,13 @@ export type DashboardData = {
   topCourses: TopCourse[];
   recentOrders: RecentOrder[];
   recentReviews: RecentReview[];
+};
+
+export type VisibleSections = {
+  summary: boolean;
+  chart: boolean;
+  topCourses: boolean;
+  orders: boolean;
+  reviews: boolean;
+  notifications: boolean;
 };

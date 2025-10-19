@@ -4,6 +4,7 @@ import dashboardController from "../controllers/dashboard.controller.js";
 
 const router = express.Router();
 
+// Lấy tổng quan dashboard
 router.get(
   "/summary",
   middlewares.auth,
@@ -11,6 +12,7 @@ router.get(
   dashboardController.getSummary
 );
 
+// Doanh thu theo tháng
 router.get(
   "/revenue",
   middlewares.auth,
@@ -18,6 +20,7 @@ router.get(
   dashboardController.getRevenueStats
 );
 
+// Top khóa học bán chạy
 router.get(
   "/top-courses",
   middlewares.auth,
@@ -25,6 +28,7 @@ router.get(
   dashboardController.getTopCourses
 );
 
+// Đơn hàng gần đây
 router.get(
   "/recent-orders",
   middlewares.auth,
@@ -32,6 +36,7 @@ router.get(
   dashboardController.getRecentOrders
 );
 
+// Đánh giá gần đây
 router.get(
   "/recent-reviews",
   middlewares.auth,

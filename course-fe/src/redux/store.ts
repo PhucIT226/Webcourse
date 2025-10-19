@@ -1,5 +1,6 @@
 import { persistReducer } from "redux-persist";
 import { configureStore } from "@reduxjs/toolkit";
+import profileSlice from "./profileSlice"
 import courseSlice from "./courseSlice";
 import userSlice from "./userSlice";
 import authSlice from "./authSlice";
@@ -23,7 +24,7 @@ const persistedReducer = persistReducer(persistConfig, authSlice);
 
 export const store = configureStore({
   reducer: {
-    // product: productSlice,
+    profile: profileSlice,
     auth: persistedReducer,
     dashboard: dashboardSlice,
     // users: userSlice,

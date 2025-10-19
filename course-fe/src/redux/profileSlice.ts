@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+<<<<<<< HEAD
 import {
   getCourse,
   getProfile,
@@ -18,10 +19,25 @@ interface ProfileState {
 const initialState: ProfileState = {
   profile: null,
   courses: [],
+=======
+import type { PayloadAction } from "@reduxjs/toolkit";
+import ProfileService from "../services/profileService";
+import type { Profile } from "../types/profile";
+
+type ProfileState = {
+  data: Profile | null;
+  loading: boolean;
+  error: string | null;
+};
+
+const initialState: ProfileState = {
+  data: null,
+>>>>>>> main
   loading: false,
   error: null,
 };
 
+<<<<<<< HEAD
 export const fetchProfile = createAsyncThunk<
   Profile,
   string,
@@ -60,19 +76,50 @@ export const fetchUserCourses = createAsyncThunk<
     return rejectWithValue(
       err.response?.data?.message || "Fetch courses failed"
     );
+=======
+export const fetchProfile = createAsyncThunk<Profile>(
+  "profile/fetch",
+  async (_, { rejectWithValue }) => {
+    try {
+      return await ProfileService.getProfile();
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
+
+export const updateProfile = createAsyncThunk<
+  Profile,
+  { profile: Partial<Profile>; file?: File }
+>("profile/update", async ({ profile, file }, { rejectWithValue }) => {
+  try {
+    return await ProfileService.updateProfile(profile, file);
+  } catch (err: any) {
+    return rejectWithValue(err.response?.data?.message || err.message);
+>>>>>>> main
   }
 });
 
 const profileSlice = createSlice({
   name: "profile",
   initialState,
+<<<<<<< HEAD
   reducers: {},
+=======
+  reducers: {
+    clearProfile: (state) => {
+      state.data = null;
+      state.error = null;
+    },
+  },
+>>>>>>> main
   extraReducers: (builder) => {
     builder
       .addCase(fetchProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
+<<<<<<< HEAD
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.loading = false;
         state.profile = action.payload;
@@ -104,8 +151,33 @@ const profileSlice = createSlice({
       .addCase(fetchUserCourses.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Lỗi tải khóa học";
+=======
+      .addCase(fetchProfile.fulfilled, (state, action: PayloadAction<Profile>) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfile.fulfilled, (state, action: PayloadAction<Profile>) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+>>>>>>> main
       });
   },
 });
 
+<<<<<<< HEAD
+=======
+export const { clearProfile } = profileSlice.actions;
+>>>>>>> main
 export default profileSlice.reducer;
