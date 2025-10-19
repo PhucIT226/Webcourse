@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
-import {
-  fetchProfile,
-  editProfile,
-  fetchUserCourses,
-} from "../../../../redux/profileSlice";
+import { fetchProfile, updateProfile } from "../../../../redux/profileSlice";
+import { useNavigate } from "react-router-dom";
+import type { OrderItem } from "../../../../types/profile";
 
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "courses">("profile");
@@ -17,57 +15,80 @@ const UserProfile = () => {
   });
 
   const dispatch = useAppDispatch();
-  const userId = useAppSelector((state) => state.auth.user?.id);
-  const { profile, loading, error, courses } = useAppSelector(
-    (state) => state.profile
-  );
-  console.log(courses);
+  const navigate = useNavigate();
 
+  // Lấy profile từ Redux
+  const {
+    data: profile,
+    loading: profileLoading,
+    error: profileError,
+  } = useAppSelector((state) => state.profile);
+
+  // ✅ Lấy các khóa học đang hoạt động (active)
+  const seenIds = new Set();
+  const activeCourses =
+    profile?.orders
+      ?.filter(
+        (order) => order.status === "paid" || order.paymentStatus === "paid"
+      )
+      .flatMap((order) => order.items ?? [])
+      .filter((item) => {
+        const id = item.course?.id;
+        if (!id || seenIds.has(id)) return false; // nếu chưa có id hoặc bị trùng
+        seenIds.add(id); // thêm id vào danh sách đã thấy
+        return true; // giữ lại item này
+      }) ?? [];
+
+  // ✅ Fetch profile khi load trang
   useEffect(() => {
-    if (userId) dispatch(fetchProfile(userId));
-  }, [dispatch, userId]);
+    dispatch(fetchProfile());
+  }, [dispatch]);
 
-  useEffect(() => {
-    if (userId) {
-      dispatch(fetchUserCourses(userId));
-    }
-  }, [dispatch, userId]);
-
+  // ✅ Khi có profile thì set form
   useEffect(() => {
     if (profile) {
       setFormData({
-        fullName: profile.fullName || "",
+        fullName: profile.name || "",
         phone: profile.phone || "",
         address: profile.address || "",
-        dateOfBirth: profile.dateOfBirth || "",
+        dateOfBirth: profile.dob || "",
       });
     }
   }, [profile]);
 
+  // ✅ Xử lý thay đổi input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ✅ Lưu thay đổi
   const handleSave = () => {
-    if (userId) {
-      dispatch(editProfile({ userId, data: formData }));
-      setIsEditing(false);
-    }
+    const updated = {
+      name: formData.fullName,
+      phone: formData.phone,
+      address: formData.address,
+      dob: formData.dateOfBirth,
+    };
+    dispatch(updateProfile({ profile: updated }));
+    setIsEditing(false);
   };
 
-  if (loading)
-    return <p className="text-center mt-10 text-gray-600">Đang tải...</p>;
-  if (error)
-    return <p className="text-center mt-10 text-red-500">Lỗi: {error}</p>;
+  // ✅ Loading / error / empty handling
+  if (profileLoading)
+    return <p className="text-center mt-10 text-gray-600">Đang tải hồ sơ...</p>;
+  if (profileError)
+    return (
+      <p className="text-center mt-10 text-red-500">Lỗi: {profileError}</p>
+    );
   if (!profile)
     return (
-      <p className="text-center mt-10 text-gray-600">Không có dữ liệu hồ sơ</p>
+      <p className="text-center mt-10 text-gray-600">Không có dữ liệu hồ sơ.</p>
     );
 
   const user = {
-    name: profile.user?.name,
-    email: profile.user?.email,
+    name: profile.name,
+    email: profile.email || "",
     location: profile.address || "Đà Nẵng, Việt Nam",
   };
 
@@ -105,6 +126,7 @@ const UserProfile = () => {
       {/* Content */}
       <main className="flex-1 p-8">
         {activeTab === "profile" ? (
+          // ==================== TAB HỒ SƠ ====================
           <div className="max-w-md mx-auto bg-white shadow-lg rounded-2xl p-6 text-center">
             {!isEditing ? (
               <>
@@ -188,34 +210,53 @@ const UserProfile = () => {
             )}
           </div>
         ) : (
+          // ==================== TAB KHÓA HỌC ====================
           <div className="max-w-2xl mx-auto">
             <h2 className="text-2xl font-semibold mb-6">📚 Khoá học của tôi</h2>
 
-            {loading ? (
-              <p>Đang tải khoá học...</p>
-            ) : (
-              <div className="grid gap-4">
-                {courses.length > 0 ? (
-                  courses.map((course) => (
-                    <div
-                      key={course.id}
-                      className="bg-white shadow rounded-xl p-5 flex items-center justify-between"
-                    >
-                      <div>
-                        <h3 className="font-medium text-gray-800">
-                          {course.title}
-                        </h3>
-                        <div className="mt-2 bg-gray-200 h-2 rounded-full w-40">
-                          <div className="bg-blue-500 h-2 rounded-full"></div>
-                        </div>
+            {activeCourses.length > 0 ? (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                {activeCourses.map((course) => (
+                  <div
+                    key={course.id}
+                    className="bg-white rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-transform overflow-hidden cursor-pointer"
+                    onClick={() =>
+                      navigate(`/coursevid/${course.course.id}`, {
+                        state: { courseId: course.course.id },
+                      })
+                    }
+                  >
+                    {/* Ảnh khoá học */}
+                    <div className="relative">
+                      <img
+                        src={
+                          course.course.thumbnailUrls?.[0]?.url ||
+                          "/placeholder.jpg"
+                        }
+                        alt={course.course.title}
+                        className="w-full h-44 object-cover"
+                      />
+                      <div className="absolute top-2 right-2 bg-yellow-400 text-white text-xs font-semibold px-2 py-1 rounded-md shadow">
+                        ★ 4.7
                       </div>
-                      <span className="text-sm text-gray-500"></span>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-600">Bạn chưa mua khoá học nào.</p>
-                )}
+
+                    {/* Nội dung khoá học */}
+                    <div className="p-4 flex flex-col justify-between h-[160px]">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-800 line-clamp-2">
+                          {course.course.title}
+                        </h3>
+                        <p className="text-gray-500 text-sm mt-1 line-clamp-2">
+                          {course.course.shortDescription}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
+            ) : (
+              <p className="text-gray-600">Bạn chưa mua khoá học nào.</p>
             )}
           </div>
         )}

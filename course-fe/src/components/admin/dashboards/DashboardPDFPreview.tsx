@@ -103,7 +103,9 @@ export const DashboardPDFPreview = ({
               <input
                 type="checkbox"
                 checked={previewSections[key as keyof VisibleSections]}
-                onChange={() => togglePreviewSection(key as keyof VisibleSections)}
+                onChange={() =>
+                  togglePreviewSection(key as keyof VisibleSections)
+                }
               />
               {key}
             </label>
@@ -138,7 +140,9 @@ export const DashboardPDFPreview = ({
                 />
                 <StatCard
                   title="Doanh thu"
-                  value={`₫${Math.ceil(summary?.totalRevenue ?? 0).toLocaleString("vi-VN")}`}
+                  value={`₫${Math.ceil(
+                    summary?.totalRevenue ?? 0
+                  ).toLocaleString("vi-VN")}`}
                   icon={<FaMoneyBillWave className="text-green-500" />}
                   loading={loading}
                 />

@@ -16,6 +16,27 @@ class ProfileRepository {
           as: "profile",
           attributes: ["fullName", "phone", "address", "dateOfBirth"],
         },
+        {
+          model: db.Order, // ✅ join đúng quan hệ
+          as: "orders",
+          attributes: ["id", "status", "paymentStatus", "totalAmount"],
+          include: [
+            {
+              model: db.OrderItem,
+              as: "items",
+              attributes: ["id", "finalPrice", "accessStatus", "createdAt"],
+              where: { accessStatus: "active" },
+              required: false,
+              include: [
+                {
+                  model: db.Course,
+                  as: "course",
+                  attributes: ["id", "title", "price", "thumbnailUrl"],
+                },
+              ],
+            },
+          ],
+        },
       ],
     });
   }
@@ -34,9 +55,9 @@ class ProfileRepository {
       email: data.email ?? user.email,
     });
 
-    if (user.Profile) {
+    if (user.profile) {
       // Nếu đã có profile thì update
-      await user.Profile.update({
+      await user.profile.update({
         fullName: data.name ?? user.Profile.fullName,
         phone: data.phone ?? user.Profile.phone,
         address: data.address ?? user.Profile.address,

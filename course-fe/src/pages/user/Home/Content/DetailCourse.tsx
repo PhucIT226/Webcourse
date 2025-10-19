@@ -15,7 +15,6 @@ const DetailCourse = () => {
   const courseId = location.state?.courseId;
   const courseTitle = location.state?.courseTitle;
   const coursePrice = location.state?.coursePrice;
-  console.log(coursePrice);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { lessons, loading } = useAppSelector((state) => state.lesson);

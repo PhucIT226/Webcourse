@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { createPaymentIntent } from "../../../redux/paymentSlice";
 import { loadStripe } from "@stripe/stripe-js";
@@ -9,7 +9,6 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import type { TAny } from "../../../types/common";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -17,6 +16,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 const CheckoutForm = ({ clientSecret }: { clientSecret: string }) => {
   const stripe = useStripe();
   const elements = useElements();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,6 +37,7 @@ const CheckoutForm = ({ clientSecret }: { clientSecret: string }) => {
       alert(error.message);
     } else if (paymentIntent?.status === "succeeded") {
       alert("🎉 Thanh toán thành công!");
+      navigate("/");
     }
     setLoading(false);
   };

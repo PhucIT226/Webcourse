@@ -13,7 +13,7 @@ const Courses = () => {
 
   useEffect(() => {
     dispatch(fetchCourses());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="container mx-auto px-4">
@@ -40,7 +40,7 @@ const Courses = () => {
                     courseTitle: course.title,
                     courseDes: course.description,
                     courseId: course.id,
-                    courePrice: course.price,
+                    coursePrice: course.price,
                   },
                 })
               }

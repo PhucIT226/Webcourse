@@ -1,6 +1,4 @@
-import { useNavigate, NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../../redux/store";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { signout } from "../../../../redux/authSlice";
 import { Button } from "../../../../components/ui/button";
@@ -21,6 +19,8 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const userid = useAppSelector((state) => state.auth.user?.id);
+  const courseId = useAppSelector((state) => state.course.data);
+  console.log(courseId);
 
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");

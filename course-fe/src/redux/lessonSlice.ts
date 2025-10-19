@@ -7,7 +7,7 @@ import type { Lesson } from "../types/lesson";
 
 export const fetchLessons = createAsyncThunk(
   "lessons/fetchLessons",
-  async (params?: { page?: number; pageSize?: number; courseId?: string }) => {
+  async (params: { page?: number; pageSize?: number; courseId?: string }) => {
     return await LessonService.getLessons(params);
   }
 );
