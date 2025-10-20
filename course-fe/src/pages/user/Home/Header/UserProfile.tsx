@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { fetchProfile, updateProfile } from "../../../../redux/profileSlice";
 import { useNavigate } from "react-router-dom";
-import type { OrderItem } from "../../../../types/profile";
 
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "courses">("profile");
@@ -38,7 +37,7 @@ const UserProfile = () => {
         seenIds.add(id); // thêm id vào danh sách đã thấy
         return true; // giữ lại item này
       }) ?? [];
-
+  console.log(activeCourses);
   // ✅ Fetch profile khi load trang
   useEffect(() => {
     dispatch(fetchProfile());

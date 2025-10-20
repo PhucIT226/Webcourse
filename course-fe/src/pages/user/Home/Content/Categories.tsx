@@ -6,12 +6,14 @@ import { fetchCourses } from "../../../../redux/courseSlice";
 import { useSelector } from "react-redux";
 import type { RootState } from "../../../../redux/store";
 import type { TAny } from "../../../../types/common";
+import { useNavigate } from "react-router-dom";
 
 const Categories = () => {
   const dispatch = useAppDispatch();
 
   const categories = useSelector((state: RootState) => state.category.data);
   const courses = useSelector((state: RootState) => state.course.data);
+  const navigate = useNavigate();
 
   const [activeCategory, setActiveCategory] = useState<TAny>(null);
 
@@ -65,8 +67,18 @@ const Categories = () => {
         ) : (
           filteredCourses.map((course) => (
             <div
-              className="course-card border rounded-lg p-3 hover:shadow-lg transition"
+              className="course-card border rounded-lg p-3 hover:shadow-lg transition cursor-pointer"
               key={course.id}
+              onClick={() =>
+                navigate(`/course/${course.id}`, {
+                  state: {
+                    courseTitle: course.title,
+                    courseDes: course.description,
+                    courseId: course.id,
+                    coursePrice: course.price,
+                  },
+                })
+              }
             >
               {course.thumbnailUrls?.[0] && (
                 <img

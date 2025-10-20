@@ -8,6 +8,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../../../../components/ui/accordion";
+import { addToCart } from "../../../../redux/cartSlice";
+import { toast } from "react-toastify";
 
 const DetailCourse = () => {
   const location = useLocation();
@@ -108,6 +110,21 @@ const DetailCourse = () => {
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow"
         >
           ĐĂNG KÝ HỌC
+        </button>
+        <button
+          onClick={() =>
+            dispatch(
+              addToCart({
+                id: courseId,
+                title: courseTitle,
+                price: coursePrice,
+              }),
+              toast.success("Đã thêm vào giỏ hàng")
+            )
+          }
+          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow mt-5"
+        >
+          Thêm vào giỏ hàng
         </button>
 
         <ul className="text-gray-600 text-sm mt-5 space-y-2">

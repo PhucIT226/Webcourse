@@ -9,6 +9,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import { clearCart } from "../../../redux/cartSlice";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -17,6 +18,7 @@ const CheckoutForm = ({ clientSecret }: { clientSecret: string }) => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,6 +39,7 @@ const CheckoutForm = ({ clientSecret }: { clientSecret: string }) => {
       alert(error.message);
     } else if (paymentIntent?.status === "succeeded") {
       alert("🎉 Thanh toán thành công!");
+      dispatch(clearCart());
       navigate("/");
     }
     setLoading(false);
@@ -62,18 +65,32 @@ const CheckoutForm = ({ clientSecret }: { clientSecret: string }) => {
 // ========================== Main Payment Page ==========================
 const PaymentPage = () => {
   const location = useLocation();
-  console.log(location);
   const dispatch = useAppDispatch();
   const userId = useAppSelector((state) => state.auth.user?.id);
   const { clientSecret, loading } = useAppSelector((state) => state.payment);
 
-  const { courseId, courseTitle, coursePrice } = location.state || {};
+  // 1 khóa học hoặc nhiều khóa học
+  const { courseId, courseTitle, coursePrice, courses } = location.state || {};
+
+  const isMultiple = Array.isArray(courses);
+
+  // ===== Tính tổng tiền =====
+  const total = isMultiple
+    ? courses.reduce((sum, c) => sum + Number(c.coursePrice || 0), 0)
+    : Number(coursePrice || 0);
 
   useEffect(() => {
-    if (courseId && userId) {
-      dispatch(createPaymentIntent({ courseId, userId }));
+    if (userId) {
+      if (isMultiple && courses?.length > 0) {
+        // Thanh toán nhiều khóa học
+        const courseId = courses.map((c) => c.courseId);
+        dispatch(createPaymentIntent({ courseId, userId }));
+      } else if (courseId) {
+        // Thanh toán 1 khóa học
+        dispatch(createPaymentIntent({ courseId, userId }));
+      }
     }
-  }, [courseId, userId, dispatch]);
+  }, [userId, courseId, courses, isMultiple, dispatch]);
 
   if (loading || !clientSecret) return <p>Đang tạo đơn thanh toán...</p>;
 
@@ -84,12 +101,11 @@ const PaymentPage = () => {
         <h2 className="text-2xl font-bold mb-4">Checkout</h2>
 
         <p className="text-sm text-gray-500 mb-6">
-          Udemy is required by law to collect applicable transaction taxes for
-          purchases made in certain tax jurisdictions.
+          Chúng tôi có thể thu thêm thuế tuỳ theo quy định địa phương.
         </p>
 
         {/* Card payment */}
-        <h3 className="font-semibold mb-3">Payment method</h3>
+        <h3 className="font-semibold mb-3">Phương thức thanh toán</h3>
         <Elements stripe={stripePromise} options={{ clientSecret }}>
           <CheckoutForm clientSecret={clientSecret} />
         </Elements>
@@ -97,27 +113,52 @@ const PaymentPage = () => {
 
       {/* ===== Right: Order summary ===== */}
       <div className="border rounded-md p-6 bg-gray-50">
-        <h3 className="text-xl font-bold mb-4">Order Summary</h3>
-        <p className="flex justify-between mb-2">
-          <span>Course:</span>
-          <span className="font-semibold">{courseTitle}</span>
-        </p>
-        <p className="flex justify-between mb-2">
-          <span>Price:</span>
-          <span className="font-semibold">${coursePrice}</span>
-        </p>
-        <hr className="my-4" />
-        <p className="flex justify-between text-lg font-bold">
-          <span>Total:</span>
-          <span>${coursePrice}</span>
-        </p>
+        <h3 className="text-xl font-bold mb-4">Tóm tắt đơn hàng</h3>
+
+        {isMultiple ? (
+          <>
+            {courses.map((course) => (
+              <div
+                key={course.courseId}
+                className="flex justify-between mb-2 text-sm"
+              >
+                <span className="truncate w-2/3">{course.courseTitle}</span>
+                <span className="font-medium">
+                  {course.coursePrice.toLocaleString()}₫
+                </span>
+              </div>
+            ))}
+            <hr className="my-4" />
+            <p className="flex justify-between text-lg font-bold">
+              <span>Tổng cộng:</span>
+              <span>{total.toLocaleString()}₫</span>
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="flex justify-between mb-2">
+              <span>Khóa học:</span>
+              <span className="font-semibold">{courseTitle}</span>
+            </p>
+            <p className="flex justify-between mb-2">
+              <span>Giá:</span>
+              <span className="font-semibold">
+                {Number(coursePrice).toLocaleString()}₫
+              </span>
+            </p>
+            <hr className="my-4" />
+            <p className="flex justify-between text-lg font-bold">
+              <span>Tổng cộng:</span>
+              <span>{Number(coursePrice).toLocaleString()}₫</span>
+            </p>
+          </>
+        )}
 
         <div className="mt-6 text-sm text-gray-600">
-          <p className="font-semibold mb-1">30-Day Money-Back Guarantee 💸</p>
-          <p>
-            Not satisfied? Get a full refund within 30 days. Simple and
-            straightforward!
+          <p className="font-semibold mb-1">
+            💸 Chính sách hoàn tiền trong 30 ngày
           </p>
+          <p>Nếu không hài lòng, bạn có thể được hoàn tiền 100%.</p>
         </div>
       </div>
     </div>
