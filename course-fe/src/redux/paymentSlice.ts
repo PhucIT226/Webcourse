@@ -10,7 +10,7 @@ interface PaymentState {
 }
 
 interface PaymentPayload {
-  courseId: string;
+  courseId: string | string[];
   userId: string;
   orderId?: string;
 }
