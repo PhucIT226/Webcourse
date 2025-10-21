@@ -1,42 +1,40 @@
+// src/services/lesson.service.ts
 import axios from "./axiosClient";
-import type { Lesson, LessonResDto, GetAllLessonParams } from "../types/lesson";
+import type { Lesson, ApiResponse } from "../types/lesson";
 
 const LessonService = {
   // GET /api/lessons?page=&pageSize=&courseId=
-  async getAll(params?: GetAllLessonParams): Promise<LessonResDto> {
-    const res = await axios.get<LessonResDto>("/lessons", { params });
+  async getLessons(params?: {
+    page?: number;
+    pageSize?: number;
+    courseId?: string;
+  }) {
+    const res = await axios.get<ApiResponse<Lesson[]>>("/lessons", { params });
     return res.data;
   },
 
   // GET /api/lessons/:id
-  async getById(id: string): Promise<Lesson> {
-    const res = await axios.get(`/lessons/${id}`);
-    return res.data.data;
+  async getLessonById(id: string) {
+    const res = await axios.get<ApiResponse<Lesson>>(`/lessons/${id}`);
+    return res.data;
   },
 
   // POST /api/lessons
-   async create(lesson: Partial<Lesson>): Promise<Lesson> {
-    const res = await axios.post<{ status: boolean; message: string; data: Lesson }>(
-      "/lessons",
-      lesson
-    );
-
-    return res.data.data;
+  async createLesson(data: Partial<Lesson>) {
+    const res = await axios.post<ApiResponse<Lesson>>("/lessons", data);
+    return res.data;
   },
 
   // PUT /api/lessons/:id
-  async update(id: string, lesson: Partial<Lesson>): Promise<Lesson> {
-    const res = await axios.patch<{ status: boolean; message: string; data: Lesson }>(
-      `/lessons/${id}`,
-      lesson
-    );
-
-    return res.data.data;
+  async updateLesson(id: string, data: Partial<Lesson>) {
+    const res = await axios.put<ApiResponse<Lesson>>(`/lessons/${id}`, data);
+    return res.data;
   },
 
   // DELETE /api/lessons/:id
-  async delete(id: string): Promise<void> {
-    await axios.delete(`/lessons/${id}`);
+  async deleteLesson(id: string) {
+    const res = await axios.delete<ApiResponse<null>>(`/lessons/${id}`);
+    return res.data;
   },
 };
 

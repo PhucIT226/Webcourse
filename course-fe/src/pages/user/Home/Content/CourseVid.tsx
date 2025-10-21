@@ -15,7 +15,7 @@ const CourseVid = () => {
   const location = useLocation();
   const courseId = location.state?.courseId;
   const { id } = useParams();
-  const { data: lessons } = useAppSelector((state) => state.lesson);
+  const { lessons } = useAppSelector((state) => state.lesson);
 
   useEffect(() => {
     if (courseId) {
