@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import searchRoutes from "./search.js";
 import authRoutes from "./auth.js";
 import rolesRoutes from "./roles.js";
 import usersRoutes from "./users.js";
@@ -19,6 +20,7 @@ import uploadsRoutes from "./uploads.js";
 
 export default {
   v1: Router()
+    .use("/search", searchRoutes)
     .use("/auth", authRoutes)
     .use("/roles", rolesRoutes)
     .use("/users", usersRoutes)

@@ -19,7 +19,7 @@ const DetailCourse = () => {
   const coursePrice = location.state?.coursePrice;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { lessons, loading } = useAppSelector((state) => state.lesson);
+  const { data: lessons, loading } = useAppSelector((state) => state.lesson);
 
   useEffect(() => {
     if (courseId) {

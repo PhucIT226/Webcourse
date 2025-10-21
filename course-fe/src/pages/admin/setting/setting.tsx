@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { ProfileSettings } from "../../../components/admin/setting/Profile";
+// import { ProfileSettings } from "../../../components/admin/setting/Profile";
 import { SystemSettings } from "../../../components/admin/setting/System";
 import { motion, AnimatePresence } from "framer-motion";
 
 const menuItems = [
-  { id: "profile", 
-    label: "Thông tin cá nhân",
-    color: "from-green-400 to-green-500",
-    component: <ProfileSettings />
-  },
+  // { id: "profile", 
+  //   label: "Thông tin cá nhân",
+  //   color: "from-green-400 to-green-500",
+  //   component: <ProfileSettings />
+  // },
   { id: "system", 
     label: "Cài đặt chung", 
     color: "from-green-400 to-green-500", 

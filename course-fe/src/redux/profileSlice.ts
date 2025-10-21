@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import ProfileService from "../services/profileService";
 import type { Profile } from "../types/profile";
+import type { TAny } from "../types/common";
 
 type ProfileState = {
   data: Profile | null;
@@ -20,7 +21,7 @@ export const fetchProfile = createAsyncThunk<Profile>(
   async (_, { rejectWithValue }) => {
     try {
       return await ProfileService.getProfile();
-    } catch (err: any) {
+    } catch (err: TAny) {
       return rejectWithValue(err.response?.data?.message || err.message);
     }
   }
@@ -32,7 +33,7 @@ export const updateProfile = createAsyncThunk<
 >("profile/update", async ({ profile, file }, { rejectWithValue }) => {
   try {
     return await ProfileService.updateProfile(profile, file);
-  } catch (err: any) {
+  } catch (err: TAny) {
     return rejectWithValue(err.response?.data?.message || err.message);
   }
 });

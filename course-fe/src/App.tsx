@@ -13,6 +13,13 @@ import { Bounce, ToastContainer } from "react-toastify";
 // Admin pages
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
+import Search from "./components/admin/search/search";
+
+// Admin user
+import UserList from "./pages/admin/users/users";
+import UserDetail from "./components/admin/users/UserDetail";
+import UserCreate from "./pages/admin/users/user-create";
+import UserEdit from "./pages/admin/users/user-edit";
 
 // Admin course
 import CourseList from "./pages/admin/courses/courses";
@@ -20,11 +27,11 @@ import CourseDetail from "./components/admin/courses/CourseDetail";
 import CourseCreate from "./pages/admin/courses/Course-create";
 import CourseEdit from "./pages/admin/courses/Course-edit";
 
-// Admin user
-import UserList from "./pages/admin/users/users";
-import UserDetail from "./components/admin/users/UserDetail";
-import UserCreate from "./pages/admin/users/user-create";
-import UserEdit from "./pages/admin/users/user-edit";
+// Admin lesson
+import LessonList from "./pages/admin/lessons/lessons";
+import LessonDetail from "./components/admin/lessons/LessonDetail";
+import LessonCreate from "./pages/admin/lessons/lesson-create";
+import LessonEdit from "./pages/admin/lessons/lesson-edit";
 
 // Admin category
 import CategoryList from "./pages/admin/categories/categories";
@@ -53,12 +60,70 @@ import CouponEdit from "./pages/admin/coupons/coupon-edit";
 import Setting from "./pages/admin/setting/setting";
 
 import PaymentPage from "./pages/user/Payment/PaymentPage";
-import UserProfile from "./pages/user/Home/Header/UserProfile";
+// import UserProfile from "./pages/user/Home/Header/UserProfile";
 
 function App() {
   return (
-    <>
+    <Routes>
+      {/* Admin routes */}
+      <Route path="/admin" element={<Admin />}>
+        <Route index element={<Dashboard />} />
+
+        <Route path="search" element={<Search />} />
+
+        {/* User routes */}
+        <Route path="users">
+          <Route index element={<UserList />} />
+          <Route path="create" element={<UserCreate />} />
+          <Route path=":id" element={<UserDetail />} />
+          <Route path=":id/edit" element={<UserEdit />} />
+        </Route>
+
+        {/* Course routes */}
+        <Route path="courses">
+          <Route index element={<CourseList />} />
+          <Route path="create" element={<CourseCreate />} />
+          <Route path=":id" element={<CourseDetail />} />
+          <Route path=":id/edit" element={<CourseEdit />} />
+        </Route>
+
+        {/* Lesson routes */}
+        <Route path="lessons">
+          <Route index element={<LessonList />} />
+          <Route path="create" element={<LessonCreate />} />
+          <Route path=":id" element={<LessonDetail />} />
+          <Route path=":id/edit" element={<LessonEdit />} />
+        </Route>
+
+        {/* Category routes */}
+        <Route path="categories">
+          <Route index element={<CategoryList />} />
+          <Route path="create" element={<CategoryCreate />} />
+          <Route path=":id" element={<CategoryDetail />} />
+          <Route path=":id/edit" element={<CategoryEdit />} />
+        </Route>
+
+        {/* Order routes */}
+        <Route path="orders">
+          <Route index element={<OrderList />} />
+          <Route path=":id" element={<OrderDetail />} />
+          <Route path=":id/edit" element={<OrderEdit />} />
+        </Route>
+
+        {/* Review routes */}
+        <Route path="reviews">
+          <Route index element={<ReviewList />} />
+          <Route path=":id" element={<ReviewDetail />} />
+        </Route>
+
+        {/* Coupon routes */}
+        <Route path="coupons">
+          <Route index element={<CouponList />} />
+          <Route path="create" element={<CouponCreate />} />
+          <Route path=":id" element={<CouponDetail />} />
+          <Route path=":id/edit" element={<CouponEdit />} />
       <Routes>
+        
         {/* User routes */}
         <Route path="/" element={<User />}>
           <Route index element={<Home />} />
@@ -67,64 +132,7 @@ function App() {
           <Route path="/coursesfound" element={<SearchCourses />} />
         </Route>
 
-        {/* Admin routes */}
-        <Route path="/admin" element={<Admin />}>
-          <Route index element={<Dashboard />} />
-
-          {/* Course routes */}
-          <Route path="courses">
-            <Route index element={<CourseList />} />
-            <Route path="create" element={<CourseCreate />} />
-            <Route path=":id" element={<CourseDetail />} />
-            <Route path=":id/edit" element={<CourseEdit />} />
-          </Route>
-
-          {/* User routes */}
-          <Route path="users">
-            <Route index element={<UserList />} />
-            <Route path="create" element={<UserCreate />} />
-            <Route path=":id" element={<UserDetail />} />
-            <Route path=":id/edit" element={<UserEdit />} />
-          </Route>
-
-          {/* Category routes */}
-          <Route path="categories">
-            <Route index element={<CategoryList />} />
-            <Route path="create" element={<CategoryCreate />} />
-            <Route path=":id" element={<CategoryDetail />} />
-            <Route path=":id/edit" element={<CategoryEdit />} />
-          </Route>
-
-          {/* Order routes */}
-          <Route path="orders">
-            <Route index element={<OrderList />} />
-            <Route path=":id" element={<OrderDetail />} />
-            <Route path=":id/edit" element={<OrderEdit />} />
-          </Route>
-
-          {/* Review routes */}
-          <Route path="reviews">
-            <Route index element={<ReviewList />} />
-            <Route path=":id" element={<ReviewDetail />} />
-          </Route>
-
-          {/* Coupon routes */}
-          <Route path="coupons">
-            <Route index element={<CouponList />} />
-            <Route path="create" element={<CouponCreate />} />
-            <Route path=":id" element={<CouponDetail />} />
-            <Route path=":id/edit" element={<CouponEdit />} />
-          </Route>
-
-          {/* Setting routes */}
-          <Route path="setting">
-            <Route index element={<Setting />} />
-            <Route path="create" element={<CouponCreate />} />
-            <Route path=":id" element={<CouponDetail />} />
-            <Route path=":id/edit" element={<CouponEdit />} />
-          </Route>
-        </Route>
-
+      </Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/payment/:id" element={<PaymentPage />} />

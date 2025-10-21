@@ -1,20 +1,20 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, useRef, type ReactNode } from "react";
+import axios from "../services/axiosClient";
 import {
   FaBars,
-  FaThLarge,
   FaUser,
+  FaThLarge,
+  FaBookOpen,
   FaGraduationCap,
   FaTags,
   FaGift,
   FaStarHalfAlt,
   FaCreditCard,
-  FaSearch,
 } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate  } from "react-router-dom"; 
 import type { Menu } from "../types/menu";
 import type { TAny } from "../types/common";
-import SearchBar from "../components/admin/SearchBar";
 
 type AdminLayoutProps = {
   children: ReactNode;
@@ -23,62 +23,48 @@ type AdminLayoutProps = {
 type MenuType = Menu[];
 
 const menu: MenuType = [
-  {
-    label: "Dashboard",
-    to: "",
-    icon: FaThLarge,
-    defaultColor: "text-blue-600",
-    badge: 4,
-  },
-  {
-    label: "Khóa học",
-    to: "courses",
-    icon: FaGraduationCap,
-    defaultColor: "text-purple-600",
-    children: [],
-  },
-  {
-    label: "Người dùng",
-    to: "users",
-    icon: FaUser,
-    defaultColor: "text-green-600",
-    children: [],
-  },
-  {
-    label: "Danh mục",
-    to: "categories",
-    icon: FaTags,
-    defaultColor: "text-pink-500",
-    children: [],
-  },
-  {
-    label: "Đơn hàng",
-    to: "orders",
-    icon: FaCreditCard,
-    defaultColor: "text-orange-500",
-    children: [],
-  },
-  {
-    label: "Đánh giá",
-    to: "reviews",
-    icon: FaStarHalfAlt,
-    defaultColor: "text-yellow-500",
-    children: [],
-  },
-  {
-    label: "Voucher",
-    to: "coupons",
-    icon: FaGift,
-    defaultColor: "text-red-500",
-    children: [],
-  },
+  { label: "Dashboard", to: "", icon: FaThLarge, defaultColor: "text-blue-600", badge: 4 },
+  { label: "Người dùng", to: "users", icon: FaUser, defaultColor: "text-green-600", children: [] },
+  { label: "Khóa học", to: "courses", icon: FaGraduationCap, defaultColor: "text-purple-600", children: [] },
+  { label: "Bài học", to: "lessons", icon: FaBookOpen, defaultColor: "text-blue-600", children: [] },
+  { label: "Danh mục", to: "categories", icon: FaTags, defaultColor: "text-pink-500", children: [] },
+  { label: "Đơn hàng", to: "orders", icon: FaCreditCard, defaultColor: "text-orange-500", children: [] },
+  { label: "Đánh giá", to: "reviews", icon: FaStarHalfAlt, defaultColor: "text-yellow-500", children: [] },
+  { label: "Voucher", to: "coupons", icon: FaGift, defaultColor: "text-red-500", children: [] },
 ];
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [menus, setMenus] = useState(menu);
   const location = useLocation();
-  const [searchText, setSearchText] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
+  const navigate = useNavigate();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleSelect = (item: any) => {
+    setSearchQuery("");
+    setSuggestions([]);
+    navigate(`/admin/${item.type.toLowerCase()}s/${item.id}`);
+  };
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setLoadingSearch(true);
+      axios
+        .get(`/admin/search?query=${encodeURIComponent(searchQuery)}`)
+        .then((res) => setSuggestions(res.data))
+        .finally(() => setLoadingSearch(false));
+    }, 300); // debounce 300ms
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     setMenus((prevMenus: TAny) =>
@@ -183,6 +169,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             width: sidebarOpen ? "calc(100% - 16rem)" : "calc(100% - 5rem)",
           }}
         >
+          {/* Left: Sidebar toggle */}
           <div className="flex items-center gap-4">
             <button
               className="text-2xl text-gray-600"
@@ -190,23 +177,30 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             >
               <FaBars />
             </button>
-            <div className="flex items-center gap-2">
-              <SearchBar
-                placeholder="Tìm kiếm..."
-                value={searchText}
-                onChange={setSearchText}
-              />
-              <button
-                className="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition"
-                onClick={() => {
-                  console.log("🔍 Search text:", searchText);
-                  // TODO: gọi API search global ở đây
-                }}
-              >
-                <FaSearch />
-              </button>
-            </div>
           </div>
+
+          <div className="relative w-64">
+            <input
+              type="text"
+              placeholder="Tìm kiếm..."
+              className="border rounded-lg px-3 py-1 w-full focus:outline-none focus:ring focus:ring-blue-300"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+            {searchQuery && suggestions.length > 0 && (
+              <div ref={dropdownRef} className="absolute top-full left-0 w-full bg-white border shadow-lg z-50 max-h-60 overflow-auto">
+                {loadingSearch ? (
+                  <p className="p-2 text-gray-500">Đang tìm...</p>
+                ) : suggestions.map(item => (
+                  <div key={item.type + item.id} className="p-2 cursor-pointer hover:bg-blue-100" onClick={() => handleSelect(item)}>
+                    <span className="font-semibold">{item.name || item.title || item.email}</span> <span className="text-gray-500 text-sm">({item.type})</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Right: Settings */}
           <div className="flex items-center gap-4">
             <Link to="setting">
               <IoMdSettings className="text-2xl" />

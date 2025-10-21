@@ -1,56 +1,104 @@
 import LessonService from "../services/lesson.service.js";
+import BaseController from "./base.controller.js";
 
-class LessonController {
+class LessonController extends BaseController {
   constructor() {
+    super();
     this.service = new LessonService();
   }
 
-  getLessons = async (req, res) => {
-    try {
-      const { page, pageSize, courseId } = req.query;
-      const result = await this.service.getAll({ page, pageSize, courseId });
-      res.json(result);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  };
+  // Lấy danh sách bài học
+  async getAllLessons(req, res) {
+    const { 
+      page = 1, 
+      pageSize = 10, 
+      course,
+      search,
+      sortField, 
+      sortOrder,
+    } = req.query;
 
-  getLessonById = async (req, res) => {
-    try {
-      const lesson = await this.service.getById(req.params.id);
-      res.json(lesson);
-    } catch (error) {
-      res.status(404).json({ message: error.message });
-    }
-  };
+    const result = await this.service.getListLessons({ 
+      page, 
+      pageSize,
+      course,
+      search,
+      sortField, 
+      sortOrder,
+    });
 
-  createLesson = async (req, res) => {
-    try {
-      const data = req.body;
-      const lesson = await this.service.create(data);
-      res.status(201).json(lesson);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  };
+    res.json({
+      status: true,
+      message: "Fetched lessons successfully",
+      data: result.data,
+      pagination: result.pagination,
+    });
+  }
 
-  updateLesson = async (req, res) => {
-    try {
-      const lesson = await this.service.update(req.params.id, req.body);
-      res.json(lesson);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  };
+  // Lấy bài học theo id
+  async getLessonById(req, res) {
+    const { id } = req.params;
+    const lesson = await this.service.getLessonById(id);
 
-  deleteLesson = async (req, res) => {
-    try {
-      const result = await this.service.delete(req.params.id);
-      res.json(result);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
+    if (!lesson) {
+      return res.status(404).json({ status: false, message: "Lesson not found" });
     }
-  };
+
+    res.json({
+      status: true,
+      message: "Fetched lesson successfully",
+      data: lesson,
+    });
+  }
+
+  // Tạo bài học mới
+  async createLesson(req, res) {
+    const data = req.body;
+    
+    const newLesson = await this.service.createLesson(data);
+    
+    data.courseId = data.courseId;
+    
+    res.status(201).json({
+      status: true,
+      message: "Lesson created successfully",
+      data: newLesson,
+    });
+  }
+
+  // Cập nhật bài học
+  async updateLesson(req, res) {
+    const { id } = req.params;
+    const data = req.body;
+    const updated = await this.service.updateLesson(id, data);
+
+    data.courseId = data.courseId;
+
+    if (!updated) {
+      return res.status(404).json({ status: false, message: "Lesson not found" });
+    }
+
+    res.json({
+      status: true,
+      message: "Lesson updated successfully",
+      data: updated,
+    });
+  }
+
+  // Xóa bài học
+  async deleteLesson(req, res) {
+    const { id } = req.params;
+    const deleted = await this.service.deleteLesson(id);
+
+    if (!deleted) {
+      return res.status(404).json({ status: false, message: "Lesson not found" });
+    }
+
+    res.json({
+      status: true,
+      message: "Lesson deleted successfully",
+    });
+  }
 }
 
 export default new LessonController();

@@ -14,7 +14,6 @@ import lessonSlice from "./lessonSlice";
 import paymentSlice from "./paymentSlice";
 import persistStore from "redux-persist/es/persistStore";
 import storage from "redux-persist/lib/storage";
-// import userSlice from "./userSlice";
 
 const persistConfig = {
   key: "root",
@@ -27,7 +26,6 @@ export const store = configureStore({
     profile: profileSlice,
     auth: persistedReducer,
     dashboard: dashboardSlice,
-    // users: userSlice,
     course: courseSlice,
     user: userSlice,
     category: categorySlice,
