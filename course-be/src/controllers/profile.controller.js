@@ -1,67 +1,55 @@
-import ProfileRepository from "../repositories/profile.repository.js";
+import ProfileService from "../services/profile.service.js";
 
-class ProfileController {
-  constructor() {
-    this.repository = new ProfileRepository();
+    class ProfileController {
+    // GET /profile/me
+    async getProfile(req, res) {
+        try {
+        const userId = req.user.id;
+        const profile = await ProfileService.getProfile(userId);
 
-    // Bind để không bị mất context `this` khi truyền vào route
-    this.getProfile = this.getProfile.bind(this);
-    this.updateProfile = this.updateProfile.bind(this);
-  }
+        if (!profile) {
+            return res.status(404).json({
+            status: false,
+            message: "Profile not found",
+            });
+        }
 
-  // [GET] /api/profile/me
-  async getProfile(req, res) {
-    try {
-      const userId = req.user?.id; // Lấy từ middleware auth
-      if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-
-      const userProfile = await this.repository.getProfileByUserId(userId);
-
-      if (!userProfile) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      res.json({
-        success: true,
-        data: userProfile,
-      });
-    } catch (error) {
-      console.error("❌ Error getProfile:", error);
-      res.status(500).json({ message: "Internal server error" });
+        res.json({
+            status: true,
+            message: "Fetched profile successfully",
+            data: profile,
+        });
+        } catch (err) {
+        console.error("❌ GET PROFILE ERROR:", err);
+        res.status(500).json({ status: false, message: err.message });
+        }
     }
-  }
 
-  // [PATCH] /api/profile/me
-  async updateProfile(req, res) {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
+    // PATCH /profile/me
+    async updateProfile(req, res) {
+        try {
+        const userId = req.user.id;
+        const data = req.body;
 
-      const { name, phone, address, dob } = req.body;
-      const avatar = req.file ? req.file.path : null; // nếu có upload avatar
+        const updatedProfile = await ProfileService.updateProfile(userId, data);
 
-      const updatedProfile = await this.repository.updateProfile(userId, {
-        name,
-        phone,
-        address,
-        dob,
-        avatar,
-      });
+        if (!updatedProfile) {
+            return res.status(404).json({
+            status: false,
+            message: "User not found",
+            });
+        }
 
-      res.json({
-        success: true,
-        message: "Profile updated successfully",
-        data: updatedProfile,
-      });
-    } catch (error) {
-      console.error("❌ Error updateProfile:", error);
-      res.status(500).json({ message: "Internal server error" });
+        res.json({
+            status: true,
+            message: "Profile updated successfully",
+            data: updatedProfile,
+        });
+        } catch (err) {
+        console.error("❌ UPDATE PROFILE ERROR:", err);
+        res.status(500).json({ status: false, message: err.message });
+        }
     }
-  }
-}
+    }
 
-export default new ProfileController;
+    export const profileControler = new ProfileController();

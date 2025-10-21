@@ -8,7 +8,6 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { fetchLessons } from "../../../../redux/lessonSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import type { TAny } from "../../../../types/common";
 
 const CourseVid = () => {
   const dispatch = useAppDispatch();

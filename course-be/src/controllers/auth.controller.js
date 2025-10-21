@@ -34,6 +34,7 @@ class AuthController extends BaseController {
       userId: user.id,
       fullName: user.name,
     });
+
     res.status(201).json({ message: "User created" });
   }
 

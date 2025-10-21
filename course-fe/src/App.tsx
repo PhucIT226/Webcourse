@@ -8,6 +8,7 @@ import CourseVid from "./pages/user/Home/Content/CourseVid";
 import SearchCourses from "./pages/user/Home/Header/SearchCourse";
 import Login from "./Auth/login";
 import Register from "./Auth/register";
+import { Bounce, ToastContainer } from "react-toastify";
 
 // Admin pages
 import Admin from "./pages/admin/admin";
@@ -64,14 +65,6 @@ import PaymentPage from "./pages/user/Payment/PaymentPage";
 function App() {
   return (
     <Routes>
-      {/* User routes */}
-      <Route path="/" element={<User />}>
-        <Route index element={<Home />} />
-        <Route path="/course/:id" element={<DetailCourse />} />
-        <Route path="/coursevid/:id" element={<CourseVid />} />
-        <Route path="/coursesfound" element={<SearchCourses />} />
-      </Route>
-
       {/* Admin routes */}
       <Route path="/admin" element={<Admin />}>
         <Route index element={<Dashboard />} />
@@ -129,22 +122,37 @@ function App() {
           <Route path="create" element={<CouponCreate />} />
           <Route path=":id" element={<CouponDetail />} />
           <Route path=":id/edit" element={<CouponEdit />} />
+      <Routes>
+        
+        {/* User routes */}
+        <Route path="/" element={<User />}>
+          <Route index element={<Home />} />
+          <Route path="/course/:id" element={<DetailCourse />} />
+          <Route path="/coursevid/:id" element={<CourseVid />} />
+          <Route path="/coursesfound" element={<SearchCourses />} />
         </Route>
 
-        {/* Setting routes */}
-        <Route path="setting">
-          <Route index element={<Setting />} />
-          <Route path="create" element={<CouponCreate />} />
-          <Route path=":id" element={<CouponDetail />} />
-          <Route path=":id/edit" element={<CouponEdit />} />
-        </Route>
-      </Route>
-
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/payment/:id" element={<PaymentPage />} />
-      {/* <Route path="/profile/:id" element={<UserProfile />} /> */}
-    </Routes>
+      </Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/payment/:id" element={<PaymentPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/profile/:id" element={<UserProfile />} />
+      </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
+    </>
   );
 }
 

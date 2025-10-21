@@ -2,6 +2,7 @@ export type UserRes = {
   email: string;
   id: string;
   name: string;
+  roleId: string;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -21,7 +22,6 @@ export type LoginRes = {
 export type LogoutRes = {
   message: string;
 };
-
 
 export interface RegisterForm {
   name: string;
