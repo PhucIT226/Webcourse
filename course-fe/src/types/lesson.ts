@@ -1,8 +1,5 @@
-import type { Pagination } from "./common";
-
 export interface Lesson {
   id: string;
-  course: { id?: string; title: string };
   courseId: string;
   title: string;
   content?: string;
@@ -15,16 +12,14 @@ export interface Lesson {
   updatedAt?: string;
 }
 
-export interface LessonResDto {
-  data: Lesson[];
-  pagination: Pagination;
+export interface Pagination {
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
-export type GetAllLessonParams = {
-  page?: number;
-  pageSize?: number;
-  search?: string;
-  sortField?: string;
-  courseId?: string;
-  sortOrder?: "asc" | "desc";
-};
+export interface ApiResponse<T> {
+  data: T;
+  pagination?: Pagination;
+  message?: string;
+}
