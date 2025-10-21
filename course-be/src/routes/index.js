@@ -1,9 +1,10 @@
 import { Router } from "express";
 
+import searchRoutes from "./search.js";
 import authRoutes from "./auth.js";
 import rolesRoutes from "./roles.js";
 import usersRoutes from "./users.js";
-import profileRoutes from './profile.js';
+// import profileRoutes from './profile.js';
 import dashboardRoutes from "./dashboard.js";
 import categoriesRoutes from "./categories.js";
 import coursesRoutes from "./courses.js";
@@ -19,10 +20,11 @@ import uploadsRoutes from "./uploads.js";
 
 export default {
   v1: Router()
+    .use("/search", searchRoutes)
     .use("/auth", authRoutes)
     .use("/roles", rolesRoutes)
     .use("/users", usersRoutes)
-    .use("/profile", profileRoutes)
+    // .use("/profile", profileRoutes)
     .use("/dashboard", dashboardRoutes)
     .use("/courses", coursesRoutes)
     // .use("/courses/:courseId/lessons", lessonsRoutes)

@@ -2,45 +2,32 @@ import LessonRepository from "../repositories/lesson.repository.js";
 
 class LessonService {
   constructor() {
-    this.repo = new LessonRepository();
+    this.repository = new LessonRepository();
   }
 
-  async getAll({ page, pageSize, courseId }) {
-    const { count, rows } = await this.repo.findAll({
-      page,
-      pageSize,
-      courseId,
-    });
-    return {
-      data: rows,
-      pagination: {
-        total: count,
-        page: parseInt(page),
-        pageSize: parseInt(pageSize),
-      },
-    };
+  // Lấy danh sách bài học
+  getListLessons({ page, pageSize, courseId, search, sortField, sortOrder }) {
+    return this.repository.getAllLessons({ page, pageSize, courseId, search, sortField, sortOrder });
   }
 
-  async getById(id) {
-    const lesson = await this.repo.findById(id);
-    if (!lesson) throw new Error("Lesson not found");
-    return lesson;
+  // Lấy bài học theo id
+  getLessonById(id) {
+    return this.repository.getLessonById(id);
   }
 
-  async create(data) {
-    return await this.repo.create(data);
+  // Tạo bài học
+  createLesson(data) {
+    return this.repository.createLesson(data);
   }
 
-  async update(id, data) {
-    const updated = await this.repo.update(id, data);
-    if (!updated) throw new Error("Lesson not found");
-    return updated;
+  // Cập nhật bài học
+  updateLesson(id, data) {
+    return this.repository.updateLesson(id, data);
   }
 
-  async delete(id) {
-    const deleted = await this.repo.delete(id);
-    if (!deleted) throw new Error("Lesson not found");
-    return { message: "Lesson deleted successfully" };
+  // Xóa bài học
+  deleteLesson(id) {
+    return this.repository.deleteLesson(id);
   }
 }
 

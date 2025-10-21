@@ -12,6 +12,13 @@ import Register from "./Auth/register";
 // Admin pages
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
+import Search from "./components/admin/search/search";
+
+// Admin user
+import UserList from "./pages/admin/users/users";
+import UserDetail from "./components/admin/users/UserDetail";
+import UserCreate from "./pages/admin/users/user-create";
+import UserEdit from "./pages/admin/users/user-edit";
 
 // Admin course
 import CourseList from "./pages/admin/courses/courses";
@@ -19,11 +26,11 @@ import CourseDetail from "./components/admin/courses/CourseDetail";
 import CourseCreate from "./pages/admin/courses/Course-create";
 import CourseEdit from "./pages/admin/courses/Course-edit";
 
-// Admin user
-import UserList from "./pages/admin/users/users";
-import UserDetail from "./components/admin/users/UserDetail";
-import UserCreate from "./pages/admin/users/user-create";
-import UserEdit from "./pages/admin/users/user-edit";
+// Admin lesson
+import LessonList from "./pages/admin/lessons/lessons";
+import LessonDetail from "./components/admin/lessons/LessonDetail";
+import LessonCreate from "./pages/admin/lessons/lesson-create";
+import LessonEdit from "./pages/admin/lessons/lesson-edit";
 
 // Admin category
 import CategoryList from "./pages/admin/categories/categories";
@@ -52,7 +59,7 @@ import CouponEdit from "./pages/admin/coupons/coupon-edit";
 import Setting from "./pages/admin/setting/setting";
 
 import PaymentPage from "./pages/user/Payment/PaymentPage";
-import UserProfile from "./pages/user/Home/Header/UserProfile";
+// import UserProfile from "./pages/user/Home/Header/UserProfile";
 
 function App() {
   return (
@@ -69,6 +76,16 @@ function App() {
       <Route path="/admin" element={<Admin />}>
         <Route index element={<Dashboard />} />
 
+        <Route path="search" element={<Search />} />
+
+        {/* User routes */}
+        <Route path="users">
+          <Route index element={<UserList />} />
+          <Route path="create" element={<UserCreate />} />
+          <Route path=":id" element={<UserDetail />} />
+          <Route path=":id/edit" element={<UserEdit />} />
+        </Route>
+
         {/* Course routes */}
         <Route path="courses">
           <Route index element={<CourseList />} />
@@ -77,12 +94,12 @@ function App() {
           <Route path=":id/edit" element={<CourseEdit />} />
         </Route>
 
-        {/* User routes */}
-        <Route path="users">
-          <Route index element={<UserList />} />
-          <Route path="create" element={<UserCreate />} />
-          <Route path=":id" element={<UserDetail />} />
-          <Route path=":id/edit" element={<UserEdit />} />
+        {/* Lesson routes */}
+        <Route path="lessons">
+          <Route index element={<LessonList />} />
+          <Route path="create" element={<LessonCreate />} />
+          <Route path=":id" element={<LessonDetail />} />
+          <Route path=":id/edit" element={<LessonEdit />} />
         </Route>
 
         {/* Category routes */}
@@ -126,7 +143,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/payment/:id" element={<PaymentPage />} />
-      <Route path="/profile/:id" element={<UserProfile />} />
+      {/* <Route path="/profile/:id" element={<UserProfile />} /> */}
     </Routes>
   );
 }
