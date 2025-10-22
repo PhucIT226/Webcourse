@@ -3,6 +3,7 @@ import axios from "./axiosClient";
 import type {
   DashboardSummary,
   RevenueStat,
+  MonthlyNewUserStat,
   TopCourse,
   RecentOrder,
   RecentReview,
@@ -18,6 +19,12 @@ const DashboardService = {
   // 📈 Lấy thống kê doanh thu
   async getRevenueStats(): Promise<RevenueStat[]> {
     const res = await axios.get("/dashboard/revenue");
+    return res.data.data;
+  },
+
+  // 👥 Lấy số lượng học viên đăng ký theo tháng
+  async getMonthlyNewUsers(): Promise<MonthlyNewUserStat[]> {
+    const res = await axios.get("/dashboard/monthly-new-users");
     return res.data.data;
   },
 

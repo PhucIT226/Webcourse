@@ -1,8 +1,9 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "../../../services/axiosClient";
 import type { User } from "../../../types/user";
 import {
   FaKey,
-  FaUser,
   FaBirthdayCake,
   FaPhoneAlt,
   FaAlgolia,
@@ -10,12 +11,32 @@ import {
   FaUserTie,
   FaCalendarAlt,
   FaArrowLeft,
+  FaBookOpen,
 } from "react-icons/fa";
 
-export default function CourseDetail() {
+export default function UserDetail() {
   const navigate = useNavigate();
   const location = useLocation();
-  const user = location.state?.user as User | undefined;
+  const { id } = useParams();
+  const [user, setUser] = useState<User | null>(location.state?.user || null);
+  const [loading, setLoading] = useState(!location.state?.user);
+
+  useEffect(() => {
+    if (id) {
+      setLoading(true);
+      axios
+        .get(`/users/${id}`)
+        .then((res) => {
+          console.log("🧩 Kết quả từ backend:", res.data);
+          setUser(res.data.data);
+        })
+        .catch((err) => {
+          console.error("❌ Lỗi khi fetch user:", err);
+          setUser(null);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [id]);
 
   const roleLabel = (roleName?: string) => {
     if (!roleName) return "—";
@@ -25,6 +46,14 @@ export default function CourseDetail() {
     };
     return map[roleName] ?? roleName;
   };
+
+  if (loading) {
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen flex items-center justify-center">
+        <p className="text-gray-600 text-lg font-medium">Đang tải dữ liệu...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return (
@@ -65,7 +94,7 @@ export default function CourseDetail() {
           <div className="space-y-4">
             <p className="flex items-center text-gray-800 font-medium">
               <FaKey className="mr-3 text-yellow-500 text-lg" />
-              Mã người dùng: {user.id}
+              ID: {user.id}
             </p>
             <p className="flex items-center text-gray-800 font-medium">
               <FaUserTie className="mr-3 text-blue-600 text-lg" />
@@ -76,12 +105,31 @@ export default function CourseDetail() {
             </p>
             <p className="flex items-center text-gray-800 font-medium">
               <FaBirthdayCake className="mr-3 text-pink-500 text-lg" />
-              Ngày sinh: {new Date(user.profile?.dateOfBirth || "Chưa cập nhật").toLocaleDateString("vi-VN")}
+              Ngày sinh: {user.profile?.dateOfBirth 
+                ? new Date(user.profile.dateOfBirth).toLocaleDateString("vi-VN")
+                : "Chưa cập nhật"}
             </p>
             <p className="flex items-center text-gray-800 font-medium">
               <FaPhoneAlt className="mr-3 text-green-500 text-lg" />
               Số điện thoại: {user.profile?.phone || "Chưa cập nhật"}
             </p>
+            {user.role?.name === "student" && (
+              <p className="flex flex-col text-gray-800 font-medium">
+                <span className="flex items-center mb-1">
+                  <FaBookOpen className="mr-3 text-purple-500 text-lg" />
+                  Khóa học đang học:
+                </span>
+                {user.enrollments && user.enrollments.length > 0 ? (
+                  <ul className="ml-8 list-decimal list-inside">
+                    {user.enrollments.map((enroll, index) => (
+                      <li key={enroll.id}>{enroll.course?.title || "Chưa có tên khóa học"}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <span className="ml-8">Chưa đăng ký khóa học</span>
+                )}
+              </p>
+            )}
           </div>
 
           {/* Cột phải */}

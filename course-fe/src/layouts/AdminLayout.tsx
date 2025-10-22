@@ -43,28 +43,32 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleSelect = (item: any) => {
-    setSearchQuery("");
-    setSuggestions([]);
-    navigate(`/admin/${item.type.toLowerCase()}s/${item.id}`);
-  };
-
   useEffect(() => {
-    if (!searchQuery.trim()) {
+    const q = searchQuery.trim();
+    if (q === "") {
       setSuggestions([]);
       return;
     }
 
-    const timer = setTimeout(() => {
-      setLoadingSearch(true);
-      axios
-        .get(`/admin/search?query=${encodeURIComponent(searchQuery)}`)
-        .then((res) => setSuggestions(res.data))
-        .finally(() => setLoadingSearch(false));
-    }, 300); // debounce 300ms
+    const timer = setTimeout(async () => {
+      try {
+        setLoadingSearch(true);
+        const res = await axios.get(`/admin/search?query=${encodeURIComponent(q)}`);
+        setSuggestions(res.data || []);
+      } catch (err) {
+        console.error("❌ Lỗi khi fetch search:", err);
+      } finally {
+        setLoadingSearch(false);
+      }
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
+
+  const handleSelect = (item: any) => {
+    setSuggestions([]);
+    navigate(`/admin/${item.type.toLowerCase()}s/${item.id}`);
+  };
 
   useEffect(() => {
     setMenus((prevMenus: TAny) =>

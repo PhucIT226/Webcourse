@@ -7,9 +7,9 @@ import {
   FaCartArrowDown,
   FaMoneyBillWave,
 } from "react-icons/fa";
-
 import { StatCard } from "./StatCard";
 import { ChartRevenue } from "./ChartRevenue";
+import { ChartNewUsers } from "./ChartNewUsers";
 import { TopCourses } from "./TopCourses";
 import { RecentOrders } from "./RecentOrders";
 import { RecentReviews } from "./RecentReviews";
@@ -32,6 +32,7 @@ export const DashboardPDFPreview = ({
   const [previewSections, setPreviewSections] =
     useState<VisibleSections>(visibleSections);
 
+  // ✅ Toggle phần hiển thị
   const togglePreviewSection = (key: keyof VisibleSections) => {
     setPreviewSections((prev) => ({
       ...prev,
@@ -39,6 +40,7 @@ export const DashboardPDFPreview = ({
     }));
   };
 
+  // ✅ Xử lý tải xuống PDF
   const handleDownloadPDF = async () => {
     const pdfContent = document.getElementById("pdf-preview-content");
     if (!pdfContent) return;
@@ -53,15 +55,16 @@ export const DashboardPDFPreview = ({
     const pdf = new jsPDF("p", "mm", "a4");
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
+
     const imgWidth = pageWidth;
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
     let heightLeft = imgHeight;
     let position = 0;
 
     pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
     heightLeft -= pageHeight;
 
+    // ✅ Thêm trang mới nếu nội dung dài
     while (heightLeft > 0) {
       position = heightLeft - imgHeight;
       pdf.addPage();
@@ -69,9 +72,10 @@ export const DashboardPDFPreview = ({
       heightLeft -= pageHeight;
     }
 
+    // ✅ Lưu file PDF
     pdf.save("dashboard-report.pdf");
 
-    // ✅ Lưu config PDF riêng biệt
+    // ✅ Lưu config PDF vào localStorage
     localStorage.setItem(
       "dashboardPDFSections",
       JSON.stringify(previewSections)
@@ -83,6 +87,7 @@ export const DashboardPDFPreview = ({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white w-[90%] max-w-5xl rounded-lg shadow-lg overflow-y-auto max-h-[90vh] p-6 space-y-4">
+        {/* Header */}
         <div className="flex justify-between items-center border-b pb-2">
           <h2 className="text-xl font-semibold">Xem trước & chỉnh sửa PDF</h2>
           <button
@@ -93,7 +98,7 @@ export const DashboardPDFPreview = ({
           </button>
         </div>
 
-        {/* Chọn phần */}
+        {/* Chọn phần hiển thị */}
         <div className="flex flex-wrap gap-4 border-b pb-3">
           {Object.keys(previewSections).map((key) => (
             <label
@@ -103,20 +108,19 @@ export const DashboardPDFPreview = ({
               <input
                 type="checkbox"
                 checked={previewSections[key as keyof VisibleSections]}
-                onChange={() =>
-                  togglePreviewSection(key as keyof VisibleSections)
-                }
+                onChange={() => togglePreviewSection(key as keyof VisibleSections)}
               />
               {key}
             </label>
           ))}
         </div>
 
-        {/* Nội dung preview */}
+        {/* Nội dung xem trước */}
         <div
           id="pdf-preview-content"
           className="p-4 border rounded-md space-y-6 bg-white"
         >
+          {/* Tổng quan */}
           {previewSections.summary && (
             <div contentEditable suppressContentEditableWarning>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -150,12 +154,19 @@ export const DashboardPDFPreview = ({
             </div>
           )}
 
+          {/* Biểu đồ */}
           {previewSections.chart && (
-            <div contentEditable suppressContentEditableWarning>
+            <div
+              contentEditable
+              suppressContentEditableWarning
+              className="flex flex-col gap-6"
+            >
               <ChartRevenue />
+              <ChartNewUsers />
             </div>
           )}
 
+          {/* Top Courses & Orders */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {previewSections.topCourses && (
               <div contentEditable suppressContentEditableWarning>
@@ -169,6 +180,7 @@ export const DashboardPDFPreview = ({
             )}
           </div>
 
+          {/* Reviews */}
           {previewSections.reviews && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div contentEditable suppressContentEditableWarning>
@@ -177,6 +189,7 @@ export const DashboardPDFPreview = ({
             </div>
           )}
 
+          {/* Notifications */}
           {previewSections.notifications && <Notifications />}
         </div>
 

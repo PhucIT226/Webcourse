@@ -12,16 +12,23 @@ import { useAppSelector } from "../../../hooks";
 export const ChartRevenue = () => {
   const { revenueStats, loading } = useAppSelector((state) => state.dashboard);
 
-  const data =
-    revenueStats.length > 0
-      ? revenueStats.map((item) => ({
-          month: item.month,
-          revenue: item.totalRevenue,
-        }))
-      : [];
+  // Chuẩn hóa dữ liệu để luôn có 6 tháng
+  const last6Months = Array.from({ length: 6 }, (_, i) =>
+    new Date(new Date().setMonth(new Date().getMonth() - (5 - i)))
+      .toISOString()
+      .slice(0, 7)
+  );
+
+  const data = last6Months.map((month) => {
+    const found = revenueStats.find((item) => item.month === month);
+    return {
+      month,
+      revenue: found ? found.totalRevenue : 0,
+    };
+  });
 
   return (
-    <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300">
+    <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 min-w-[760px] mx-auto">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-gray-800 text-lg">
           📈 Doanh thu 6 tháng gần nhất
@@ -76,7 +83,7 @@ export const ChartRevenue = () => {
               dataKey="revenue"
               stroke="#3b82f6"
               strokeWidth={3}
-              dot={{ r: 5, fill: "#3b82f6", strokeWidth: 2, stroke: "#fff" }}
+              dot={{ r: 5, fill: "#3b82f6", strokeWidth: 2, stroke: "#fff" }} // chấm luôn hiện
               activeDot={{
                 r: 7,
                 fill: "#2563eb",

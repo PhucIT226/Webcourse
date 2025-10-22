@@ -5,6 +5,7 @@ import DashboardService from "../services/dashboardService";
 import type {
   DashboardSummary,
   RevenueStat,
+  MonthlyNewUserStat,
   TopCourse,
   RecentOrder,
   RecentReview,
@@ -14,6 +15,7 @@ import type { TAny } from "../types/common";
 type DashboardState = {
   summary: DashboardSummary | null;
   revenueStats: RevenueStat[];
+  monthlyNewUsers: MonthlyNewUserStat[];
   topCourses: TopCourse[];
   recentOrders: RecentOrder[];
   recentReviews: RecentReview[];
@@ -24,6 +26,7 @@ type DashboardState = {
 const initialState: DashboardState = {
   summary: null,
   revenueStats: [],
+  monthlyNewUsers: [],
   topCourses: [],
   recentOrders: [],
   recentReviews: [],
@@ -36,6 +39,7 @@ export const fetchDashboardData = createAsyncThunk<
   {
     summary: DashboardSummary;
     revenueStats: RevenueStat[];
+    monthlyNewUsers: MonthlyNewUserStat[];
     topCourses: TopCourse[];
     recentOrders: RecentOrder[];
     recentReviews: RecentReview[];
@@ -44,16 +48,17 @@ export const fetchDashboardData = createAsyncThunk<
   { rejectValue: string }
 >("dashboard/fetchAll", async (_, { rejectWithValue }) => {
   try {
-    const [summary, revenueStats, topCourses, recentOrders, recentReviews] =
+    const [summary, revenueStats, monthlyNewUsers, topCourses, recentOrders, recentReviews] =
       await Promise.all([
         DashboardService.getSummary(),
         DashboardService.getRevenueStats(),
+        DashboardService.getMonthlyNewUsers(),
         DashboardService.getTopCourses(),
         DashboardService.getRecentOrders(),
         DashboardService.getRecentReviews(),
       ]);
 
-    return { summary, revenueStats, topCourses, recentOrders, recentReviews };
+    return { summary, revenueStats, monthlyNewUsers, topCourses, recentOrders, recentReviews };
   } catch (err: TAny) {
     console.error("❌ FETCH DASHBOARD ERROR:", err);
     return rejectWithValue(err.response?.data?.message || err.message);
@@ -68,6 +73,7 @@ const dashboardSlice = createSlice({
     clearDashboard: (state) => {
       state.summary = null;
       state.revenueStats = [];
+      state.monthlyNewUsers = [];
       state.topCourses = [];
       state.recentOrders = [];
       state.recentReviews = [];
@@ -87,6 +93,7 @@ const dashboardSlice = createSlice({
           action: PayloadAction<{
             summary: DashboardSummary;
             revenueStats: RevenueStat[];
+            monthlyNewUsers: MonthlyNewUserStat[];
             topCourses: TopCourse[];
             recentOrders: RecentOrder[];
             recentReviews: RecentReview[];
@@ -95,6 +102,7 @@ const dashboardSlice = createSlice({
           state.loading = false;
           state.summary = action.payload.summary;
           state.revenueStats = action.payload.revenueStats;
+          state.monthlyNewUsers = action.payload.monthlyNewUsers;
           state.topCourses = action.payload.topCourses;
           state.recentOrders = action.payload.recentOrders;
           state.recentReviews = action.payload.recentReviews;

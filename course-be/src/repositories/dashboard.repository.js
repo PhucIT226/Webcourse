@@ -14,21 +14,25 @@ class DashboardRepository {
 
   // 1️⃣ Tổng quan hệ thống
   async getSummary() {
-    // Đếm số học viên (role = 'user')
-    const [totalUsers, totalCourses, totalOrders, totalRevenue] = await Promise.all([
-      this.userModel.count({
-        include: [
-          {
-            model: this.roleModel,
-            as: "role",
-            where: { name: "student" }, // chỉ tính học viên
-          },
-        ],
-      }),
-      this.courseModel.count(),
-      this.orderModel.count(),
-      this.paymentModel.sum("amount"),
-    ]);
+    const totalRevenue = await this.paymentModel.sum("amount", {
+      where: { status: "success" }, // sửa từ 'paid' → 'success'
+    });
+
+    const totalOrders = await this.orderModel.count({
+      where: { paymentStatus: "paid" }, // giữ nguyên vì Order.paymentStatus = 'paid'
+    });
+
+    const totalUsers = await this.userModel.count({
+      include: [
+        {
+          model: this.roleModel,
+          as: "role",
+          where: { name: "student" },
+        },
+      ],
+    });
+
+    const totalCourses = await this.courseModel.count();
 
     return {
       totalUsers,
@@ -48,16 +52,51 @@ class DashboardRepository {
         ],
         [Sequelize.fn("SUM", Sequelize.col("amount")), "totalRevenue"],
       ],
+      where: { status: "success" }, // sửa từ 'paid' → 'success'
       group: ["month"],
       order: [[Sequelize.literal("month"), "ASC"]],
       raw: true,
     });
+
+    console.log("Backend revenue stats:", result);
 
     return result.map((r) => ({
       month: r.month,
       totalRevenue: parseFloat(r.totalRevenue),
     }));
   }
+
+  // 6️⃣ Số lượng học viên đăng ký theo tháng (6 tháng gần nhất)
+  async getMonthlyNewUsers(months = 6) {
+  const result = await this.userModel.findAll({
+    attributes: [
+      [
+        Sequelize.fn("DATE_FORMAT", Sequelize.col("User.createdAt"), "%Y-%m"),
+        "month",
+      ],
+      [Sequelize.fn("COUNT", Sequelize.col("User.id")), "count"],
+    ],
+    include: [
+      {
+        model: this.roleModel,
+        as: "role",
+        where: { name: "student" },
+        attributes: [],
+      },
+    ],
+    group: ["month"],
+    order: [[Sequelize.literal("month"), "ASC"]],
+    raw: true,
+  });
+
+  const mapped = result.map((r) => ({
+    month: r.month,
+    count: parseInt(r.count, 10),
+  }));
+
+  return mapped.slice(-months);
+}
+
 
   // 3️⃣ Top khóa học bán chạy
   async getTopCourses(limit = 5) {
@@ -94,6 +133,7 @@ class DashboardRepository {
     const result = await this.orderModel.findAll({
       limit,
       order: [["createdAt", "DESC"]],
+      where: { paymentStatus: "paid" },
       include: [
         {
           model: this.userModel,
