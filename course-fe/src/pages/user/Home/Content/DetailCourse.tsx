@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { fetchLessons } from "../../../../redux/lessonSlice";
@@ -12,8 +12,8 @@ import { addToCart } from "../../../../redux/cartSlice";
 import { toast } from "react-toastify";
 
 const DetailCourse = () => {
+  const [showVideo, setShowVideo] = useState(false); // 👈 Quản lý modal video
   const location = useLocation();
-  console.log(location);
   const courseId = location.state?.courseId;
   const courseTitle = location.state?.courseTitle;
   const coursePrice = location.state?.coursePrice;
@@ -39,9 +39,7 @@ const DetailCourse = () => {
     <div className="flex flex-col md:flex-row gap-10 p-8 max-w-6xl mx-auto">
       {/* Left content */}
       <div className="flex-1">
-        <h1 className="text-3xl font-bold mb-2">
-          {location?.state?.courseTitle}
-        </h1>
+        <h1 className="text-3xl font-bold mb-2">{courseTitle}</h1>
         <p className="text-gray-700 mb-6 leading-relaxed">
           {location?.state?.courseDes}
         </p>
@@ -75,7 +73,11 @@ const DetailCourse = () => {
 
       {/* Right sidebar */}
       <div className="md:w-72 flex flex-col items-center">
-        <div className="w-full bg-gradient-to-br from-cyan-500 to-teal-600 text-white rounded-xl overflow-hidden shadow-md">
+        {/* 📽️ Khung xem giới thiệu */}
+        <div
+          onClick={() => setShowVideo(true)}
+          className="cursor-pointer w-full bg-gradient-to-br from-cyan-500 to-teal-600 text-white rounded-xl overflow-hidden shadow-md hover:scale-105 transition"
+        >
           <div className="aspect-video flex justify-center items-center">
             <div className="bg-white/20 rounded-full p-4">
               <svg
@@ -94,34 +96,31 @@ const DetailCourse = () => {
         </div>
 
         <h2 className="text-3xl text-orange-500 font-semibold mt-6 mb-3">
-          Miễn phí
+          {coursePrice}đ
         </h2>
 
         <button
           onClick={() =>
             navigate(`/payment/${courseId}`, {
-              state: {
-                courseId: courseId,
-                courseTitle: courseTitle,
-                coursePrice: coursePrice,
-              },
+              state: { courseId, courseTitle, coursePrice },
             })
           }
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow"
         >
-          ĐĂNG KÝ HỌC
+          Mua khoá học
         </button>
+
         <button
-          onClick={() =>
+          onClick={() => {
             dispatch(
               addToCart({
                 id: courseId,
                 title: courseTitle,
                 price: coursePrice,
-              }),
-              toast.success("Đã thêm vào giỏ hàng")
-            )
-          }
+              })
+            );
+            toast.success("Đã thêm vào giỏ hàng");
+          }}
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-8 py-3 rounded-lg shadow mt-5"
         >
           Thêm vào giỏ hàng
@@ -134,6 +133,44 @@ const DetailCourse = () => {
           <li>💻 Học mọi lúc, mọi nơi</li>
         </ul>
       </div>
+
+      {/* 📺 Modal Video Giới Thiệu */}
+      {showVideo && (
+        <div
+          className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+          onClick={() => setShowVideo(false)} // 👈 bấm ngoài tắt video
+        >
+          <div
+            className="bg-white rounded-lg overflow-hidden shadow-lg max-w-3xl w-full relative"
+            onClick={(e) => e.stopPropagation()} // 👈 ngăn click bên trong tắt
+          >
+            {/* Nút đóng (tuỳ chọn) */}
+            <button
+              onClick={() => setShowVideo(false)}
+              className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-full p-2"
+            >
+              ✕
+            </button>
+
+            {/* 👉 Video giới thiệu (YouTube hoặc nội bộ) */}
+            {/* Nếu bạn dùng YouTube: */}
+            <iframe
+              width="100%"
+              height="400"
+              src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+              title="Giới thiệu khóa học"
+              allowFullScreen
+            ></iframe>
+
+            {/* Nếu dùng file video nội bộ, có thể thay bằng:
+            <video width="100%" height="400" controls autoPlay>
+              <source src="/videos/demo.mp4" type="video/mp4" />
+              Trình duyệt của bạn không hỗ trợ video.
+            </video> 
+            */}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
