@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { fetchProfile, updateProfile } from "../../../../redux/profileSlice";
 import { useNavigate } from "react-router-dom";
+import { getThumbnailUrl } from "../../../../utils/getThumbnailUrl";
 
 const UserProfile = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "courses">("profile");
@@ -22,7 +23,6 @@ const UserProfile = () => {
     loading: profileLoading,
     error: profileError,
   } = useAppSelector((state) => state.profile);
-
   // ✅ Lấy các khóa học đang hoạt động (active)
   const seenIds = new Set();
   const activeCourses =
@@ -38,6 +38,7 @@ const UserProfile = () => {
         return true; // giữ lại item này
       }) ?? [];
   console.log(activeCourses);
+
   // ✅ Fetch profile khi load trang
   useEffect(() => {
     dispatch(fetchProfile());
@@ -228,10 +229,7 @@ const UserProfile = () => {
                     {/* Ảnh khoá học */}
                     <div className="relative">
                       <img
-                        src={
-                          course.course.thumbnailUrls?.[0]?.url ||
-                          "/placeholder.jpg"
-                        }
+                        src={getThumbnailUrl(course.course)}
                         alt={course.course.title}
                         className="w-full h-44 object-cover"
                       />

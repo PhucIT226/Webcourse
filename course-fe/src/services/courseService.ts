@@ -39,7 +39,11 @@ const CourseService = {
   },
 
   // Cập nhật khóa học
-  async update(id: string, course: Partial<Course>, files?: File[]): Promise<Course> {
+  async update(
+    id: string,
+    course: Partial<Course>,
+    files?: File[]
+  ): Promise<Course> {
     const formData = new FormData();
 
     Object.entries(course).forEach(([key, value]) => {
@@ -53,13 +57,13 @@ const CourseService = {
       formData.append("thumbnail", files[0]);
     }
 
-    const res = await axios.patch<{ status: boolean; message: string; data: Course }>(
-      `/courses/${id}`,
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
+    const res = await axios.patch<{
+      status: boolean;
+      message: string;
+      data: Course;
+    }>(`/courses/${id}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
 
     return res.data.data;
   },
