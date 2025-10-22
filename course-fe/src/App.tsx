@@ -13,6 +13,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 // Admin pages
 import Admin from "./pages/admin/admin";
 import Dashboard from "./pages/admin/dashboard/dashboard";
+import Search from "./components/admin/search/search";
 
 // Admin course
 import CourseList from "./pages/admin/courses/courses";
@@ -70,6 +71,8 @@ function App() {
         {/* Admin routes */}
         <Route path="/admin" element={<Admin />}>
           <Route index element={<Dashboard />} />
+
+          <Route path="search" element={<Search />} />
 
           {/* Course routes */}
           <Route path="courses">

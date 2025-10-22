@@ -1,4 +1,6 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "../../../services/axiosClient";
 import type { Course } from "../../../types/course";
 import {
   FaKey,
@@ -9,12 +11,42 @@ import {
   FaCalendarAlt,
   FaAlgolia,
   FaArrowLeft,
+  FaChevronDown,
+  FaChevronUp,
 } from "react-icons/fa";
 
 export default function CourseDetail() {
   const navigate = useNavigate();
   const location = useLocation();
-  const course = location.state?.course as Course | undefined;
+  const { id } = useParams();
+  const [course, setCourse] = useState<Course | null>(location.state?.course || null);
+  const [lessonsOpen, setLessonsOpen] = useState(false);
+  const [loading, setLoading] = useState(!location.state?.course)
+
+  useEffect(() => {
+    if (id) {
+      setLoading(true);
+      axios
+        .get(`/courses/${id}`)
+        .then((res) => {
+          console.log("🧩 Kết quả từ backend:", res.data);
+          setCourse(res.data.data);
+        })
+        .catch((err) => {
+          console.error("❌ Lỗi khi fetch course:", err);
+          setCourse(null);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen flex items-center justify-center">
+        <p className="text-gray-600 text-lg font-medium">Đang tải dữ liệu...</p>
+      </div>
+    );
+  }
 
   if (!course) {
     return (
@@ -73,6 +105,44 @@ export default function CourseDetail() {
             <p className="flex items-center text-gray-800 font-medium">
               <FaMoneyBillAlt className="mr-3 text-green-500 text-lg" />
               Giá: <span className="text-xl font-bold">{Number(course.price).toLocaleString("vi-VN")} đ</span>
+            </p>
+            <p className="flex flex-col text-gray-800 font-medium mt-2">
+              <button
+                onClick={() => setLessonsOpen(!lessonsOpen)}
+                className="flex items-center focus:outline-none"
+              >
+                <FaFolderOpen className="mr-2 text-yellow-500" />
+                <span>Danh sách bài học</span>
+                {lessonsOpen ? (
+                  <FaChevronUp className="ml-2 text-gray-600" />
+                ) : (
+                  <FaChevronDown className="ml-2 text-gray-600" />
+                )}
+              </button>
+
+              {lessonsOpen && (
+  <>
+    {course.lessons && course.lessons.length > 0 ? (
+      <ul className="ml-6 list-disc mt-2">
+        {[...course.lessons]
+          .sort((a, b) => {
+            const getNumber = (title: string) => {
+              const match = title.match(/Lesson (\d+)/);
+              return match ? parseInt(match[1], 10) : 0;
+            };
+            return getNumber(a.title) - getNumber(b.title);
+          })
+          .map((lesson, idx) => (
+            <li key={lesson.id}>
+              {lesson.title}
+            </li>
+          ))}
+      </ul>
+    ) : (
+      <span className="ml-6 mt-2 text-gray-500">Chưa có bài học</span>
+    )}
+  </>
+)}
             </p>
           </div>
 

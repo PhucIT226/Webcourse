@@ -10,6 +10,11 @@ export type Course = {
   instructorId?: string;
   category: { id?: string; name: string };
   categoryId: string;
+  lessons?: {
+    id: string;
+    title: string;
+    order?: number;
+  }[];
   price: number;
   studentCount?: number;
   createdAt?: string;

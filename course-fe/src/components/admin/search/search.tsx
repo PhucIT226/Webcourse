@@ -9,10 +9,16 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    console.log("🔍 Query từ URL:", query); // log query nhận từ URL
     if (!query) return;
+
     setLoading(true);
     axios.get(`/admin/search?query=${encodeURIComponent(query)}`)
-      .then(res => setResults(res.data))
+      .then(res => {
+        console.log("📥 Dữ liệu nhận từ BE:", res.data); // log dữ liệu từ backend
+        setResults(res.data);
+      })
+      .catch(err => console.error("❌ Lỗi khi fetch search:", err))
       .finally(() => setLoading(false));
   }, [query]);
 
