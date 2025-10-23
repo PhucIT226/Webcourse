@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -17,41 +17,47 @@ const CourseVid = () => {
   const { id } = useParams();
   const { lessons } = useAppSelector((state) => state.lesson);
 
+  const [comments, setComments] = useState<{ name: string; text: string }[]>(
+    []
+  );
+  const [name, setName] = useState("");
+  const [text, setText] = useState("");
+  const [showQnA, setShowQnA] = useState(false);
+
   useEffect(() => {
     if (courseId) {
       dispatch(fetchLessons({ courseId }));
     }
   }, [courseId, dispatch]);
 
-  // Tìm bài hiện tại
   let currentIndex = lessons.findIndex((lesson) => lesson.id === id);
-  if (currentIndex === -1) {
-    currentIndex = 0;
-  }
-
+  if (currentIndex === -1) currentIndex = 0;
   const currentLesson = lessons[currentIndex];
-  const formatNum = (num: number) => {
-    const str = num.toString().padStart(3, "0");
-    return `${str.slice(0, 2)} : ${str.slice(2)}`;
-  };
 
-  // Chuyển bài
   const handleNext = () => {
     if (currentIndex < lessons.length - 1) {
       const nextLesson = lessons[currentIndex + 1];
-      navigate(`/coursevid/${nextLesson.id}`);
+      navigate(`/coursevid/${nextLesson.id}`, { state: { courseId } });
     }
   };
 
   const handlePrev = () => {
     if (currentIndex > 0) {
       const prevLesson = lessons[currentIndex - 1];
-      navigate(`/coursevid/${prevLesson.id}`);
+      navigate(`/coursevid/${prevLesson.id}`, { state: { courseId } });
     }
   };
 
+  const handleAddComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !text.trim()) return;
+    setComments([{ name, text }, ...comments]);
+    setName("");
+    setText("");
+  };
+
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="relative flex flex-col h-screen bg-gray-50">
       <div className="flex flex-1 overflow-hidden">
         {/* Video Player */}
         <div className="flex-1 bg-black flex items-center justify-center">
@@ -72,7 +78,6 @@ const CourseVid = () => {
           <div className="p-4 border-b font-semibold text-gray-700">
             Nội dung khóa học
           </div>
-
           <Accordion type="single" collapsible>
             <AccordionItem value="section-1">
               <AccordionTrigger className="bg-gray-100 px-4 py-3 flex justify-between text-left font-medium text-gray-800 hover:bg-gray-200">
@@ -96,9 +101,6 @@ const CourseVid = () => {
                       }
                     >
                       <span>▶ {l.title}</span>
-                      <span className="text-gray-500 text-xs whitespace-nowrap">
-                        {formatNum(l.duration ?? 0)}
-                      </span>
                     </li>
                   ))}
                 </ul>
@@ -125,6 +127,66 @@ const CourseVid = () => {
           Bài tiếp theo
         </button>
       </div>
+
+      {/* Floating Button */}
+      <button
+        onClick={() => setShowQnA(true)}
+        className="fixed bottom-6 right-6 bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2 px-4 py-2 rounded-full shadow-lg transition-all"
+      >
+        <span>💬</span> <span className="font-medium">Comment</span>
+      </button>
+
+      {/* Q&A Panel */}
+      {showQnA && (
+        <div className="fixed bottom-20 right-6 w-96 bg-white rounded-2xl shadow-2xl border p-4 max-h-[70vh] flex flex-col">
+          <div className="flex justify-between items-center border-b pb-2 mb-3">
+            <h3 className="font-semibold text-gray-800">Comment</h3>
+            <button
+              onClick={() => setShowQnA(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              ✕
+            </button>
+          </div>
+
+          <form onSubmit={handleAddComment} className="space-y-2 mb-4">
+            <input
+              type="text"
+              placeholder="Tên của bạn..."
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full border rounded px-3 py-2 text-sm"
+            />
+            <textarea
+              placeholder="Viết bình luận..."
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              className="w-full border rounded px-3 py-2 text-sm h-20"
+            ></textarea>
+            <button
+              type="submit"
+              className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600 w-full"
+            >
+              Gửi
+            </button>
+          </form>
+
+          <div className="overflow-y-auto flex-1 space-y-3">
+            {comments.length === 0 ? (
+              <p className="text-gray-500 text-sm text-center">
+                Chưa có câu hỏi hoặc bình luận nào.
+              </p>
+            ) : (
+              comments.map((c, i) => (
+                <div key={i} className="border-b pb-2">
+                  <p className="font-medium text-orange-600">{c.name}</p>
+                  <p className="text-gray-700 text-sm">{c.text}</p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
