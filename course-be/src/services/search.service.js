@@ -5,8 +5,11 @@ class SearchService {
     this.repository = new SearchRepository();
   }
 
-  searchAll(query) {
-    return this.repository.searchAll(query);
+  async searchAll(query) {
+    console.log("🔧 [Service] Nhận query:", query); // log query từ controller
+    const results = await this.repository.searchAll(query);
+    console.log("🔧 [Service] Kết quả nhận từ repository:", results); // log kết quả repo
+    return results;
   }
 }
 

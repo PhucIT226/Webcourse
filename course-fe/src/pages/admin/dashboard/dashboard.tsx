@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { fetchDashboardData } from "../../../redux/dashboardSlice";
 import {
@@ -11,24 +12,26 @@ import {
 
 import { StatCard } from "../../../components/admin/dashboards/StatCard";
 import { ChartRevenue } from "../../../components/admin/dashboards/ChartRevenue";
+import { ChartNewUsers } from "../../../components/admin/dashboards/ChartNewUsers";
 import { TopCourses } from "../../../components/admin/dashboards/TopCourses";
 import { RecentOrders } from "../../../components/admin/dashboards/RecentOrders";
 import { RecentReviews } from "../../../components/admin/dashboards/RecentReviews";
 import { Notifications } from "../../../components/admin/dashboards/Notifications";
 import { DashboardPDFPreview } from "../../../components/admin/dashboards/DashboardPDFPreview";
 import type { VisibleSections } from "../../../types/dashboard";
-import { useNavigate } from "react-router-dom";
 
 const DashboardPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { summary, loading } = useAppSelector((state) => state.dashboard);
+
   const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     dispatch(fetchDashboardData());
   }, [dispatch]);
 
+  // ✅ Các phần hiển thị mặc định
   const visibleSections: VisibleSections = {
     summary: true,
     chart: true,
@@ -38,6 +41,7 @@ const DashboardPage = () => {
     notifications: true,
   };
 
+  // ✅ Lấy cài đặt phần PDF đã lưu
   const getPDFSections = (): VisibleSections => {
     const saved = localStorage.getItem("dashboardPDFSections");
     return saved
@@ -69,7 +73,7 @@ const DashboardPage = () => {
         </button>
       </div>
 
-      {/* 📊 Thống kê */}
+      {/* 📊 Thống kê tổng quan */}
       {visibleSections.summary && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
           <StatCard
@@ -79,6 +83,7 @@ const DashboardPage = () => {
             loading={loading}
             onClick={() => navigate("/admin/courses")}
           />
+
           <StatCard
             title="Tổng học viên"
             value={summary?.totalUsers ?? 0}
@@ -86,6 +91,7 @@ const DashboardPage = () => {
             loading={loading}
             onClick={() => navigate("/admin/users")}
           />
+
           <StatCard
             title="Tổng đơn hàng"
             value={summary?.totalOrders ?? 0}
@@ -93,6 +99,7 @@ const DashboardPage = () => {
             loading={loading}
             onClick={() => navigate("/admin/orders")}
           />
+
           <StatCard
             title="Doanh thu"
             value={Math.ceil(summary?.totalRevenue ?? 0).toLocaleString("vi-VN")}
@@ -106,8 +113,9 @@ const DashboardPage = () => {
       {/* 📈 Biểu đồ & Thông báo */}
       {visibleSections.chart && (
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <div className="xl:col-span-2">
+          <div className="xl:col-span-2 grid grid-cols-1 gap-6">
             <ChartRevenue />
+            <ChartNewUsers />
           </div>
           {visibleSections.notifications && <Notifications />}
         </div>
@@ -126,7 +134,7 @@ const DashboardPage = () => {
         </div>
       )}
 
-      {/* 🧾 Modal Preview */}
+      {/* 🧾 Modal Preview PDF */}
       {showPreview && (
         <DashboardPDFPreview
           summary={summary}

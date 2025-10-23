@@ -1,4 +1,6 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "../../../services/axiosClient";
 import type { Order } from "../../../types/order";
 import {
   FaUser,
@@ -14,7 +16,34 @@ import {
 export default function OrderDetail() {
   const navigate = useNavigate();
   const location = useLocation();
-  const order = location.state?.order as Order | undefined;
+  const { id } = useParams();
+  const [order, setOrder] = useState<Order | null>(location.state?.order || null);
+  const [loading, setLoading] = useState(!location.state?.order);
+
+  useEffect(() => {
+    if (id) {
+      setLoading(true);
+      axios
+        .get(`/orders/${id}`)
+        .then((res) => {
+          console.log("🧩 Kết quả từ backend:", res.data);
+          setOrder(res.data.data);
+        })
+        .catch((err) => {
+          console.error("❌ Lỗi khi fetch order:", err);
+          setOrder(null);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen flex items-center justify-center">
+        <p className="text-gray-600 text-lg font-medium">Đang tải dữ liệu...</p>
+      </div>
+    );
+  }
 
   if (!order) {
     return (

@@ -1,20 +1,24 @@
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
-  CartesianGrid,
   Tooltip,
+  CartesianGrid,
   ResponsiveContainer,
+  Cell,
 } from "recharts";
+import { FaUserGraduate } from "react-icons/fa";
 import { useAppSelector } from "../../../hooks";
-import { useState, useMemo, useRef, useEffect } from "react";
 import dayjs from "dayjs";
+import { useState, useMemo, useRef, useEffect } from "react";
 
-export const ChartRevenue = () => {
-  const { revenueStats, loading } = useAppSelector((state) => state.dashboard);
+export const ChartNewUsers = () => {
+  const monthlyNewUsers = useAppSelector(
+    (state) => state.dashboard.monthlyNewUsers
+  );
 
-  // 🧩 State hiển thị dropdown
+  // 🧩 Lưu tùy chọn hiển thị: 6 tháng, 12 tháng, hoặc tất cả
   const [monthRange, setMonthRange] = useState<6 | 12 | "all">(6);
   const [openDropdown, setOpenDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -30,13 +34,13 @@ export const ChartRevenue = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Lấy danh sách tất cả tháng từ backend
+  // Lấy danh sách tất cả tháng có trong dữ liệu backend
   const allMonths = useMemo(
-    () => revenueStats.map((item) => item.month),
-    [revenueStats]
+    () => monthlyNewUsers.map((item) => item.month),
+    [monthlyNewUsers]
   );
 
-  // Tính danh sách tháng hiển thị
+  // Nếu chọn 6 hoặc 12 tháng → tính lại mốc thời gian gần nhất
   const displayedMonths =
     monthRange === "all"
       ? allMonths
@@ -46,11 +50,19 @@ export const ChartRevenue = () => {
             .format("YYYY-MM")
         );
 
-  // Chuẩn hóa dữ liệu
-  const data = displayedMonths.map((month) => {
-    const found = revenueStats.find((item) => item.month === month);
-    return { month, revenue: found ? found.totalRevenue : 0 };
+  // Gắn dữ liệu vào chart, đảm bảo tháng nào chưa có count thì = 0
+  const chartData = displayedMonths.map((month) => {
+    const found = monthlyNewUsers.find((item) => item.month === month);
+    return {
+      month,
+      count: found ? found.count : 0,
+    };
   });
+
+  const colors = ["#6C5DD3", "#7F56D9", "#9A70E3", "#B083ED", "#CA96F7", "#E0AAFF"];
+
+  // 💡 Khi hiển thị nhiều tháng → cột nhỏ hơn để đủ không gian
+  const barSize = monthRange === 6 ? 40 : monthRange === 12 ? 25 : 15;
 
   // Nhãn hiển thị hiện tại
   const labelMap = { 6: "6 tháng", 12: "12 tháng", all: "Tất cả" } as const;
@@ -58,9 +70,12 @@ export const ChartRevenue = () => {
   return (
     <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-2xl shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 min-w-[760px] mx-auto">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-gray-800 text-lg">
-          📈 Doanh thu theo tháng
-        </h3>
+        <div className="flex items-center gap-2">
+          <FaUserGraduate className="text-blue-500 w-5 h-5" />
+          <h3 className="font-semibold text-gray-800 text-lg">
+            Học viên mới theo tháng
+          </h3>
+        </div>
 
         {/* 🔘 Dropdown custom */}
         <div className="relative text-sm" ref={dropdownRef}>
@@ -103,70 +118,57 @@ export const ChartRevenue = () => {
         </div>
       </div>
 
-      <span className="text-sm text-gray-500 block mb-3">
-        (đơn vị: <span className="font-medium text-gray-700">VNĐ</span>)
-      </span>
-
-      {loading ? (
-        <div className="h-[300px] flex items-center justify-center">
-          <p className="text-gray-500 text-sm animate-pulse">Đang tải biểu đồ...</p>
-        </div>
-      ) : (
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={data} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
-            <CartesianGrid
-              strokeDasharray="4 3"
-              stroke="#e5e7eb"
-              opacity={0.7}
-              vertical={false}
-            />
-            <XAxis
-              dataKey="month"
-              tick={{ fontSize: 12, fill: "#6b7280" }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <YAxis
-              tickFormatter={(val) => `${(val / 1_000_000).toFixed(1)}M`}
-              tick={{ fontSize: 12, fill: "#6b7280" }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <Tooltip
-              cursor={{ stroke: "#60a5fa", strokeDasharray: "4 2" }}
-              contentStyle={{
-                backgroundColor: "#fff",
-                borderRadius: "10px",
-                border: "1px solid #e5e7eb",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-              }}
-              formatter={(value: number) => [
-                `₫${value.toLocaleString("vi-VN")}`,
-                "Doanh thu",
-              ]}
-              labelStyle={{ color: "#374151", fontWeight: 500 }}
-            />
-            <Line
-              type="monotone"
-              dataKey="revenue"
-              stroke="#3b82f6"
-              strokeWidth={3}
-              dot={{
-                r: 5,
-                fill: "#3b82f6",
-                strokeWidth: 2,
-                stroke: "#fff",
-              }}
-              activeDot={{
-                r: 7,
-                fill: "#2563eb",
-                strokeWidth: 3,
-                stroke: "#fff",
-              }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      )}
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart
+          data={chartData}
+          margin={{ top: 20, right: 10, left: -10, bottom: 0 }}
+        >
+          <CartesianGrid
+            strokeDasharray="4 3"
+            stroke="#e5e7eb"
+            opacity={0.7}
+            vertical={false}
+          />
+          <XAxis
+            dataKey="month"
+            tick={{ fontSize: 12, fill: "#6b7280" }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            tick={{ fontSize: 12, fill: "#6b7280" }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip
+            cursor={{ fill: "rgba(59, 130, 246, 0.1)" }}
+            contentStyle={{
+              backgroundColor: "#fff",
+              borderRadius: "10px",
+              border: "1px solid #e5e7eb",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+              padding: "8px 12px",
+            }}
+            formatter={(value: number) => [value, "Học viên mới"]}
+            labelStyle={{ color: "#374151", fontWeight: 500 }}
+          />
+          <Bar
+            dataKey="count"
+            radius={[5, 5, 0, 0]}
+            animationDuration={800}
+            barSize={barSize} // 👈 Thu nhỏ cột khi hiển thị nhiều tháng
+            fillOpacity={1}
+          >
+            {chartData.map((_, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={colors[index % colors.length]}
+                cursor="pointer"
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 };

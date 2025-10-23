@@ -13,6 +13,12 @@ class DashboardService {
     return this.repository.getRevenueStats();
   }
 
+  getMonthlyNewUsers(lastMonths = 6) {
+  console.log("📌 Service: lastMonths =", lastMonths);
+  return this.repository.getMonthlyNewUsers(lastMonths);
+}
+
+
   getTopCourses(limit) {
     return this.repository.getTopCourses(limit);
   }
