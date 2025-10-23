@@ -66,37 +66,36 @@ class DashboardRepository {
     }));
   }
 
-  // 6️⃣ Số lượng học viên đăng ký theo tháng (6 tháng gần nhất)
-  async getMonthlyNewUsers(months = 6) {
-  const result = await this.userModel.findAll({
-    attributes: [
-      [
-        Sequelize.fn("DATE_FORMAT", Sequelize.col("User.createdAt"), "%Y-%m"),
-        "month",
+  // 6️⃣ Số lượng học viên đăng ký theo tháng (toàn bộ, không giới hạn)
+  async getMonthlyNewUsers() {
+    const result = await this.userModel.findAll({
+      attributes: [
+        [
+          Sequelize.fn("DATE_FORMAT", Sequelize.col("User.createdAt"), "%Y-%m"),
+          "month",
+        ],
+        [Sequelize.fn("COUNT", Sequelize.col("User.id")), "totalUsers"],
       ],
-      [Sequelize.fn("COUNT", Sequelize.col("User.id")), "count"],
-    ],
-    include: [
-      {
-        model: this.roleModel,
-        as: "role",
-        where: { name: "student" },
-        attributes: [],
-      },
-    ],
-    group: ["month"],
-    order: [[Sequelize.literal("month"), "ASC"]],
-    raw: true,
-  });
+      include: [
+        {
+          model: this.roleModel,
+          as: "role",
+          where: { name: "student" },
+          attributes: [],
+        },
+      ],
+      group: ["month"],
+      order: [[Sequelize.literal("month"), "ASC"]],
+      raw: true,
+    });
 
-  const mapped = result.map((r) => ({
-    month: r.month,
-    count: parseInt(r.count, 10),
-  }));
+    console.log("Backend new users stats:", result);
 
-  return mapped.slice(-months);
-}
-
+    return result.map((r) => ({
+      month: r.month,
+      totalUsers: parseInt(r.totalUsers, 10),
+    }));
+  }
 
   // 3️⃣ Top khóa học bán chạy
   async getTopCourses(limit = 5) {
