@@ -20,6 +20,7 @@ import uploadsRoutes from "./uploads.js";
 
 export default {
   v1: Router()
+    .use("/admin/search", searchRoutes)
     .use("/auth", authRoutes)
     .use("/roles", rolesRoutes)
     .use("/users", usersRoutes)

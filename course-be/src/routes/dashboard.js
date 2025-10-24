@@ -44,4 +44,11 @@ router.get(
   dashboardController.getRecentReviews
 );
 
+router.get(
+  "/monthly-new-users",
+  middlewares.auth,
+  middlewares.role("admin"),
+  dashboardController.getMonthlyNewUsers
+);
+
 export default router;

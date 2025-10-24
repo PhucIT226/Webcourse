@@ -29,6 +29,28 @@ class DashboardController extends BaseController {
     });
   }
 
+  async getMonthlyNewUsers(req, res) {
+    try {
+      const lastMonths = +req.query.lastMonths || 6;
+      console.log("📌 Controller: lastMonths =", lastMonths);
+
+      const data = await this.service.getMonthlyNewUsers(lastMonths);
+      console.log("📌 Controller: data fetched =", data);
+
+      res.json({
+        status: true,
+        message: "Fetched monthly new users successfully",
+        data,
+      });
+    } catch (error) {
+      console.error("❌ getMonthlyNewUsers ERROR (Controller):", error);
+      res.status(500).json({
+        status: false,
+        message: "Server error while fetching monthly new users",
+      });
+    }
+  }
+
   // 3️⃣ Top khóa học
   async getTopCourses(req, res) {
     const limit = +req.query.limit || 5;

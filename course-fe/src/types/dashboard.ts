@@ -10,6 +10,11 @@ export type RevenueStat = {
   totalRevenue: number;
 };
 
+export type MonthlyNewUserStat = {
+  month: string;
+  count: number;
+};
+
 export type TopCourse = {
   id: string;
   title: string;
@@ -43,6 +48,7 @@ export type RecentReview = {
 export type DashboardData = {
   summary: DashboardSummary;
   revenueStats: RevenueStat[];
+  monthlyNewUsers: MonthlyNewUserStat[];
   topCourses: TopCourse[];
   recentOrders: RecentOrder[];
   recentReviews: RecentReview[];

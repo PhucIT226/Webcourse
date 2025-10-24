@@ -16,7 +16,17 @@ export type User = {
     address?: string;
     dateOfBirth?: string;
   };
-  courseCount?: number; 
+  enrollments?: {
+    id: string;
+    course?: {
+      id: string;
+      title: string;
+    };
+  }[];
+  courses?: {
+    id: string;
+    title: string;
+  }[];
   progress?: string; 
   status: "active" | "inactive" | "banned" | "pending";
   createdAt?: string;
