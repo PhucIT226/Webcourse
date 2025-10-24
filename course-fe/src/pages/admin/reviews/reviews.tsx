@@ -73,7 +73,7 @@ export default function ReviewList() {
               placeholder="Tìm kiếm"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="border bg-white px-3 py-2 rounded-md text-sm text-black"
+              className="border bg-base-100 px-3 py-2 rounded-md text-sm text-base-content"
             />
             <button
               onClick={handleSearch}
@@ -88,7 +88,7 @@ export default function ReviewList() {
                 value={statusFilter}
                 onChange={(e) => { setPage(1); setStatusFilter(e.target.value as any); }}
                 className="
-                  border border-gray-300 bg-white px-4 py-2 rounded-lg text-sm text-gray-800 
+                  border border-gray-300 bg-base-100 px-4 py-2 rounded-lg text-sm text-base-content 
                   focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400
                   shadow-sm hover:border-gray-400 transition-all duration-200"
               >
@@ -135,7 +135,7 @@ export default function ReviewList() {
               reviews.map((review: Review, index: number) => (
                 <tr
                   key={review.id}
-                  className="border-b whitespace-nowrap hover:bg-gray-50 transition-colors"
+                  className="border-b whitespace-nowrap hover:bg-amber-700 transition-colors"
                 >
                   <td className="border text-center px-4 py-2">
                     {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}

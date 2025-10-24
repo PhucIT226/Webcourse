@@ -173,7 +173,7 @@ export default function OrderDetail() {
               {order.items.map((item, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-4 bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                  className="flex items-center gap-4 bg-base-100 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                 >
                   {item.course?.thumbnailUrls &&
                     item.course.thumbnailUrls.length > 0 && (
@@ -219,7 +219,7 @@ export default function OrderDetail() {
         {order.note && (
           <div className="mt-8">
             <p className="font-semibold mb-2 text-gray-800 text-lg">Ghi chú:</p>
-            <p className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm text-gray-700">
+            <p className="bg-base-100 p-4 rounded-lg border border-gray-200 shadow-sm text-gray-700">
               {order.note}
             </p>
           </div>

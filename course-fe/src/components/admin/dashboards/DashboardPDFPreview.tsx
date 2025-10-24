@@ -86,7 +86,7 @@ export const DashboardPDFPreview = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white w-[90%] max-w-5xl rounded-lg shadow-lg overflow-y-auto max-h-[90vh] p-6 space-y-4">
+      <div className="bg-base-100 w-[90%] max-w-5xl rounded-lg shadow-lg overflow-y-auto max-h-[90vh] p-6 space-y-4">
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-2">
           <h2 className="text-xl font-semibold">Xem trước & chỉnh sửa PDF</h2>
@@ -118,7 +118,7 @@ export const DashboardPDFPreview = ({
         {/* Nội dung xem trước */}
         <div
           id="pdf-preview-content"
-          className="p-4 border rounded-md space-y-6 bg-white"
+          className="p-4 border rounded-md space-y-6 bg-base-100"
         >
           {/* Tổng quan */}
           {previewSections.summary && (
@@ -197,7 +197,7 @@ export const DashboardPDFPreview = ({
         <div className="flex justify-end gap-3 pt-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300"
+            className="px-4 py-2 bg-base-300 rounded-md hover:bg-gray-700"
           >
             Hủy
           </button>

@@ -57,10 +57,10 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-8 space-y-8">
+    <div className="min-h-screen bg-base-100 p-8 space-y-8">
       {/* 🧭 Header */}
       <div className="flex flex-wrap justify-between items-center gap-4">
-        <h1 className="text-3xl font-extrabold text-gray-800 tracking-tight">
+        <h1 className="text-3xl font-extrabold text-base-content tracking-tight">
           Dashboard tổng quan
         </h1>
 

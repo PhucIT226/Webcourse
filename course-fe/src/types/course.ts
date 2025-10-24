@@ -20,6 +20,7 @@ export type Course = {
   createdAt?: string;
   updatedAt?: string;
   status: "published" | "draft" | "closed";
+  thumbnailUrl?: string;
   thumbnailUrls?: Image[];
 };
 

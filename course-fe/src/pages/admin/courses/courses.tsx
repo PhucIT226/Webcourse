@@ -65,7 +65,7 @@ export default function CourseList() {
               placeholder="Tìm khóa học..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="border bg-white px-3 py-2 rounded-md text-sm text-black"
+              className="border bg-base-100 px-3 py-2 rounded-md text-sm text-base-content"
             />
             <button
               onClick={handleSearch}
@@ -144,7 +144,7 @@ export default function CourseList() {
               courses.map((course: Course, index: number) => (
                 <tr
                   key={course.id}
-                  className="border-b whitespace-nowrap hover:bg-gray-50 transition-colors"
+                  className="border-b whitespace-nowrap hover:bg-amber-700 transition-colors"
                 >
                   <td className="border text-center px-4 py-2">
                     {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}

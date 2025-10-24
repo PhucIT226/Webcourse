@@ -19,7 +19,7 @@ export const Notifications = () => {
 
       {/* List */}
       <ul className="space-y-3 text-sm">
-        <li className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-3 hover:bg-yellow-50 transition-all duration-200">
+        <li className="flex items-center gap-3 bg-gray-200 border border-gray-100 rounded-xl p-3 hover:bg-yellow-50 transition-all duration-200">
           <div className="p-2 bg-yellow-100 rounded-full">
             <FaShoppingCart className="text-yellow-600" />
           </div>
@@ -31,7 +31,7 @@ export const Notifications = () => {
           </div>
         </li>
 
-        <li className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl p-3 hover:bg-blue-50 transition-all duration-200">
+        <li className="flex items-center gap-3 bg-gray-200 border border-gray-100 rounded-xl p-3 hover:bg-blue-50 transition-all duration-200">
           <div className="p-2 bg-blue-100 rounded-full">
             <FaCommentDots className="text-blue-600" />
           </div>
