@@ -14,10 +14,9 @@ class DashboardService {
   }
 
   getMonthlyNewUsers(lastMonths = 6) {
-  console.log("📌 Service: lastMonths =", lastMonths);
-  return this.repository.getMonthlyNewUsers(lastMonths);
-}
-
+    console.log("📌 Service: lastMonths =", lastMonths);
+    return this.repository.getMonthlyNewUsers(lastMonths);
+  }
 
   getTopCourses(limit) {
     return this.repository.getTopCourses(limit);

@@ -29,7 +29,6 @@ export default function CourseDetail() {
       axios
         .get(`/courses/${id}`)
         .then((res) => {
-          console.log("🧩 Kết quả từ backend:", res.data);
           setCourse(res.data.data);
         })
         .catch((err) => {
@@ -121,28 +120,28 @@ export default function CourseDetail() {
               </button>
 
               {lessonsOpen && (
-  <>
-    {course.lessons && course.lessons.length > 0 ? (
-      <ul className="ml-6 list-disc mt-2">
-        {[...course.lessons]
-          .sort((a, b) => {
-            const getNumber = (title: string) => {
-              const match = title.match(/Lesson (\d+)/);
-              return match ? parseInt(match[1], 10) : 0;
-            };
-            return getNumber(a.title) - getNumber(b.title);
-          })
-          .map((lesson, idx) => (
-            <li key={lesson.id}>
-              {lesson.title}
-            </li>
-          ))}
-      </ul>
-    ) : (
-      <span className="ml-6 mt-2 text-gray-500">Chưa có bài học</span>
-    )}
-  </>
-)}
+                <>
+                  {course.lessons && course.lessons.length > 0 ? (
+                    <ul className="ml-6 list-disc mt-2">
+                      {[...course.lessons]
+                        .sort((a, b) => {
+                          const getNumber = (title: string) => {
+                            const match = title.match(/Lesson (\d+)/);
+                            return match ? parseInt(match[1], 10) : 0;
+                          };
+                          return getNumber(a.title) - getNumber(b.title);
+                        })
+                        .map((lesson, idx) => (
+                          <li key={lesson.id}>
+                            {lesson.title}
+                          </li>
+                        ))}
+                    </ul>
+                  ) : (
+                    <span className="ml-6 mt-2 text-gray-500">Chưa có bài học</span>
+                  )}
+                </>
+              )}
             </p>
           </div>
 
@@ -179,19 +178,14 @@ export default function CourseDetail() {
         </div>
 
         {/* Thumbnail dạng carousel mini */}
-        {course.thumbnailUrls && course.thumbnailUrls.length > 0 && (
+        {!course.thumbnailUrls?.length && course.thumbnailUrl && (
           <div className="mt-6">
             <p className="font-semibold mb-3 text-gray-800 text-lg">Ảnh khóa học:</p>
-            <div className="flex gap-4 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 p-2 rounded-xl">
-              {course.thumbnailUrls.map((img, i) => (
-                <img
-                  key={i}
-                  src={`http://localhost:3000${img.url}`}
-                  alt={course.title}
-                  className="w-48 h-32 object-cover rounded-xl border border-gray-200 shadow-sm hover:scale-105 transition-transform duration-300"
-                />
-              ))}
-            </div>
+            <img
+              src={`http://localhost:3000${course.thumbnailUrl}`}
+              alt={course.title}
+              className="w-48 h-32 object-cover rounded-xl border border-gray-200 shadow-sm"
+            />
           </div>
         )}
       </div>

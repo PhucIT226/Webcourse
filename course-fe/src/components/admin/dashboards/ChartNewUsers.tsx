@@ -55,7 +55,7 @@ export const ChartNewUsers = () => {
     const found = monthlyNewUsers.find((item) => item.month === month);
     return {
       month,
-      count: found ? found.count : 0,
+      totalUsers: found ? found.totalUsers : 0,
     };
   });
 
@@ -81,7 +81,7 @@ export const ChartNewUsers = () => {
         <div className="relative text-sm" ref={dropdownRef}>
           <button
             onClick={() => setOpenDropdown((prev) => !prev)}
-            className="border border-gray-300 rounded-lg px-3 py-1 bg-white shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 flex items-center gap-1"
+            className="border border-gray-300 rounded-lg px-3 py-1 bg-base-100 shadow-sm hover:bg-amber-700 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 flex items-center gap-1"
           >
             {labelMap[monthRange]}
             <svg
@@ -98,7 +98,7 @@ export const ChartNewUsers = () => {
           </button>
 
           {openDropdown && (
-            <ul className="absolute right-0 mt-2 w-28 bg-white border border-gray-200 rounded-lg shadow-md z-10 overflow-hidden">
+            <ul className="absolute right-0 mt-2 w-28 bg-base-100 border border-gray-200 rounded-lg shadow-md z-10 overflow-hidden">
               {([6, 12, "all"] as const).map((option) => (
                 <li
                   key={option}
@@ -106,7 +106,7 @@ export const ChartNewUsers = () => {
                     setMonthRange(option);
                     setOpenDropdown(false);
                   }}
-                  className={`px-3 py-2 cursor-pointer hover:bg-blue-50 transition ${
+                  className={`px-3 py-2 cursor-pointer hover:bg-amber-800 transition ${
                     monthRange === option ? "bg-blue-100 text-blue-600 font-medium" : ""
                   }`}
                 >
@@ -153,7 +153,7 @@ export const ChartNewUsers = () => {
             labelStyle={{ color: "#374151", fontWeight: 500 }}
           />
           <Bar
-            dataKey="count"
+            dataKey="totalUsers"
             radius={[5, 5, 0, 0]}
             animationDuration={800}
             barSize={barSize} // 👈 Thu nhỏ cột khi hiển thị nhiều tháng

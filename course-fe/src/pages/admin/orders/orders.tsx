@@ -62,7 +62,7 @@ export default function OrderList() {
   return (
     <div className="p-6">
       {/* Header + Search */}
-      <div className="sticky top-16 z-20 p-4 my-4 bg-yellow-700 shadow-lg rounded-sm text-white ">
+      <div className="sticky top-16 z-20 p-4 my-4 bg-yellow-700 shadow-lg rounded-sm bg-base-100">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Quản lý đơn hàng</h1>
           <div className="flex gap-2">
@@ -71,7 +71,7 @@ export default function OrderList() {
               placeholder="Tìm đơn hàng..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="border bg-white px-3 py-2 rounded-md text-sm text-black"
+              className="border bg-base-100 px-3 py-2 rounded-md text-sm text-base-content"
             />
             <button
               onClick={handleSearch}
@@ -129,7 +129,7 @@ export default function OrderList() {
               orders.map((order: Order, index: number) => (
                 <tr
                   key={order.id}
-                  className="border-b whitespace-nowrap hover:bg-gray-50 transition-colors"
+                  className="border-b whitespace-nowrap hover:bg-amber-700 transition-colors"
                 >
                   <td className="border text-center px-4 py-2">
                     {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}

@@ -36,7 +36,7 @@ export default function OrderEdit() {
   if (!order) return <p className="p-6 text-gray-600">Đang tải dữ liệu...</p>;
 
   return (
-    <div className="p-6 max-w-2xl mx-auto bg-white rounded-lg shadow">
+    <div className="p-6 max-w-2xl mx-auto bg-base-100 rounded-lg shadow">
       <h1 className="text-3xl text-center font-extrabold text-indigo-600 tracking-wide mb-4">
         Cập nhật đơn hàng
       </h1>

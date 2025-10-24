@@ -73,7 +73,7 @@ export default function UserList() {
                 ${
                   activeRole === "student"
                     ? "bg-green-500 text-white border-green-600 shadow-md"
-                    : "bg-white text-green-700 border-green-400 hover:bg-green-50"
+                    : "bg-base-100 text-green-700 border-green-400 hover:bg-green-50"
                 }`}
             >
               Học viên
@@ -89,7 +89,7 @@ export default function UserList() {
                 ${
                   activeRole === "instructor"
                     ? "bg-blue-500 text-white border-blue-600 shadow-md"
-                    : "bg-white text-blue-700 border-blue-400 hover:bg-blue-50"
+                    : "bg-base-100 text-blue-700 border-blue-400 hover:bg-blue-50"
                 }`}
             >
               Giảng viên
@@ -102,7 +102,7 @@ export default function UserList() {
               placeholder={`Tìm ${activeRole === "student" ? "học viên" : "giảng viên"}...`}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="border bg-white px-3 py-2 rounded-md text-sm text-black"
+              className="border bg-base-100 px-3 py-2 rounded-md text-sm text-base-content"
             />
             <button
               onClick={handleSearch}
@@ -176,7 +176,7 @@ export default function UserList() {
               users.map((user: User, index: number) => (
                 <tr
                   key={user.id}
-                  className="border-b whitespace-nowrap hover:bg-gray-50 transition-colors"
+                  className="border-b whitespace-nowrap hover:bg-amber-700 transition-colors"
                 >
                   <td className="border text-center px-4 py-2">
                     {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}

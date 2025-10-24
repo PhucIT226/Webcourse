@@ -68,7 +68,7 @@ export default function CouponList() {
             placeholder="Tìm coupon..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="border bg-white px-3 py-2 rounded-md text-sm text-black"
+            className="border bg-base-100 px-3 py-2 rounded-md text-sm text-base-content"
           />
           <button
             onClick={handleSearch}
@@ -79,7 +79,10 @@ export default function CouponList() {
           <select
             value={statusFilter}
             onChange={(e) => { setPage(1); setStatusFilter(e.target.value as any); }}
-            className="border border-gray-300 bg-white px-4 py-2 rounded-lg text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 shadow-sm hover:border-gray-400 transition-all duration-200"
+            className="
+              border border-gray-300 bg-base-100 px-4 py-2 rounded-lg text-sm text-base-content
+              focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 
+              shadow-sm hover:border-gray-400 transition-all duration-200"
           >
             <option value="">Tất cả trạng thái</option>
             <option value="active">Hoạt động</option>
@@ -135,7 +138,7 @@ export default function CouponList() {
           <tbody>
             {coupons.length > 0 ? (
               coupons.map((coupon: Coupon, index: number) => (
-                <tr key={coupon.id} className="border-b whitespace-nowrap hover:bg-gray-50 transition-colors">
+                <tr key={coupon.id} className="border-b whitespace-nowrap hover:bg-amber-700 transition-colors">
                   <td className="border text-center px-4 py-2">
                     {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}
                   </td>

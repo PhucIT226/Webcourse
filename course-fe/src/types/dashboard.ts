@@ -12,7 +12,7 @@ export type RevenueStat = {
 
 export type MonthlyNewUserStat = {
   month: string;
-  count: number;
+  totalUsers: number;
 };
 
 export type TopCourse = {
