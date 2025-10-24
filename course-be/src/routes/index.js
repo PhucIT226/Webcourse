@@ -13,6 +13,7 @@ import paymentsRoutes from "./payments.js";
 import reviewsRoutes from "./reviews.js";
 import couponsRoutes from "./coupons.js";
 import profilesRoutes from "./profile.js";
+import searchRoutes from "./search.js";
 import chatCourses from "./chat.js";
 // import enrollmentsRoutes from './enrollments.js';
 // import certificatesRoutes from './certificates.js';
