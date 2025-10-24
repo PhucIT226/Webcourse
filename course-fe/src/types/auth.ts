@@ -33,3 +33,7 @@ export interface RegisterForm {
 export interface RegisterRes {
   message: string;
 }
+export type VerifyEmailRes = {
+  message: string;
+  success: boolean;
+};

@@ -54,6 +54,8 @@ import Setting from "./pages/admin/setting/setting";
 
 import PaymentPage from "./pages/user/Payment/PaymentPage";
 import UserProfile from "./pages/user/Home/Header/UserProfile";
+import VerifyEmail from "./pages/user/Email/verifyEmail";
+import CheckEmail from "./pages/user/Email/checkEmail";
 
 function App() {
   return (
@@ -130,6 +132,8 @@ function App() {
         <Route path="/payment/:id" element={<PaymentPage />} />
         <Route path="/payment" element={<PaymentPage />} />
         <Route path="/profile/:id" element={<UserProfile />} />
+        <Route path="auth/verify-email/:token" element={<VerifyEmail />} />
+        <Route path="/checkmail" element={<CheckEmail />} />
       </Routes>
       <ToastContainer
         position="top-right"

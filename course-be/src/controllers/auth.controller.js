@@ -2,6 +2,7 @@ import BaseController from "./base.controller.js";
 import UserService from "../services/user.service.js";
 import * as HashHelper from "../helpers/hash.helper.js";
 import * as JwtHelper from "../helpers/jwt.helper.js";
+import * as MailHelper from "../helpers/mailer.helper.js";
 import db from "../database/models/index.js";
 
 class AuthController extends BaseController {
@@ -35,7 +36,52 @@ class AuthController extends BaseController {
       fullName: user.name,
     });
 
-    res.status(201).json({ message: "User created" });
+    const verifyToken = JwtHelper.generateAccessToken(
+      { sub: email },
+      "verify",
+      "15m"
+    );
+
+    const verifyLink = `${process.env.CLIENT_URL}/auth/verify-email/${verifyToken}`;
+
+    // ✅ Gửi email xác minh
+    await MailHelper.sendMail(
+      email,
+      "Xác minh địa chỉ email của bạn",
+      `
+        <h2>Xin chào ${name},</h2>
+        <p>Cảm ơn bạn đã đăng ký tài khoản tại <b>Học Dễ Thôi</b>!</p>
+        <p>Nhấn vào liên kết dưới đây để xác minh email của bạn:</p>
+        <a href="${verifyLink}" target="_blank">Xác minh ngay</a>
+        <p><i>Liên kết sẽ hết hạn sau 15 phút.</i></p>
+      `
+    );
+
+    res.status(201).json({
+      message:
+        "User created successfully. Please check your email to verify your account.",
+    });
+  }
+
+  // ✅ API xác minh email (GET /api/auth/verify-email?token=...)
+  async verifyEmail(req, res) {
+    try {
+      const { token } = req.query;
+      if (!token)
+        return res.status(400).json({ message: "Missing verification token" });
+
+      const payload = JwtHelper.verifyToken(token, "verify");
+      if (!payload)
+        return res.status(400).json({ message: "Invalid or expired token" });
+
+      res.json({
+        message: "Email verified successfully ✅",
+        email: payload.sub,
+      });
+    } catch (err) {
+      console.error("Verify email error:", err);
+      res.status(500).json({ message: "Server error" });
+    }
   }
 
   async login(req, res) {
