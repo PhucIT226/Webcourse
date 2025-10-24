@@ -42,9 +42,6 @@ import CouponDetail from "./components/admin/coupons/CouponDetail";
 import CouponCreate from "./pages/admin/coupons/coupon-create";
 import CouponEdit from "./pages/admin/coupons/coupon-edit";
 import Setting from "./pages/admin/setting/setting";
-
-import PaymentPage from "./pages/user/Payment/PaymentPage";
-import UserProfile from "./pages/user/Home/Header/UserProfile";
 import VerifyEmail from "./pages/user/Email/verifyEmail";
 import CheckEmail from "./pages/user/Email/checkEmail";
 
