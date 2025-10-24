@@ -17,7 +17,7 @@ export default function CouponCreate() {
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto bg-white rounded-lg shadow">
+    <div className="p-6 max-w-2xl mx-auto bg-base-100 rounded-lg shadow">
       <h1 className="text-3xl text-center font-extrabold text-indigo-600 tracking-wide mb-6 py-4">
         Thêm mã giảm giá mới
       </h1>

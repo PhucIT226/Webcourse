@@ -17,10 +17,10 @@ const menuItems = [
 ];
 
 const SettingsPage = () => {
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState("system");
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen lg:flex gap-6">
+    <div className="p-6 bg-base-100 min-h-screen lg:flex gap-6">
       {/* Sidebar menu */}
       <div className="bg-gradient-to-r from-amber-700 via-amber-600 to-amber-700 text-white 
                       rounded-xl px-5 py-3 shadow-lg w-full lg:w-64 border border-gray-200 p-6">
@@ -45,7 +45,7 @@ const SettingsPage = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 bg-white rounded-3xl shadow-xl border border-gray-200 p-6 overflow-auto max-h-screen">
+      <div className="flex-1 bg-base-100 rounded-3xl shadow-xl border border-gray-200 p-6 overflow-auto max-h-screen">
         <AnimatePresence mode="wait">
           {menuItems
             .filter((item) => item.id === activeTab)
