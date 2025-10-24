@@ -28,20 +28,13 @@ const CheckEmail = () => {
         </p>
         <p className="text-gray-600">
           Vui lòng kiểm tra email
-          <a className="font-medium text-indigo-600"> {email}</a> để xác minh
-          tài khoản của bạn.
+          <span className="font-medium text-indigo-600"> {email}</span> để xác
+          minh tài khoản của bạn.
         </p>
         <p className="text-sm text-gray-400 mt-6">
           Nếu không thấy email, vui lòng kiểm tra hộp thư <b>Spam</b> hoặc{" "}
           <b>Thư rác</b>.
         </p>
-
-        <button
-          onClick={() => navigate("/login")}
-          className="mt-6 bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg transition"
-        >
-          Đến trang đăng nhập
-        </button>
       </div>
     </div>
   );
