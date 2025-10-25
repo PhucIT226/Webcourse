@@ -1,5 +1,7 @@
 import { Router } from "express";
 
+import settingRoutes from "./setting.js";
+import searchRoutes from "./search.js";
 import authRoutes from "./auth.js";
 import rolesRoutes from "./roles.js";
 import usersRoutes from "./users.js";
@@ -13,7 +15,6 @@ import paymentsRoutes from "./payments.js";
 import reviewsRoutes from "./reviews.js";
 import couponsRoutes from "./coupons.js";
 import profilesRoutes from "./profile.js";
-import searchRoutes from "./search.js";
 import chatCourses from "./chat.js";
 // import enrollmentsRoutes from './enrollments.js';
 // import certificatesRoutes from './certificates.js';
@@ -21,6 +22,7 @@ import uploadsRoutes from "./uploads.js";
 
 export default {
   v1: Router()
+    .use("/settings", settingRoutes)
     .use("/admin/search", searchRoutes)
     .use("/auth", authRoutes)
     .use("/roles", rolesRoutes)
