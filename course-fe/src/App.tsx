@@ -1,7 +1,10 @@
 import { Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "./services/axiosClient";
+import Maintenance from "./pages/admin/maintenance/MaintenancePage";
 
 // Protected routes
-import { ProtectedRoute } from "./components/admin/ProtectedRoute";
+// import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 // import { PublicRoute } from "./components/admin/PublicRoute";
 
 // User pages
@@ -46,6 +49,29 @@ import VerifyEmail from "./pages/user/Email/verifyEmail";
 import CheckEmail from "./pages/user/Email/checkEmail";
 
 function App() {
+  const [isMaintenance, setIsMaintenance] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const checkMaintenance = async () => {
+      try {
+        const res = await axios.get("/settings/maintenance");
+        setIsMaintenance(res.data.maintenanceMode);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    checkMaintenance();
+  }, []);
+
+  // Cho admin vẫn vào bình thường
+  const isAdminRoute = window.location.pathname.startsWith("/admin");
+
+  if (loading) return null;
+  if (isMaintenance && !isAdminRoute) return <Maintenance />;
+
   return (
     <>
       <Routes>
@@ -58,70 +84,65 @@ function App() {
         </Route>
 
         {/* Admin routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/admin" element={<Admin />}>
-            <Route index element={<Dashboard />} />
+        <Route path="/admin" element={<Admin />}>
+          <Route index element={<Dashboard />} />
 
-            <Route path="search" element={<Search />} />
+          <Route path="search" element={<Search />} />
 
-            {/* Course routes */}
-            <Route path="courses">
-              <Route index element={<CourseList />} />
-              <Route path="create" element={<CourseCreate />} />
-              <Route path=":id" element={<CourseDetail />} />
-              <Route path=":id/edit" element={<CourseEdit />} />
-            </Route>
+          {/* Course routes */}
+          <Route path="courses">
+            <Route index element={<CourseList />} />
+            <Route path="create" element={<CourseCreate />} />
+            <Route path=":id" element={<CourseDetail />} />
+            <Route path=":id/edit" element={<CourseEdit />} />
+          </Route>
 
-            {/* User routes */}
-            <Route path="users">
-              <Route index element={<UserList />} />
-              <Route path="create" element={<UserCreate />} />
-              <Route path=":id" element={<UserDetail />} />
-              <Route path=":id/edit" element={<UserEdit />} />
-            </Route>
+          {/* User routes */}
+          <Route path="users">
+            <Route index element={<UserList />} />
+            <Route path="create" element={<UserCreate />} />
+            <Route path=":id" element={<UserDetail />} />
+            <Route path=":id/edit" element={<UserEdit />} />
+          </Route>
 
-            {/* Category routes */}
-            <Route path="categories">
-              <Route index element={<CategoryList />} />
-              <Route path="create" element={<CategoryCreate />} />
-              <Route path=":id" element={<CategoryDetail />} />
-              <Route path=":id/edit" element={<CategoryEdit />} />
-            </Route>
+          {/* Category routes */}
+          <Route path="categories">
+            <Route index element={<CategoryList />} />
+            <Route path="create" element={<CategoryCreate />} />
+            <Route path=":id" element={<CategoryDetail />} />
+            <Route path=":id/edit" element={<CategoryEdit />} />
+          </Route>
 
-            {/* Order routes */}
-            <Route path="orders">
-              <Route index element={<OrderList />} />
-              <Route path=":id" element={<OrderDetail />} />
-              <Route path=":id/edit" element={<OrderEdit />} />
-            </Route>
+          {/* Order routes */}
+          <Route path="orders">
+            <Route index element={<OrderList />} />
+            <Route path=":id" element={<OrderDetail />} />
+            <Route path=":id/edit" element={<OrderEdit />} />
+          </Route>
 
-            {/* Review routes */}
-            <Route path="reviews">
-              <Route index element={<ReviewList />} />
-              <Route path=":id" element={<ReviewDetail />} />
-            </Route>
+          {/* Review routes */}
+          <Route path="reviews">
+            <Route index element={<ReviewList />} />
+            <Route path=":id" element={<ReviewDetail />} />
+          </Route>
 
-            {/* Coupon routes */}
-            <Route path="coupons">
-              <Route index element={<CouponList />} />
-              <Route path="create" element={<CouponCreate />} />
-              <Route path=":id" element={<CouponDetail />} />
-              <Route path=":id/edit" element={<CouponEdit />} />
-            </Route>
+          {/* Coupon routes */}
+          <Route path="coupons">
+            <Route index element={<CouponList />} />
+            <Route path="create" element={<CouponCreate />} />
+            <Route path=":id" element={<CouponDetail />} />
+            <Route path=":id/edit" element={<CouponEdit />} />
+          </Route>
 
-            {/* Setting routes */}
-            <Route path="setting">
-              <Route index element={<Setting />} />
-              <Route path="create" element={<CouponCreate />} />
-              <Route path=":id" element={<CouponDetail />} />
-              <Route path=":id/edit" element={<CouponEdit />} />
-            </Route>
+          {/* Setting routes */}
+          <Route path="setting">
+            <Route index element={<Setting />} />
+            <Route path="create" element={<CouponCreate />} />
+            <Route path=":id" element={<CouponDetail />} />
+            <Route path=":id/edit" element={<CouponEdit />} />
           </Route>
         </Route>
-        {/* 
-        <Route element={<PublicRoute />}>
-          
-        </Route> */}
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 

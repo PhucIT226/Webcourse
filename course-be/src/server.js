@@ -15,6 +15,10 @@ import db from "./database/models/index.js";
 import AppConfig from "./config/index.js";
 import ApiRouter from "./routes/index.js";
 
+import middlewares from "./middlewares/index.js";
+const { auth, role, checkMaintenance } = middlewares;
+import { toggleMaintenance, getMaintenanceStatus } from "./controllers/setting.controller.js";
+
 const app = express();
 const server = createServer(app);
 const port = AppConfig.port;
@@ -81,6 +85,24 @@ app.use(passport.initialize());
 
 // cho phép truy cập thư mục uploads
 app.use("/uploads", express.static("uploads"));
+
+// Admin toggle bảo trì
+app.put(
+  `/api/${AppConfig.apiVersion}/settings/maintenance`,
+  auth,        // verify token, set req.user
+  role("admin"),
+  toggleMaintenance
+);
+
+// API check maintenance cho FE
+app.get(
+  `/api/${AppConfig.apiVersion}/settings/maintenance`,
+  checkMaintenance,  // block user thường nếu maintenance
+  getMaintenanceStatus
+);
+
+// 🔥 Check bảo trì toàn hệ thống
+app.use(checkMaintenance);
 
 app.use(`/api/${AppConfig.apiVersion}`, ApiRouter[AppConfig.apiVersion]);
 
