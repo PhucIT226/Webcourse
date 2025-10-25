@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 
 // Protected routes
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
-import { PublicRoute } from "./components/admin/PublicRoute";
+// import { PublicRoute } from "./components/admin/PublicRoute";
 
 // User pages
 import User from "./pages/user/user";
@@ -118,11 +118,12 @@ function App() {
             </Route>
           </Route>
         </Route>
-
+        {/* 
         <Route element={<PublicRoute />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
+          
+        </Route> */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route path="/payment/:id" element={<PaymentPage />} />
         <Route path="/payment" element={<PaymentPage />} />
