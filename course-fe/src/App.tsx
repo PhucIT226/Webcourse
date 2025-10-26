@@ -1,6 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "./services/axiosClient";
 import Maintenance from "./pages/admin/maintenance/MaintenancePage";
 
 // Protected routes
@@ -49,28 +47,8 @@ import VerifyEmail from "./pages/user/Email/verifyEmail";
 import CheckEmail from "./pages/user/Email/checkEmail";
 
 function App() {
-  const [isMaintenance, setIsMaintenance] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const checkMaintenance = async () => {
-      try {
-        const res = await axios.get("/settings/maintenance");
-        setIsMaintenance(res.data.maintenanceMode);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkMaintenance();
-  }, []);
-
   // Cho admin vẫn vào bình thường
   const isAdminRoute = window.location.pathname.startsWith("/admin");
-
-  if (loading) return null;
-  if (isMaintenance && !isAdminRoute) return <Maintenance />;
 
   return (
     <>
@@ -135,12 +113,7 @@ function App() {
           </Route>
 
           {/* Setting routes */}
-          <Route path="setting">
-            <Route index element={<Setting />} />
-            <Route path="create" element={<CouponCreate />} />
-            <Route path=":id" element={<CouponDetail />} />
-            <Route path=":id/edit" element={<CouponEdit />} />
-          </Route>
+          <Route path="setting" element={<Setting />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
@@ -151,7 +124,11 @@ function App() {
         <Route path="/profile/:id" element={<UserProfile />} />
         <Route path="auth/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/checkmail" element={<CheckEmail />} />
+
+        {/* Maintenance route để FE redirect */}
+        {!isAdminRoute && <Route path="/maintenance" element={<Maintenance />} />}
       </Routes>
+      
       <ToastContainer
         position="top-right"
         autoClose={1000}

@@ -7,12 +7,21 @@ export const SystemSettings = () => {
   const [isMaintenance, setIsMaintenance] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Lấy trạng thái từ backend
+  // 🔹 Khi load trang -> lấy trạng thái từ localStorage + API
   useEffect(() => {
+    const cached = localStorage.getItem("maintenanceMode");
+    if (cached !== null) {
+      setIsMaintenance(JSON.parse(cached));
+    }
+
     const fetchSetting = async () => {
       try {
         const res = await axios.get("/settings/maintenance");
         setIsMaintenance(res.data.maintenanceMode);
+        localStorage.setItem(
+          "maintenanceMode",
+          JSON.stringify(res.data.maintenanceMode)
+        );
       } catch (err) {
         console.error(err);
       } finally {
@@ -22,14 +31,17 @@ export const SystemSettings = () => {
     fetchSetting();
   }, []);
 
-  // Bật/tắt bảo trì
+  // 🔹 Toggle bật/tắt bảo trì
   const handleToggleMaintenance = async () => {
     try {
       const newStatus = !isMaintenance;
+      setIsMaintenance(newStatus);
+      localStorage.setItem("maintenanceMode", JSON.stringify(newStatus));
+
       await axios.put("/settings/maintenance", {
         maintenanceMode: newStatus,
       });
-      setIsMaintenance(newStatus);
+
       toast.success(
         newStatus ? "Đã bật chế độ bảo trì" : "Đã tắt chế độ bảo trì"
       );
