@@ -29,3 +29,35 @@ export const sendMail = async (to, subject, html) => {
     throw err;
   }
 };
+
+// import { Resend } from "resend";
+
+// const resend = new Resend(process.env.RESEND_API_KEY);
+
+// /**
+//  * Gửi email bằng Resend
+//  * @param {string} to - email người nhận
+//  * @param {string} subject - tiêu đề
+//  * @param {string} html - nội dung HTML
+//  */
+// export const sendMail = async (to, subject, html) => {
+//   try {
+//     const { data, error } = await resend.emails.send({
+//       from: "Học Dễ Thôi <onboarding@resend.dev>",
+//       to,
+//       subject,
+//       html,
+//     });
+
+//     if (error) {
+//       console.error("❌ Send mail error:", error);
+//       throw error;
+//     }
+
+//     console.log("✅ Email sent:", data);
+//     return data;
+//   } catch (err) {
+//     console.error("❌ Send mail failed:", err);
+//     throw err;
+//   }
+// };
