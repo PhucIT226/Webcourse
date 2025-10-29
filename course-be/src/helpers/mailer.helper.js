@@ -30,34 +30,64 @@
 //   }
 // };
 
+import nodemailer from "nodemailer";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-/**
- * Gửi email bằng Resend
- * @param {string} to - email người nhận
- * @param {string} subject - tiêu đề
- * @param {string} html - nội dung HTML
- */
-export const sendMail = async (to, subject, html) => {
+export async function sendMail(to, subject, html) {
   try {
-    const { data, error } = await resend.emails.send({
-      from: "Học Dễ Thôi <onboarding@resend.dev>",
+    // 🚀 Dùng Resend nếu deploy hoặc có lỗi kết nối SMTP
+    if (process.env.NODE_ENV === "production") {
+      console.log("📨 Using Resend API for production...");
+      const response = await resend.emails.send({
+        from: "WebCourse <no-reply@webcourse.app>", // domain đã verify (hoặc mặc định resend.dev)
+        to,
+        subject,
+        html,
+      });
+
+      if (response.error) {
+        console.error("❌ Resend error:", response.error);
+        throw new Error(response.error.message);
+      }
+
+      console.log("✅ Email sent via Resend:", response.data?.id || response);
+      return;
+    }
+
+    // 💻 Gmail SMTP cho localhost
+    console.log("📨 Using Gmail SMTP for dev...");
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: `"WebCourse" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
     });
 
-    if (error) {
-      console.error("❌ Send mail error:", error);
+    console.log("✅ Email sent via Gmail");
+  } catch (error) {
+    console.error("❌ Send mail error:", error.message);
+
+    // fallback: nếu Gmail lỗi, thử Resend
+    if (process.env.NODE_ENV !== "production") {
+      console.log("⚠️ Gmail failed, fallback to Resend...");
+      await resend.emails.send({
+        from: "WebCourse <no-reply@webcourse.app>",
+        to,
+        subject,
+        html,
+      });
+    } else {
       throw error;
     }
-
-    console.log("✅ Email sent:", data);
-    return data;
-  } catch (err) {
-    console.error("❌ Send mail failed:", err);
-    throw err;
   }
-};
+}
