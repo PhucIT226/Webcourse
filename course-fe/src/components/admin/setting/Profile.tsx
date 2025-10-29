@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { FaCamera } from "react-icons/fa";
 import axios from "../../../services/axiosClient";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 export const ProfileSettings = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState({
     name: "",
@@ -118,12 +120,12 @@ export const ProfileSettings = () => {
     }
   };
 
-  if (loading) return <div>Đang tải thông tin...</div>;
+  if (loading) return <div>{t("loadingProfile")}</div>;
 
   return (
     <div className="bg-base-100 p-5 rounded-2xl shadow-sm border border-gray-100">
       <h1 className="font-semibold text-base-content text-center text-3xl mb-4">
-        Thông tin cá nhân
+        {t("profileTitle")}
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -160,7 +162,7 @@ export const ProfileSettings = () => {
 
         {/* Input fields */}
         <div>
-          <label className="text-lg text-base-content">Tên hiển thị</label>
+          <label className="text-lg text-base-content">{t("displayName")}</label>
           <input
             type="text"
             name="name"
@@ -183,7 +185,7 @@ export const ProfileSettings = () => {
         </div>
 
         <div>
-          <label className="text-lg text-base-content">Số điện thoại</label>
+          <label className="text-lg text-base-content">{t("phone")}</label>
           <input
             type="text"
             name="phone"
@@ -194,7 +196,7 @@ export const ProfileSettings = () => {
         </div>
 
         <div>
-          <label className="text-lg text-base-content">Ngày sinh</label>
+          <label className="text-lg text-base-content">{t("dob")}</label>
           <input
             type="date"
             name="dob"
@@ -205,7 +207,7 @@ export const ProfileSettings = () => {
         </div>
 
         <div>
-          <label className="text-lg text-base-content">Địa chỉ</label>
+          <label className="text-lg text-base-content">{t("address")}</label>
           <textarea
             name="address"
             value={profile.address}

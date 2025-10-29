@@ -9,37 +9,39 @@ import {
   FaGift,
   FaStarHalfAlt,
   FaCreditCard,
+  FaRobot,
 } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { Link, useLocation, useNavigate  } from "react-router-dom"; 
 import type { Menu } from "../types/menu";
 import type { TAny } from "../types/common";
+import { useTranslation } from "react-i18next";
 
-type AdminLayoutProps = {
-  children: ReactNode;
-};
-
+type AdminLayoutProps = { children: ReactNode };
 type MenuType = Menu[];
 
-const menu: MenuType = [
-  { label: "Dashboard", to: "", icon: FaThLarge, defaultColor: "text-blue-600", badge: 4 },
-  { label: "Người dùng", to: "users", icon: FaUser, defaultColor: "text-green-600", children: [] },
-  { label: "Khóa học", to: "courses", icon: FaGraduationCap, defaultColor: "text-purple-600", children: [] },
-  { label: "Danh mục", to: "categories", icon: FaTags, defaultColor: "text-pink-500", children: [] },
-  { label: "Đơn hàng", to: "orders", icon: FaCreditCard, defaultColor: "text-orange-500", children: [] },
-  { label: "Đánh giá", to: "reviews", icon: FaStarHalfAlt, defaultColor: "text-yellow-500", children: [] },
-  { label: "Voucher", to: "coupons", icon: FaGift, defaultColor: "text-red-500", children: [] },
-];
-
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
+  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [menus, setMenus] = useState(menu);
-  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
+
+  const menu: MenuType = [
+    { label: t("dashboard"), to: "", icon: FaThLarge, defaultColor: "text-blue-600" },
+    { label: t("users"), to: "users", icon: FaUser, defaultColor: "text-green-600" },
+    { label: t("courses"), to: "courses", icon: FaGraduationCap, defaultColor: "text-purple-600" },
+    { label: t("categories"), to: "categories", icon: FaTags, defaultColor: "text-pink-500" },
+    { label: t("orders"), to: "orders", icon: FaCreditCard, defaultColor: "text-orange-500" },
+    { label: t("reviews"), to: "reviews", icon: FaStarHalfAlt, defaultColor: "text-yellow-500" },
+    { label: t("coupons"), to: "coupons", icon: FaGift, defaultColor: "text-red-500" },
+    { label: t("chatbot"), to: "chatbot", icon: FaRobot, defaultColor: "text-blue-500" },
+  ];
+
+  const [menus, setMenus] = useState(menu);
 
   useEffect(() => {
     const q = searchQuery.trim();
@@ -184,7 +186,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           <div className="relative w-64">
             <input
               type="text"
-              placeholder="Tìm kiếm..."
+              placeholder={t("searchPlaceholder")}
               className="border rounded-lg px-3 py-1 w-full focus:outline-none focus:ring focus:ring-blue-300"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
@@ -214,7 +216,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <main className="flex-1 p-6 pt-20 bg-base-100">{children}</main>
 
         {/* Footer */}
-        <footer className="bg-base-100 text-center py-3 text-base-content text-sm shadow-inner -mt-10">
+        <footer className="bg-base-100 text-center py-3 text-base-content text-sm shadow-inner">
           Copyright © {new Date().getFullYear()} Axelit.{" "}
           <span className="text-pink-400 mx-1">♥</span> v1.0.0
         </footer>

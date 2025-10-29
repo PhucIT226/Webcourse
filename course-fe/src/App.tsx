@@ -43,6 +43,7 @@ import CouponDetail from "./components/admin/coupons/CouponDetail";
 import CouponCreate from "./pages/admin/coupons/coupon-create";
 import CouponEdit from "./pages/admin/coupons/coupon-edit";
 import Setting from "./pages/admin/setting/setting";
+import ChatBot from "./pages/admin/chat/AdminChat";
 import VerifyEmail from "./pages/user/Email/verifyEmail";
 import CheckEmail from "./pages/user/Email/checkEmail";
 
@@ -114,6 +115,9 @@ function App() {
 
           {/* Setting routes */}
           <Route path="setting" element={<Setting />} />
+
+          {/* ChatBot routes */}
+          <Route path="chatbot" element={<ChatBot />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
