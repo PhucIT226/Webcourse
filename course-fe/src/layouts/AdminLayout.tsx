@@ -12,7 +12,7 @@ import {
   FaRobot,
 } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
-import { Link, useLocation, useNavigate  } from "react-router-dom"; 
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import type { Menu } from "../types/menu";
 import type { TAny } from "../types/common";
 import { useTranslation } from "react-i18next";
@@ -24,21 +24,61 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState<any[]>([]);
+  const [suggestions, setSuggestions] = useState<TAny[]>([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   const menu: MenuType = [
-    { label: t("dashboard"), to: "", icon: FaThLarge, defaultColor: "text-blue-600" },
-    { label: t("users"), to: "users", icon: FaUser, defaultColor: "text-green-600" },
-    { label: t("courses"), to: "courses", icon: FaGraduationCap, defaultColor: "text-purple-600" },
-    { label: t("categories"), to: "categories", icon: FaTags, defaultColor: "text-pink-500" },
-    { label: t("orders"), to: "orders", icon: FaCreditCard, defaultColor: "text-orange-500" },
-    { label: t("reviews"), to: "reviews", icon: FaStarHalfAlt, defaultColor: "text-yellow-500" },
-    { label: t("coupons"), to: "coupons", icon: FaGift, defaultColor: "text-red-500" },
-    { label: t("chatbot"), to: "chatbot", icon: FaRobot, defaultColor: "text-blue-500" },
+    {
+      label: t("dashboard"),
+      to: "",
+      icon: FaThLarge,
+      defaultColor: "text-blue-600",
+    },
+    {
+      label: t("users"),
+      to: "users",
+      icon: FaUser,
+      defaultColor: "text-green-600",
+    },
+    {
+      label: t("courses"),
+      to: "courses",
+      icon: FaGraduationCap,
+      defaultColor: "text-purple-600",
+    },
+    {
+      label: t("categories"),
+      to: "categories",
+      icon: FaTags,
+      defaultColor: "text-pink-500",
+    },
+    {
+      label: t("orders"),
+      to: "orders",
+      icon: FaCreditCard,
+      defaultColor: "text-orange-500",
+    },
+    {
+      label: t("reviews"),
+      to: "reviews",
+      icon: FaStarHalfAlt,
+      defaultColor: "text-yellow-500",
+    },
+    {
+      label: t("coupons"),
+      to: "coupons",
+      icon: FaGift,
+      defaultColor: "text-red-500",
+    },
+    {
+      label: t("chatbot"),
+      to: "chatbot",
+      icon: FaRobot,
+      defaultColor: "text-blue-500",
+    },
   ];
 
   const [menus, setMenus] = useState(menu);
@@ -53,7 +93,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     const timer = setTimeout(async () => {
       try {
         setLoadingSearch(true);
-        const res = await axios.get(`/admin/search?query=${encodeURIComponent(q)}`);
+        const res = await axios.get(
+          `/admin/search?query=${encodeURIComponent(q)}`
+        );
         setSuggestions(res.data || []);
       } catch (err) {
         console.error("❌ Lỗi khi fetch search:", err);
@@ -65,7 +107,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const handleSelect = (item: any) => {
+  const handleSelect = (item: TAny) => {
     setSuggestions([]);
     navigate(`/admin/${item.type.toLowerCase()}s/${item.id}`);
   };
@@ -189,17 +231,31 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               placeholder={t("searchPlaceholder")}
               className="border rounded-lg px-3 py-1 w-full focus:outline-none focus:ring focus:ring-blue-300"
               value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && suggestions.length > 0 && (
-              <div ref={dropdownRef} className="absolute top-full left-0 w-full bg-base-100 border shadow-lg z-50 max-h-60 overflow-auto">
+              <div
+                ref={dropdownRef}
+                className="absolute top-full left-0 w-full bg-base-100 border shadow-lg z-50 max-h-60 overflow-auto"
+              >
                 {loadingSearch ? (
                   <p className="p-2 text-gray-500">Đang tìm...</p>
-                ) : suggestions.map(item => (
-                  <div key={item.type + item.id} className="p-2 cursor-pointer hover:bg-blue-100" onClick={() => handleSelect(item)}>
-                    <span className="font-semibold">{item.name || item.title || item.email}</span> <span className="text-gray-500 text-sm">({item.type})</span>
-                  </div>
-                ))}
+                ) : (
+                  suggestions.map((item) => (
+                    <div
+                      key={item.type + item.id}
+                      className="p-2 cursor-pointer hover:bg-blue-100"
+                      onClick={() => handleSelect(item)}
+                    >
+                      <span className="font-semibold">
+                        {item.name || item.title || item.email}
+                      </span>{" "}
+                      <span className="text-gray-500 text-sm">
+                        ({item.type})
+                      </span>
+                    </div>
+                  ))
+                )}
               </div>
             )}
           </div>
