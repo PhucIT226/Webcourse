@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
-import type { Message, UserInfo, UserStatus } from "../../../../types/chat";
 
 const socketURL = import.meta.env.VITE_SOCKET_URL ||
   "http://localhost:3000";

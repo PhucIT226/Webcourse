@@ -151,9 +151,7 @@ const DetailCourse = () => {
             >
               ✕
             </button>
-
             {/* 👉 Video giới thiệu (YouTube hoặc nội bộ) */}
-            {/* Nếu bạn dùng YouTube: */}
             <iframe
               width="100%"
               height="400"
@@ -161,13 +159,6 @@ const DetailCourse = () => {
               title="Giới thiệu khóa học"
               allowFullScreen
             ></iframe>
-
-            {/* Nếu dùng file video nội bộ, có thể thay bằng:
-            <video width="100%" height="400" controls autoPlay>
-              <source src="/videos/demo.mp4" type="video/mp4" />
-              Trình duyệt của bạn không hỗ trợ video.
-            </video> 
-            */}
           </div>
         </div>
       )}

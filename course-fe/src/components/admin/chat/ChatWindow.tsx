@@ -20,7 +20,6 @@ export default function ChatWindow({
   userChats,
   userStatuses,
   input,
-  setInput,
   handleInputChange,
   handleKeyPress,
   handleSend,

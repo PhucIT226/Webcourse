@@ -1,4 +1,3 @@
-import React from "react";
 import type { UserInfo, UserStatus, Message } from "../../../types/chat";
 
 type Props = {
@@ -16,7 +15,6 @@ export default function UserList({
   userList,
   userChats,
   userStatuses,
-  userInfos,
   currentUserId,
   setCurrentUserId,
   getUserName,
