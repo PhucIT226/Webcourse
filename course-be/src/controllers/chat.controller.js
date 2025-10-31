@@ -69,13 +69,12 @@ export const chatWithAI = async (req, res) => {
         .json({ error: data.message || "API error" });
     }
 
-    const reply = data.choices?.[0]?.message?.content || 
-      "Không có phản hồi.";
+    const reply = data.choices?.[0]?.message?.content || "Không có phản hồi.";
     res.json({ reply });
   } catch (err) {
     console.error("Server error:", err);
-    res.status(500).json({ 
-      error: "Lỗi server hoặc kết nối OpenRouter thất bại." 
+    res.status(500).json({
+      error: "Lỗi server hoặc kết nối OpenRouter thất bại.",
     });
   }
 };
@@ -84,7 +83,7 @@ export const chatWithAI = async (req, res) => {
 export const getAdminChatHistory = async (req, res) => {
   try {
     const db = req.app.get("db");
-    
+
     // Lấy tất cả tin nhắn giữa user và admin
     const chats = await db.Chat.findAll({
       where: {
@@ -103,10 +102,9 @@ export const getAdminChatHistory = async (req, res) => {
     // Group theo userId
     const grouped = {};
     chats.forEach((chat) => {
-      const userId = chat.senderRole === "user" 
-        ? chat.senderId 
-        : chat.receiverId;
-      
+      const userId =
+        chat.senderRole === "user" ? chat.senderId : chat.receiverId;
+
       if (!grouped[userId]) {
         grouped[userId] = [];
       }
@@ -123,8 +121,8 @@ export const getAdminChatHistory = async (req, res) => {
     res.json({ chats: grouped });
   } catch (error) {
     console.error("❌ Error fetching chat history:", error);
-    res.status(500).json({ 
-      error: "Không thể lấy lịch sử chat" 
+    res.status(500).json({
+      error: "Không thể lấy lịch sử chat",
     });
   }
 };
@@ -137,10 +135,7 @@ export const getUserChatHistory = async (req, res) => {
 
     const chats = await db.Chat.findAll({
       where: {
-        [db.Sequelize.Op.or]: [
-          { senderId: userId },
-          { receiverId: userId },
-        ],
+        [db.Sequelize.Op.or]: [{ senderId: userId }, { receiverId: userId }],
       },
       order: [["createdAt", "ASC"]],
     });
@@ -154,8 +149,8 @@ export const getUserChatHistory = async (req, res) => {
     res.json({ messages });
   } catch (error) {
     console.error("❌ Error fetching user chat:", error);
-    res.status(500).json({ 
-      error: "Không thể lấy lịch sử chat" 
+    res.status(500).json({
+      error: "Không thể lấy lịch sử chat",
     });
   }
 };
