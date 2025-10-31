@@ -22,9 +22,7 @@ export default function UserList({
 }: Props) {
   return (
     <div className="w-1/4 border-r overflow-y-auto bg-base-200">
-      <h3 className="font-bold p-2 border-b">
-        Người dùng ({userList.length})
-      </h3>
+      <h3 className="font-bold p-2 border-b">Người dùng ({userList.length})</h3>
 
       {userList.map((userId) => {
         const status = userStatuses.get(userId);
