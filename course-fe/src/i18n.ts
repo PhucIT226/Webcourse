@@ -5,7 +5,7 @@ const resources = {
   vi: {
     translation: {
         // Sidebar
-        dashboard: "Bảng điều khiển",
+        dashboard: "Dashboard",
         users: "Người dùng",
         courses: "Khóa học",
         categories: "Danh mục",

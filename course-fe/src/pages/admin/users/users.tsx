@@ -181,7 +181,9 @@ export default function UserList() {
                   <td className="border text-center px-4 py-2">
                     {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}
                   </td>
-                  <td className="border px-4 py-2 font-medium">{user.name}</td>
+                  <td className="border px-4 py-2 font-mediummax-w-[250px] truncate">
+                    {user.name}
+                  </td>
                   <td className="border px-4 py-2">{user.email}</td>
                   <td className="border px-4 py-2">{user.profile?.phone || "—"}</td>
                   <td className="border px-4 py-2">{user.profile?.dateOfBirth || "—"}</td>

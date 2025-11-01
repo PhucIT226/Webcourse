@@ -149,7 +149,9 @@ export default function CourseList() {
                   <td className="border text-center px-4 py-2">
                     {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}
                   </td>
-                  <td className="border px-4 py-2 font-medium">{course.title}</td>
+                  <td className="border px-4 py-2 font-medium max-w-[250px] truncate">
+                    {course.title}
+                  </td>
                   <td className="border px-4 py-2">{course.instructor?.name}</td>
                   <td className="border px-4 py-2 text-right">
                     {Number(course.price).toLocaleString("vi-VN")} đ

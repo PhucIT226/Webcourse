@@ -135,8 +135,12 @@ export default function CategoryList() {
                   <td className="border text-center px-4 py-2">
                     {(page - 1) * (pagination?.pageSize ?? 15) + index + 1}
                   </td>
-                  <td className="border px-4 py-2 font-medium">{cat.name}</td>
-                  <td className="border px-4 py-2">{cat.slug}</td>
+                  <td className="border px-4 py-2 font-medium max-w-[250px] truncate">
+                    {cat.name}
+                  </td>
+                  <td className="border px-4 py-2 font-medium max-w-[250px] truncate">
+                    {cat.slug}
+                  </td>
                   <td className="border px-4 py-2 text-center">{cat.courseCount || "—"}</td>
                   <td className="border px-4 py-2 text-center">
                     <span
