@@ -28,7 +28,7 @@ export type User = {
     title: string;
   }[];
   progress?: string; 
-  status: "active" | "inactive" | "banned" | "pending";
+  status: "active" | "inactive" | "banned";
   createdAt?: string;
   updatedAt?: string;
   avatarUrl?: string;

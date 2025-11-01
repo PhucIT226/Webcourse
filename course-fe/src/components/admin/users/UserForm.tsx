@@ -18,10 +18,11 @@ export default function UserForm({ initialData, onSubmit }: Props) {
   const [roleId, setRoleId] = useState<string>("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [status, setStatus] = useState<"active" | "inactive" | "banned" | "pending">("active");
+  const [status, setStatus] = useState<"active" | "inactive" | "banned">("active");
   const [avatarFiles, setAvatarFiles] = useState<File[]>([]);
   const [preview, setPreview] = useState<string[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -63,6 +64,15 @@ export default function UserForm({ initialData, onSubmit }: Props) {
     if (!email.trim()) newErrors.email = "Email không được để trống.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Email không hợp lệ.";
 
+    // Validate password chỉ khi tạo mới (không có initialData)
+    if (!initialData) {
+      if (!password.trim()) {
+        newErrors.password = "Mật khẩu không được để trống.";
+      } else if (password.length < 6) {
+        newErrors.password = "Mật khẩu phải có ít nhất 6 ký tự.";
+      }
+    }
+
     if (phone && !/^\d{9,11}$/.test(phone))
       newErrors.phone = "Số điện thoại chỉ được chứa 9–11 chữ số.";
 
@@ -93,6 +103,11 @@ export default function UserForm({ initialData, onSubmit }: Props) {
       },
       status,
     };
+
+    // Chỉ thêm password khi tạo mới
+    if (!initialData && password.trim()) {
+      (data as any).password = password.trim();
+    }
 
     onSubmit(data, avatarFiles);
   };
@@ -141,6 +156,20 @@ export default function UserForm({ initialData, onSubmit }: Props) {
         {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
       </div>
 
+      {/* Password - chỉ hiển thị khi tạo mới */}
+      {!initialData && (
+        <div>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Mật khẩu (tối thiểu 6 ký tự)"
+            className="border px-3 py-2 rounded w-full"
+          />
+          {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+        </div>
+      )}
+
       {/* Phone */}
       <div>
         <input
@@ -175,14 +204,13 @@ export default function UserForm({ initialData, onSubmit }: Props) {
       <select
         value={status}
         onChange={(e) =>
-          setStatus(e.target.value as "active" | "inactive" | "banned" | "pending")
+          setStatus(e.target.value as "active" | "inactive" | "banned")
         }
         className="border px-3 py-2 rounded"
       >
         <option value="active">Hoạt động</option>
         <option value="inactive">Ngừng hoạt động</option>
         <option value="banned">Bị khóa</option>
-        <option value="pending">Chờ xác nhận</option>
       </select>
 
       {/* Avatar */}
