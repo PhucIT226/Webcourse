@@ -5,10 +5,14 @@ import { useNavigate } from "react-router-dom";
 import type { RegisterForm } from "../types/auth";
 import { authService } from "../services/authService";
 import { toast } from "react-toastify";
+import { useState } from "react";
 
 const schema = yup.object({
   name: yup.string().required("Họ tên là bắt buộc"),
-  email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
+  email: yup
+    .string()
+    .email("Email không hợp lệ")
+    .required("Email là bắt buộc"),
   password: yup
     .string()
     .min(6, "Mật khẩu ít nhất 6 ký tự")
@@ -24,16 +28,42 @@ const Register = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<RegisterForm>({
     resolver: yupResolver(schema),
   });
 
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (data: RegisterForm) => {
-    await authService.signup(data);
-    toast.success("Đăng kí thành công,vui lòng kiểm tra mail để xác nhận");
-    navigate("/checkmail", { state: { email: data } });
+    try {
+      setIsSubmitting(true);
+      await authService.signup(data);
+      toast.success(
+        "Đăng kí thành công, vui lòng kiểm tra mail để xác nhận"
+      );
+      navigate("/checkmail", { state: { email: data } });
+    } catch (error: any) {
+      // Xử lý lỗi từ backend
+      if (error.response?.status === 400) {
+        const errorMessage = error.response.data?.message;
+        const errorField = error.response.data?.field;
+
+        if (errorField === "email") {
+          setError("email", {
+            type: "manual",
+            message: errorMessage || "Email đã được sử dụng",
+          });
+        } else {
+          toast.error(errorMessage || "Đăng ký thất bại");
+        }
+      } else {
+        toast.error("Có lỗi xảy ra, vui lòng thử lại");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -141,9 +171,12 @@ const Register = () => {
           {/* Nút Đăng ký */}
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 transition"
+            disabled={isSubmitting}
+            className="w-full bg-indigo-600 text-white py-2.5 
+            rounded-lg font-semibold hover:bg-indigo-700 transition 
+            disabled:bg-gray-400 disabled:cursor-not-allowed"
           >
-            Đăng ký
+            {isSubmitting ? "Đang đăng ký..." : "Đăng ký"}
           </button>
         </form>
 

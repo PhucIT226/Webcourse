@@ -109,7 +109,6 @@ class UserRepository {
       status: userData.status || "active",
     });
 
-    // ✅ Nếu có profile => tạo kèm
     if (userData.profile) {
       await db.Profile.create({
         id: uuidv4(),
@@ -121,7 +120,6 @@ class UserRepository {
       });
     }
 
-    // Lấy lại user có include role + profile
     return this.getUserById(newUser.id);
   }
 

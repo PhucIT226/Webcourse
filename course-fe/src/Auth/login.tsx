@@ -9,7 +9,10 @@ import { FaSpinner } from "react-icons/fa";
 import { useState } from "react";
 
 const schema = yup.object({
-  email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
+  email: yup
+    .string()
+    .email("Email không hợp lệ")
+    .required("Email là bắt buộc"),
   password: yup
     .string()
     .min(6, "Mật khẩu ít nhất 6 ký tự")
@@ -30,15 +33,22 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string>("");
 
   const onSubmit = async (data: LoginForm) => {
     setIsLoading(true);
+    setLoginError(""); // Reset lỗi trước khi submit
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      await dispatch(signin(data));
+      await dispatch(signin(data)).unwrap();
       navigate("/");
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      // Hiển thị lỗi từ backend
+      const errorMessage = 
+        error?.message || 
+        "Email hoặc mật khẩu không chính xác";
+      
+      setLoginError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -50,6 +60,14 @@ const Login = () => {
         <h3 className="text-2xl font-semibold text-center mb-6 text-base-content">
           Đăng nhập
         </h3>
+
+        {/* Hiển thị lỗi đăng nhập */}
+        {loginError && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-300 
+          rounded-lg text-red-600 text-sm text-center">
+            {loginError}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)}>
           {/* Email */}
