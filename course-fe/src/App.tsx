@@ -1,10 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import Maintenance from "./pages/admin/maintenance/MaintenancePage";
 
-// Protected routes
-// import { ProtectedRoute } from "./components/admin/ProtectedRoute";
-// import { PublicRoute } from "./components/admin/PublicRoute";
-
 // User pages
 import User from "./pages/user/user";
 import Home from "./pages/user/Home/Home";
@@ -16,6 +12,8 @@ import Register from "./Auth/register";
 import { Bounce, ToastContainer } from "react-toastify";
 import PaymentPage from "./pages/user/Payment/PaymentPage";
 import UserProfile from "./pages/user/Home/Header/UserProfile";
+import VerifyEmail from "./pages/user/Email/verifyEmail";
+import CheckEmail from "./pages/user/Email/checkEmail";
 
 // Admin pages
 import Admin from "./pages/admin/admin";
@@ -44,8 +42,6 @@ import CouponCreate from "./pages/admin/coupons/coupon-create";
 import CouponEdit from "./pages/admin/coupons/coupon-edit";
 import Setting from "./pages/admin/setting/setting";
 import ChatBot from "./pages/admin/chat/AdminChat";
-import VerifyEmail from "./pages/user/Email/verifyEmail";
-import CheckEmail from "./pages/user/Email/checkEmail";
 
 function App() {
   // Cho admin vẫn vào bình thường

@@ -31,54 +31,14 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const location = useLocation();
 
   const menu: MenuType = [
-    {
-      label: t("dashboard"),
-      to: "",
-      icon: FaThLarge,
-      defaultColor: "text-blue-600",
-    },
-    {
-      label: t("users"),
-      to: "users",
-      icon: FaUser,
-      defaultColor: "text-green-600",
-    },
-    {
-      label: t("courses"),
-      to: "courses",
-      icon: FaGraduationCap,
-      defaultColor: "text-purple-600",
-    },
-    {
-      label: t("categories"),
-      to: "categories",
-      icon: FaTags,
-      defaultColor: "text-pink-500",
-    },
-    {
-      label: t("orders"),
-      to: "orders",
-      icon: FaCreditCard,
-      defaultColor: "text-orange-500",
-    },
-    {
-      label: t("reviews"),
-      to: "reviews",
-      icon: FaStarHalfAlt,
-      defaultColor: "text-yellow-500",
-    },
-    {
-      label: t("coupons"),
-      to: "coupons",
-      icon: FaGift,
-      defaultColor: "text-red-500",
-    },
-    {
-      label: t("chatbot"),
-      to: "chatbot",
-      icon: FaRobot,
-      defaultColor: "text-blue-500",
-    },
+    { label: t("dashboard"), to: "", icon: FaThLarge, defaultColor: "text-blue-600" },
+    { label: t("users"), to: "users", icon: FaUser, defaultColor: "text-green-600" },
+    { label: t("courses"), to: "courses", icon: FaGraduationCap, defaultColor: "text-purple-600" },
+    { label: t("categories"), to: "categories", icon: FaTags, defaultColor: "text-pink-500" },
+    { label: t("orders"), to: "orders", icon: FaCreditCard, defaultColor: "text-orange-500" },
+    { label: t("reviews"), to: "reviews", icon: FaStarHalfAlt, defaultColor: "text-yellow-500" },
+    { label: t("coupons"), to: "coupons", icon: FaGift, defaultColor: "text-red-500" },
+    { label: t("chatbot"), to: "chatbot", icon: FaRobot, defaultColor: "text-blue-500" },
   ];
 
   const [menus, setMenus] = useState(menu);
@@ -209,7 +169,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       >
         {/* Header */}
         <header
-          className="fixed top-0 left-0 right-0 h-16 bg-base-100 shadow z-20 flex items-center justify-between px-6 transition-all duration-200"
+          className="fixed top-0 left-0 right-0 h-16 bg-base-100 shadow z-50 flex items-center justify-between px-6 transition-all duration-200"
           style={{
             left: sidebarOpen ? "16rem" : "5rem",
             width: sidebarOpen ? "calc(100% - 16rem)" : "calc(100% - 5rem)",
