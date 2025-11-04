@@ -41,6 +41,7 @@ const Courses = () => {
                     courseDes: course.description,
                     courseId: course.id,
                     coursePrice: course.price,
+                    courseImage: course.thumbnailUrls,
                   },
                 })
               }

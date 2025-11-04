@@ -7,12 +7,11 @@ import { useAppDispatch } from "../hooks";
 import { signin } from "../redux/authSlice";
 import { FaSpinner } from "react-icons/fa";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import type { TAny } from "../types/common";
 
 const schema = yup.object({
-  email: yup
-    .string()
-    .email("Email không hợp lệ")
-    .required("Email là bắt buộc"),
+  email: yup.string().email("Email không hợp lệ").required("Email là bắt buộc"),
   password: yup
     .string()
     .min(6, "Mật khẩu ít nhất 6 ký tự")
@@ -42,13 +41,9 @@ const Login = () => {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       await dispatch(signin(data)).unwrap();
       navigate("/");
-    } catch (error: any) {
-      // Hiển thị lỗi từ backend
-      const errorMessage = 
-        error?.message || 
-        "Email hoặc mật khẩu không chính xác";
-      
-      setLoginError(errorMessage);
+      toast.success("Đăng nhập thành công!");
+    } catch (error: TAny) {
+      toast.error(error?.message);
     } finally {
       setIsLoading(false);
     }
@@ -63,8 +58,10 @@ const Login = () => {
 
         {/* Hiển thị lỗi đăng nhập */}
         {loginError && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-300 
-          rounded-lg text-red-600 text-sm text-center">
+          <div
+            className="mb-4 p-3 bg-red-50 border border-red-300 
+          rounded-lg text-red-600 text-sm text-center"
+          >
             {loginError}
           </div>
         )}

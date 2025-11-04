@@ -24,10 +24,11 @@ class AuthController extends BaseController {
       }
 
       const existingUser = await this.service.getUserByEmail(email);
-      if (existingUser) return res.status(400).json({ 
-        message: "Email đã được sử dụng",
-        field: "email" 
-      });
+      if (existingUser)
+        return res.status(400).json({
+          message: "Email đã được sử dụng",
+          field: "email",
+        });
 
       const studentRole = await db.Role.findOne({ where: { name: "student" } });
       if (!studentRole) {
@@ -96,14 +97,16 @@ class AuthController extends BaseController {
   async login(req, res) {
     const { email, password } = req.body;
     const user = await this.service.getUserByEmail(email, true);
-    if (!user) return res.status(400).json({ 
-      message: "Email hoặc mật khẩu không chính xác" 
-    });
+    if (!user)
+      return res.status(400).json({
+        message: "Email hoặc mật khẩu không chính xác",
+      });
 
     const valid = await HashHelper.comparePassword(password, user.passwordHash);
-    if (!valid) return res.status(400).json({ 
-      message: "Email hoặc mật khẩu không chính xác" 
-    });
+    if (!valid)
+      return res.status(400).json({
+        message: "Email hoặc mật khẩu không chính xác",
+      });
 
     const { accessToken, refreshToken } = await JwtHelper.generateTokens(
       user.id,

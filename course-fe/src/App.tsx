@@ -42,6 +42,7 @@ import CouponCreate from "./pages/admin/coupons/coupon-create";
 import CouponEdit from "./pages/admin/coupons/coupon-edit";
 import Setting from "./pages/admin/setting/setting";
 import ChatBot from "./pages/admin/chat/AdminChat";
+import CartPage from "./pages/user/Payment/CartPage";
 
 function App() {
   // Cho admin vẫn vào bình thường
@@ -124,11 +125,14 @@ function App() {
         <Route path="/profile/:id" element={<UserProfile />} />
         <Route path="auth/verify-email/:token" element={<VerifyEmail />} />
         <Route path="/checkmail" element={<CheckEmail />} />
+        <Route path="/check-cart" element={<CartPage />} />
 
         {/* Maintenance route để FE redirect */}
-        {!isAdminRoute && <Route path="/maintenance" element={<Maintenance />} />}
+        {!isAdminRoute && (
+          <Route path="/maintenance" element={<Maintenance />} />
+        )}
       </Routes>
-      
+
       <ToastContainer
         position="top-right"
         autoClose={1000}
