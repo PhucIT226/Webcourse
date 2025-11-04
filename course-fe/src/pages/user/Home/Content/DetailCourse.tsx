@@ -17,6 +17,7 @@ const DetailCourse = () => {
   const courseId = location.state?.courseId;
   const courseTitle = location.state?.courseTitle;
   const coursePrice = location.state?.coursePrice;
+  const courseImage = location.state?.courseImage;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { lessons, loading } = useAppSelector((state) => state.lesson);
@@ -117,6 +118,7 @@ const DetailCourse = () => {
                 id: courseId,
                 title: courseTitle,
                 price: coursePrice,
+                thumbnailUrls: courseImage,
               })
             );
             toast.success("Đã thêm vào giỏ hàng");
