@@ -5,6 +5,5 @@ export type Menu = {
   to: string;
   icon: IconType;
   active?: boolean;
-  children?: Menu[];
   defaultColor: string;
 };

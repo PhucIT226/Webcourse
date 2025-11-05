@@ -135,24 +135,6 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                       {item.label}
                     </span>
                   </Link>
-
-                  {/* Submenu */}
-                  {item.children && item.children.length > 0 && sidebarOpen && (
-                    <ul className="ml-10 mt-1 space-y-1">
-                      {item.children.map((sub) => (
-                        <li
-                          key={sub.label}
-                          className={`px-3 py-1 rounded cursor-pointer text-sm ${
-                            sub.active
-                              ? "bg-base-100 text-[#2563eb] font-semibold"
-                              : "text-gray-600 hover:bg-[#dbeafe] hover:text-[#2563eb]"
-                          }`}
-                        >
-                          {sub.label}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
                 </li>
               );
             })}
@@ -163,9 +145,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
       {/* Main Content Area */}
       <div
         className="flex-1 flex flex-col min-h-screen transition-all duration-200"
-        style={{
-          marginLeft: sidebarOpen ? "16rem" : "5rem",
-        }}
+        style={{ marginLeft: sidebarOpen ? "16rem" : "5rem" }}
       >
         {/* Header */}
         <header
