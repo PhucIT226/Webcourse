@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../../../redux/store";
 import type { TAny } from "../../../../types/common";
 import { useNavigate } from "react-router-dom";
+import { BASE_API_URL } from "../../../../constants";
 
 const Categories = () => {
   const dispatch = useAppDispatch();
@@ -81,7 +82,7 @@ const Categories = () => {
               }
             >
               <img
-                src={course.thumbnailUrl}
+                src={`${BASE_API_URL}${course.thumbnailUrl}`}
                 alt={course.title}
                 className="w-full h-40 object-cover rounded"
               />
