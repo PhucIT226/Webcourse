@@ -1,6 +1,5 @@
 import UserService from "../services/user.service.js";
 import BaseController from "./base.controller.js";
-import slugify from "slugify";
 
 class UserController extends BaseController {
   constructor() {

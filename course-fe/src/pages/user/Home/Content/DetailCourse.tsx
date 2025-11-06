@@ -118,7 +118,7 @@ const DetailCourse = () => {
                 id: courseId,
                 title: courseTitle,
                 price: coursePrice,
-                thumbnailUrls: courseImage,
+                thumbnailUrl: courseImage,
               })
             );
             toast.success("Đã thêm vào giỏ hàng");

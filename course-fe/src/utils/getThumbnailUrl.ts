@@ -8,11 +8,6 @@ export const getThumbnailUrl = (
     return course.image[0].url;
   }
 
-  // Nếu có thumbnailUrls[] trong course
-  if (Array.isArray(course.thumbnailUrls) && course.thumbnailUrls.length > 0) {
-    return course.thumbnailUrls[0].url;
-  }
-
   // Nếu có thumbnailUrl đơn lẻ
   if (course.thumbnailUrl) return course.thumbnailUrl;
 
