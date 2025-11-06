@@ -27,7 +27,7 @@ const port = AppConfig.port;
 // ===== Socket.IO =====
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: "*",
     credentials: true,
   },
 });
