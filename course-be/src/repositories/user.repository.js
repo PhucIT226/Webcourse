@@ -37,8 +37,6 @@ class UserRepository {
       orderArray.push([sortField, orderDir]);
     } else if (sortField === "dateOfBirth") {
       orderArray.push([{ model: db.Profile, as: "profile" }, "dateOfBirth", orderDir]);
-    } else if (["fullName"].includes(sortField)) {
-      orderArray.push([{ model: db.Profile, as: "profile" }, sortField, orderDir]);
     }
 
     const include = [

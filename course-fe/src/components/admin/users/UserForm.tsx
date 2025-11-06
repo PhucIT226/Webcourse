@@ -8,7 +8,7 @@ type Role = { id: string; name: string };
 
 type Props = {
   initialData?: User | null;
-  onSubmit: (data: Partial<User>, files?: File[]) => void;
+  onSubmit: (data: Partial<User>, file?: File | null) => void;
 };
 
 export default function UserForm({ initialData, onSubmit }: Props) {
@@ -23,15 +23,21 @@ export default function UserForm({ initialData, onSubmit }: Props) {
   const [address, setAddress] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [status, setStatus] = useState<"active" | "inactive" | "banned">("active");
-  const [avatarFiles, setAvatarFiles] = useState<File[]>([]);
-  const [preview, setPreview] = useState<string[]>([]);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchRoles = async () => {
-      const res = await axios.get("/roles");
-      setRoles(res.data.data || []);
+      try {
+        const res = await axios.get("/roles");
+        setRoles(res.data.data || []);
+      } catch (err) {
+        console.error("Lỗi khi fetch roles:", err);
+      }
     };
+
+    // Gọi hàm async
     fetchRoles();
   }, []);
 
@@ -45,15 +51,15 @@ export default function UserForm({ initialData, onSubmit }: Props) {
       setAddress(initialData.profile?.address || "");
       setDateOfBirth(initialData.profile?.dateOfBirth || "");
       setStatus(initialData.status || "active");
-      setPreview(initialData.avatarUrls?.map((img) => img.url) || []);
     }
   }, [initialData]);
 
   // 🧩 Upload file
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setAvatarFiles(files);
-    setPreview(files.map((f) => URL.createObjectURL(f)));
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarFile(file);
+    setPreview(URL.createObjectURL(file));
   };
 
   const validateForm = () => {
@@ -79,8 +85,6 @@ export default function UserForm({ initialData, onSubmit }: Props) {
     if (dateOfBirth) {
       const dob = new Date(dateOfBirth);
       if (dob > new Date()) newErrors.dateOfBirth = "Ngày sinh không được lớn hơn hôm nay.";
-    } else {
-      newErrors.dateOfBirth = "Vui lòng chọn ngày sinh.";
     }
 
     setErrors(newErrors);
@@ -109,7 +113,7 @@ export default function UserForm({ initialData, onSubmit }: Props) {
       (data as any).password = password.trim();
     }
 
-    onSubmit(data, avatarFiles);
+    onSubmit(data, avatarFile);
   };
 
   return (
@@ -221,16 +225,13 @@ export default function UserForm({ initialData, onSubmit }: Props) {
         className="border px-3 py-2 rounded"
       />
 
-      {preview.length > 0 && (
+      {preview && (
         <div className="grid grid-cols-3 gap-2 mt-2">
-          {preview.map((url, i) => (
-            <img
-              key={i}
-              src={url}
-              alt="preview"
-              className="w-full h-24 object-cover rounded-lg border"
-            />
-          ))}
+          <img
+            src={preview}
+            alt="preview"
+            className="w-full h-24 object-cover rounded-lg border"
+          />
         </div>
       )}
 

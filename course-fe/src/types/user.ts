@@ -1,4 +1,4 @@
-import type { Image, Pagination } from "./common";
+import type { Pagination } from "./common";
 
 export type User = {
   id?: string;
@@ -32,7 +32,6 @@ export type User = {
   createdAt?: string;
   updatedAt?: string;
   avatarUrl?: string;
-  avatarUrls?: Image[];
 };
 
 export interface UserResDto {

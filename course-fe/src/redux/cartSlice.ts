@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Image } from "../types/common";
-
+ 
 interface CourseCart {
   id: string;
   title: string;
   price: number;
-  thumbnailUrls?: Image[];
+  thumbnailUrl?: string;
 }
 interface cartState {
   items: CourseCart[];

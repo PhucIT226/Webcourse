@@ -45,7 +45,7 @@ const SearchCourses = () => {
               className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-transform hover:-translate-y-1 cursor-pointer"
             >
               <img
-                src={course.thumbnailUrls?.[0]?.url}
+                src={course.thumbnailUrl || "/fallback.png"}
                 alt={course.title}
                 className="w-full h-48 object-cover rounded-t-2xl"
               />
