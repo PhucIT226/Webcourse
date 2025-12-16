@@ -99,13 +99,13 @@ class AuthController extends BaseController {
     const user = await this.service.getUserByEmail(email, true);
     if (!user)
       return res.status(400).json({
-        message: "Email hoặc mật khẩu không chính xác",
+        message: "Email không chính xác",
       });
 
     const valid = await HashHelper.comparePassword(password, user.passwordHash);
     if (!valid)
       return res.status(400).json({
-        message: "Email hoặc mật khẩu không chính xác",
+        message: "Mật khẩu không chính xác",
       });
 
     const { accessToken, refreshToken } = await JwtHelper.generateTokens(

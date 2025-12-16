@@ -9,8 +9,8 @@ import { BASE_API_URL } from "../../../../constants";
 const SearchCourses = () => {
   const dispatch = useAppDispatch();
   const { search } = useLocation(); // lấy query từ URL, ví dụ ?search=react
-  const queryParams = new URLSearchParams(search);
-  const searchValue = queryParams.get("search") || "";
+    const queryParams = new URLSearchParams(search);
+    const searchValue = queryParams.get("search") || "";
   const navigate = useNavigate();
 
   const courses = useAppSelector((state) => state.course.data);
